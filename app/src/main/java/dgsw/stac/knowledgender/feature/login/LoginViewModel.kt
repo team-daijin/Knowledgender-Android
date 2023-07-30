@@ -1,7 +1,9 @@
 package dgsw.stac.knowledgender.feature.login
 
 import android.util.Log
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dgsw.stac.knowledgender.remote.Register

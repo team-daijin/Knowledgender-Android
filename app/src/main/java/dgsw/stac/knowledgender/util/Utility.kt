@@ -76,7 +76,7 @@ object Utility {
         modifier: Modifier = Modifier,
         value: String,
         placeHolder: String,
-        textFieldError: Boolean,
+        textFieldError: Boolean = false,
         onValueChange: (String) -> Unit,
         isPw: Boolean = false
     ) {
