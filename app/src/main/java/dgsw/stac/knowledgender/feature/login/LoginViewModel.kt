@@ -15,8 +15,11 @@ import retrofit2.Response
 import java.lang.Exception
 
 class LoginViewModel : ViewModel() {
-    private val id = mutableStateOf("")
-    private val pw = mutableStateOf("")
+    val id = mutableStateOf("")
+    val pw = mutableStateOf("")
+
+    var idError = false
+    var pwError = false
 
     private val username = flow {
 //        emit(RetrofitBuilder.retrofitService.fetchUsername())
