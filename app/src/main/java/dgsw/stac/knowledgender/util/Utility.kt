@@ -20,6 +20,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -36,6 +37,7 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import dgsw.stac.knowledgender.ui.theme.BasePurple
+import dgsw.stac.knowledgender.ui.theme.DarkestPurple
 import dgsw.stac.knowledgender.ui.theme.DarkestRed
 import dgsw.stac.knowledgender.ui.theme.LightRed
 import dgsw.stac.knowledgender.ui.theme.LighterBlack
@@ -47,6 +49,39 @@ object Utility {
     const val REGISTERPOST = "대충 통신 주소"
     const val LOGINGET = ""
 
+
+    @Composable
+    fun TextFieldSet(
+        textContent: String,
+        textFieldPlaceHolder: String,
+        errorMsg: String,
+        value: MutableState<String>,
+        isError: Boolean,
+        isPw: Boolean = false
+    ) {
+        BaseText(
+            text = textContent,
+            color = DarkestPurple,
+            style = TextStyle(
+                fontSize = 16.sp,
+                fontFamily = pretendard,
+                fontWeight = FontWeight.Medium
+            )
+        )
+        BaseTextField(
+            modifier = Modifier.padding(top = 4.dp),
+            value = value.value,
+            placeHolder = textFieldPlaceHolder,
+            onValueChange = { value.value = it },
+            textFieldError = isError,
+            isPw = isPw
+        )
+        ErrorText(
+            modifier = Modifier.padding(top = 4.dp),
+            text = errorMsg,
+            isError = isError
+        )
+    }
     @Composable
     fun BaseText(modifier: Modifier = Modifier, text: String, color: Color, style: TextStyle) {
         Text(

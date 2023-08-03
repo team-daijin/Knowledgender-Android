@@ -19,6 +19,7 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -40,6 +41,7 @@ import dgsw.stac.knowledgender.util.Utility.BaseButton
 import dgsw.stac.knowledgender.util.Utility.BaseText
 import dgsw.stac.knowledgender.util.Utility.BaseTextField
 import dgsw.stac.knowledgender.util.Utility.ErrorText
+import dgsw.stac.knowledgender.util.Utility.TextFieldSet
 
 class LoginActivity : ComponentActivity() {
     private val viewModel by viewModels<LoginViewModel>()
@@ -103,53 +105,25 @@ private fun Header() {
     }
 }
 
+
+
 @Composable
 private fun Body(viewModel: LoginViewModel) {
     Column() {
-        BaseText(
-            text = "아이디",
-            color = DarkestPurple,
-            style = TextStyle(
-                fontSize = 16.sp,
-                fontFamily = pretendard,
-                fontWeight = FontWeight.Medium
-            )
-        )
-        BaseTextField(
-            modifier = Modifier.padding(top = 4.dp),
-            value = viewModel.id.value,
-            placeHolder = "아이디를 입력해주세요",
-            onValueChange = { viewModel.id.value = it },
-            textFieldError = viewModel.idError,
-        )
-        ErrorText(
-            modifier = Modifier.padding(top = 4.dp),
-            text = "아이디를 다시 입력해주세요.",
+        TextFieldSet(
+            textContent = "아이디",
+            textFieldPlaceHolder = "아이디를 입력해주세요",
+            errorMsg = "아이디를 다시 입력해주세요",
+            value = viewModel.id,
             isError = viewModel.idError
         )
-        BaseText(
-            modifier = Modifier.padding(top = 8.dp),
-            text = "비밀번호",
-            color = DarkestPurple,
-            style = TextStyle(
-                fontSize = 16.sp,
-                fontFamily = pretendard,
-                fontWeight = FontWeight.Medium
-            )
-        )
-        BaseTextField(
-            modifier = Modifier.padding(top = 4.dp),
-            value = viewModel.pw.value,
-            placeHolder = "비밀번호를 입력해주세요",
-            onValueChange = { viewModel.pw.value = it },
-            textFieldError = viewModel.pwError,
+        TextFieldSet(
+            textContent = "비밀번호",
+            textFieldPlaceHolder = "비밀번호를 입력해주세요",
+            errorMsg = "비밀번호를 다시 입력해주세요",
+            value = viewModel.pw,
+            isError = viewModel.pwError,
             isPw = true
-        )
-        ErrorText(
-            modifier = Modifier
-                .padding(top = 4.dp),
-            text = "비밀번호를 다시 입력해주세요.",
-            isError = viewModel.pwError
         )
         BaseButton(
             onClick = { },
@@ -158,8 +132,7 @@ private fun Body(viewModel: LoginViewModel) {
                 .heightIn(32.dp)
                 .padding(top = 22.dp),
             color = ButtonDefaults.buttonColors(
-                containerColor = if (
-                    viewModel.id.value.isNotEmpty() && viewModel.pw.value.isNotEmpty()) BasePurple else LightSky
+                containerColor = if (viewModel.id.value.isNotEmpty() && viewModel.pw.value.isNotEmpty()) BasePurple else LightSky
             ),
             text = "로그인",
             textColor = Color.White,
@@ -182,7 +155,7 @@ private fun Body(viewModel: LoginViewModel) {
                         append("회원가입")
                     }
                 },
-                onClick = {},
+                onClick = {  },
                 style = TextStyle(
                     fontFamily = pretendard,
                     fontWeight = FontWeight.Light,
@@ -195,9 +168,11 @@ private fun Body(viewModel: LoginViewModel) {
                         append("비밀번호를 잊어버렸어요")
                     }
                 },
-                onClick = {},
+                onClick = {  },
                 style = TextStyle(
-
+                    fontFamily = pretendard,
+                    fontWeight = FontWeight.Light,
+                    fontSize = 16.sp
                 )
             )
         }
@@ -206,7 +181,7 @@ private fun Body(viewModel: LoginViewModel) {
 }
 
 @Composable
-private fun Footer(){
+private fun Footer() {
 
 }
 

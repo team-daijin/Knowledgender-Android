@@ -5,15 +5,21 @@ import retrofit2.http.Body
 import retrofit2.http.POST
 
 interface RetrofitService {
-    @POST()
-    fun register(
-        @Body register: Register
-    ): Call<Boolean>
+//    @POST()
+//    fun register(
+//        @Body register: Register
+//    ): Call<Boolean>
 
 
-    @POST()
-    suspend fun register2(
-        @Body register: Register
+    @POST("/api/auth/register")
+    suspend fun register(
+        @Body register: RegisterRequest
+    ): Boolean
+
+
+    @POST("/api/auth/login")
+    suspend fun login(
+        @Body login: LoginRequest
     ): Boolean
 
     @POST()
