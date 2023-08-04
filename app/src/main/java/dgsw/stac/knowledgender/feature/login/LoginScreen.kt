@@ -19,7 +19,6 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -31,6 +30,11 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import dgsw.stac.knowledgender.feature.register.RegisterScreen
+import dgsw.stac.knowledgender.feature.register.RegisterViewModel
 import dgsw.stac.knowledgender.ui.theme.BasePurple
 import dgsw.stac.knowledgender.ui.theme.DarkestPurple
 import dgsw.stac.knowledgender.ui.theme.KnowledgenderTheme
@@ -39,31 +43,15 @@ import dgsw.stac.knowledgender.ui.theme.LightSky
 import dgsw.stac.knowledgender.ui.theme.pretendard
 import dgsw.stac.knowledgender.util.Utility.BaseButton
 import dgsw.stac.knowledgender.util.Utility.BaseText
-import dgsw.stac.knowledgender.util.Utility.BaseTextField
-import dgsw.stac.knowledgender.util.Utility.ErrorText
 import dgsw.stac.knowledgender.util.Utility.TextFieldSet
 
-class LoginActivity : ComponentActivity() {
-    private val viewModel by viewModels<LoginViewModel>()
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        setContent {
-            KnowledgenderTheme {
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background,
-                ) {
-                    LoginView(viewModel = viewModel)
-                }
-            }
-        }
-    }
-}
 
 @Composable
-fun LoginView(modifier: Modifier = Modifier, viewModel: LoginViewModel = LoginViewModel()) {
+fun LoginScreen(
+    modifier: Modifier = Modifier,
+    viewModel: LoginViewModel,
+    onNavigationRequested: (String) -> Unit
+) {
 
 
     Column(
@@ -104,7 +92,6 @@ private fun Header() {
         )
     }
 }
-
 
 
 @Composable
@@ -155,7 +142,7 @@ private fun Body(viewModel: LoginViewModel) {
                         append("회원가입")
                     }
                 },
-                onClick = {  },
+                onClick = { },
                 style = TextStyle(
                     fontFamily = pretendard,
                     fontWeight = FontWeight.Light,
@@ -168,7 +155,7 @@ private fun Body(viewModel: LoginViewModel) {
                         append("비밀번호를 잊어버렸어요")
                     }
                 },
-                onClick = {  },
+                onClick = { },
                 style = TextStyle(
                     fontFamily = pretendard,
                     fontWeight = FontWeight.Light,
@@ -194,7 +181,7 @@ fun GreetingPreview() {
             modifier = Modifier.fillMaxSize(),
             color = MaterialTheme.colorScheme.background,
         ) {
-            LoginView()
+            LoginScreen()
         }
     }
 }
@@ -208,7 +195,7 @@ fun GreetingDarkPreview() {
             modifier = Modifier.fillMaxSize(),
             color = MaterialTheme.colorScheme.background,
         ) {
-            LoginView()
+            LoginScreen(viewModel = LoginViewModel(),)
         }
     }
 }

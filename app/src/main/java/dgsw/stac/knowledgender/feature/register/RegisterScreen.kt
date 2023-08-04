@@ -1,9 +1,5 @@
 package dgsw.stac.knowledgender.feature.register
 
-import android.os.Bundle
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
-import androidx.activity.viewModels
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
@@ -16,7 +12,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentSize
@@ -51,25 +46,8 @@ import dgsw.stac.knowledgender.util.Utility.BaseText
 import dgsw.stac.knowledgender.util.Utility.BaseTextField
 import dgsw.stac.knowledgender.util.Utility.TextFieldSet
 
-class RegisterActivity : ComponentActivity() {
-    private val viewModel by viewModels<RegisterViewModel>()
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContent {
-            KnowledgenderTheme {
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background
-                ) {
-                    RegisterView(viewModel)
-                }
-            }
-        }
-    }
-}
-
 @Composable
-fun RegisterView(viewModel: RegisterViewModel, modifier: Modifier = Modifier) {
+fun RegisterScreen(viewModel: RegisterViewModel, modifier: Modifier = Modifier) {
     Column(
         Modifier
             .fillMaxSize()
@@ -166,7 +144,10 @@ private fun Body(viewModel: RegisterViewModel) {
             modifier = Modifier.padding(top = 4.dp),
             value = viewModel.name.value,
             placeHolder = "이름을 입력해주세요",
-            onValueChange = { viewModel.name.value = it }
+            onValueChange = {
+                viewModel.name.value = it
+            },
+
         )
         Row(
             Modifier
@@ -320,7 +301,6 @@ private fun Footer(viewModel: RegisterViewModel) {
             )
         )
     }
-
 }
 
 @Preview(showBackground = true)
@@ -331,7 +311,7 @@ fun GreetingPreview2() {
             modifier = Modifier.fillMaxSize(),
             color = MaterialTheme.colorScheme.background
         ) {
-            RegisterView(RegisterViewModel())
+            RegisterScreen(RegisterViewModel())
         }
     }
 }
