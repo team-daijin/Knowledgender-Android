@@ -1,13 +1,17 @@
 package dgsw.stac.knowledgender.util
 
+import android.graphics.Paint.Align
 import androidx.compose.foundation.border
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsFocusedAsState
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.safeContentPadding
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
@@ -46,8 +50,6 @@ import dgsw.stac.knowledgender.ui.theme.pretendard
 
 
 object Utility {
-    const val REGISTERPOST = "대충 통신 주소"
-    const val LOGINGET = ""
 
 
     @Composable
@@ -82,6 +84,7 @@ object Utility {
             isError = isError
         )
     }
+
     @Composable
     fun BaseText(modifier: Modifier = Modifier, text: String, color: Color, style: TextStyle) {
         Text(
@@ -93,10 +96,12 @@ object Utility {
     }
 
     @Composable
-    fun ErrorText(modifier: Modifier = Modifier, isError: Boolean,text: String){
+    fun ErrorText(modifier: Modifier = Modifier, isError: Boolean, text: String) {
         Text(
             text = text,
-            modifier = modifier.wrapContentSize().alpha(if(isError) 1f else 0f),
+            modifier = modifier
+                .wrapContentSize()
+                .alpha(if (isError) 1f else 0f),
             color = LightRed,
             style = TextStyle(
                 fontFamily = pretendard,
@@ -133,7 +138,9 @@ object Utility {
             value = value,
             onValueChange = onValueChange,
             interactionSource = interactionSource,
-            visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
+            visualTransformation =
+            if (isPw && (!passwordVisible)) PasswordVisualTransformation()
+            else VisualTransformation.None,
             decorationBox = { innerTextField ->
                 Box(
                     modifier = modifier
@@ -144,28 +151,32 @@ object Utility {
                             color = if (textFieldError) DarkestRed else if (isFocused) BasePurple else LighterSky,
                             RoundedCornerShape(8.dp)
                         ),
+                    Alignment.CenterStart,
 
                     ) {
-                    if (value.isEmpty()) {
-                        Text(
-                            placeHolder,
-                            color = LighterBlack,
-                            style = TextStyle(
-                                fontSize = 16.sp,
-                                fontFamily = pretendard,
-                                fontWeight = FontWeight.Normal
-                            ),
-                            modifier = Modifier
-                                .align(Alignment.CenterStart)
-                                .padding(start = 16.dp)
-                        )
+                    Box(modifier = Modifier.padding(start = 16.dp)) {
+                        if (value.isEmpty()) {
+                            Text(
+                                placeHolder,
+                                color = LighterBlack,
+                                style = TextStyle(
+                                    fontSize = 16.sp,
+                                    fontFamily = pretendard,
+                                    fontWeight = FontWeight.Normal
+                                ),
+                                modifier = Modifier
+                            )
+                        }
+                        innerTextField()
                     }
-                    innerTextField()
-                    if (isPw){
-                        IconButton(onClick = {passwordVisible = !passwordVisible},modifier = Modifier
-                            .align(Alignment.CenterEnd)
-                            .padding(end = 12.dp)){
-                            Icon(imageVector  = image, description)
+
+                    if (isPw) {
+                        IconButton(
+                            onClick = { passwordVisible = !passwordVisible }, modifier = Modifier
+                                .align(Alignment.CenterEnd)
+                                .padding(end = 12.dp)
+                        ) {
+                            Icon(imageVector = image, description)
                         }
                     }
                 }

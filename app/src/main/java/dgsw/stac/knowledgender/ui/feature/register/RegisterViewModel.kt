@@ -1,4 +1,4 @@
-package dgsw.stac.knowledgender.feature.register
+package dgsw.stac.knowledgender.ui.feature.register
 
 import android.util.Log
 import androidx.compose.runtime.mutableStateOf

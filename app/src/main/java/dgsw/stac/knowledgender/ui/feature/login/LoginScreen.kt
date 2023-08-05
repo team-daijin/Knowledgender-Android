@@ -1,4 +1,4 @@
-package dgsw.stac.knowledgender.feature.login
+package dgsw.stac.knowledgender.ui.feature.login
 
 import android.content.res.Configuration.UI_MODE_NIGHT_NO
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
@@ -33,8 +33,9 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import dgsw.stac.knowledgender.feature.register.RegisterScreen
-import dgsw.stac.knowledgender.feature.register.RegisterViewModel
+import dgsw.stac.knowledgender.ui.Route
+import dgsw.stac.knowledgender.ui.feature.register.RegisterScreen
+import dgsw.stac.knowledgender.ui.feature.register.RegisterViewModel
 import dgsw.stac.knowledgender.ui.theme.BasePurple
 import dgsw.stac.knowledgender.ui.theme.DarkestPurple
 import dgsw.stac.knowledgender.ui.theme.KnowledgenderTheme
@@ -61,7 +62,7 @@ fun LoginScreen(
         Arrangement.SpaceEvenly
     ) {
         Header()
-        Body(viewModel)
+        Body(viewModel, onNavigationRequested = onNavigationRequested)
         Footer()
     }
 }
@@ -95,7 +96,7 @@ private fun Header() {
 
 
 @Composable
-private fun Body(viewModel: LoginViewModel) {
+private fun Body(viewModel: LoginViewModel, onNavigationRequested: (String) -> Unit) {
     Column() {
         TextFieldSet(
             textContent = "아이디",
@@ -142,7 +143,7 @@ private fun Body(viewModel: LoginViewModel) {
                         append("회원가입")
                     }
                 },
-                onClick = { },
+                onClick = { onNavigationRequested(Route.REGISTER) },
                 style = TextStyle(
                     fontFamily = pretendard,
                     fontWeight = FontWeight.Light,
@@ -181,7 +182,9 @@ fun GreetingPreview() {
             modifier = Modifier.fillMaxSize(),
             color = MaterialTheme.colorScheme.background,
         ) {
-            LoginScreen()
+            LoginScreen(viewModel = LoginViewModel(),onNavigationRequested = {
+
+            })
         }
     }
 }
@@ -195,7 +198,9 @@ fun GreetingDarkPreview() {
             modifier = Modifier.fillMaxSize(),
             color = MaterialTheme.colorScheme.background,
         ) {
-            LoginScreen(viewModel = LoginViewModel(),)
+            LoginScreen(viewModel = LoginViewModel(),onNavigationRequested = {
+
+            })
         }
     }
 }

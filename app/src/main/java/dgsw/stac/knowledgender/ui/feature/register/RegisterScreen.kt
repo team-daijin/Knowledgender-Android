@@ -1,4 +1,4 @@
-package dgsw.stac.knowledgender.feature.register
+package dgsw.stac.knowledgender.ui.feature.register
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
@@ -15,7 +15,10 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.ClickableText
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
@@ -26,13 +29,17 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.sd.lib.compose.wheel_picker.FVerticalWheelPicker
 import dgsw.stac.knowledgender.R
+import dgsw.stac.knowledgender.ui.Route
 import dgsw.stac.knowledgender.ui.theme.BasePurple
 import dgsw.stac.knowledgender.ui.theme.DarkBlack
 import dgsw.stac.knowledgender.ui.theme.DarkestBlack
@@ -46,17 +53,20 @@ import dgsw.stac.knowledgender.util.Utility.BaseText
 import dgsw.stac.knowledgender.util.Utility.BaseTextField
 import dgsw.stac.knowledgender.util.Utility.TextFieldSet
 
+
 @Composable
-fun RegisterScreen(viewModel: RegisterViewModel, modifier: Modifier = Modifier) {
+fun RegisterScreen(viewModel: RegisterViewModel, modifier: Modifier = Modifier,onNavigationRequested: (String)->Unit) {
+    val scrollState = rememberScrollState()
     Column(
         Modifier
             .fillMaxSize()
-            .padding(start = 32.dp, top = 60.dp, end = 32.dp, bottom = 32.dp),
+            .padding(start = 32.dp, top = 60.dp, end = 32.dp, bottom = 32.dp)
+            .verticalScroll(scrollState),
         Arrangement.SpaceBetween
     ) {
         Header()
         Body(viewModel)
-        Footer(viewModel)
+        Footer(viewModel,onNavigationRequested)
     }
 
 }
@@ -261,7 +271,7 @@ private fun Body(viewModel: RegisterViewModel) {
 }
 
 @Composable
-private fun Footer(viewModel: RegisterViewModel) {
+private fun Footer(viewModel: RegisterViewModel,onNavigationRequested: (String) -> Unit) {
     Column {
         BaseButton(
             onClick = {
@@ -300,6 +310,22 @@ private fun Footer(viewModel: RegisterViewModel) {
                 fontSize = 16.sp
             )
         )
+        ClickableText(
+            text = buildAnnotatedString {
+                withStyle(style = SpanStyle(color = BasePurple)) {
+                    append("로그인")
+                }
+            },
+            modifier = Modifier
+                .padding(top = 16.dp)
+                .align(Alignment.End),
+            onClick = { onNavigationRequested(Route.LOGIN) },
+            style = TextStyle(
+                fontFamily = pretendard,
+                fontWeight = FontWeight.Light,
+                fontSize = 16.sp
+            )
+        )
     }
 }
 
@@ -311,7 +337,9 @@ fun GreetingPreview2() {
             modifier = Modifier.fillMaxSize(),
             color = MaterialTheme.colorScheme.background
         ) {
-            RegisterScreen(RegisterViewModel())
+            RegisterScreen(RegisterViewModel()) {
+
+            }
         }
     }
 }

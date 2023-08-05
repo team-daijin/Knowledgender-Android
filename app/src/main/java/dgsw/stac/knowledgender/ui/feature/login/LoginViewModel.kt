@@ -1,4 +1,4 @@
-package dgsw.stac.knowledgender.feature.login
+package dgsw.stac.knowledgender.ui.feature.login
 
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel

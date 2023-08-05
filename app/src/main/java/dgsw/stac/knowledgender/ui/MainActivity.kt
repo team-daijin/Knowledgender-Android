@@ -1,4 +1,4 @@
-package dgsw.stac.knowledgender.feature
+package dgsw.stac.knowledgender.ui
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -15,8 +15,10 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import dagger.hilt.android.AndroidEntryPoint
-import dgsw.stac.knowledgender.feature.login.LoginScreen
-import dgsw.stac.knowledgender.feature.login.LoginViewModel
+import dgsw.stac.knowledgender.ui.feature.login.LoginScreen
+import dgsw.stac.knowledgender.ui.feature.login.LoginViewModel
+import dgsw.stac.knowledgender.ui.feature.register.RegisterScreen
+import dgsw.stac.knowledgender.ui.feature.register.RegisterViewModel
 import dgsw.stac.knowledgender.ui.theme.KnowledgenderTheme
 
 @AndroidEntryPoint
@@ -42,16 +44,19 @@ private fun KnowledgenderScreens() {
     val navController = rememberNavController()
     NavHost(
         navController = navController,
-        startDestination = "LoginScreen"
+        startDestination = Route.LOGIN
     ) {
-        composable("LoginScreen") {
+        composable(
+            "LoginScreen",
+
+        ) {
             Column {
                 LoginDestination(navController = navController)
             }
         }
-        composable("LoginScreen") {
+        composable("RegisterScreen") {
             Column {
-
+                RegisterDestination(navController = navController)
             }
         }
     }
@@ -66,4 +71,19 @@ private fun LoginDestination(navController: NavHostController) {
             navController.navigate(it)
         }
     )
+}
+@Composable
+private fun RegisterDestination(navController: NavHostController) {
+    val viewModel: RegisterViewModel = hiltViewModel()
+    RegisterScreen(
+        viewModel = viewModel,
+        onNavigationRequested = {
+            navController.navigate(it)
+        }
+    )
+}
+
+object Route {
+    const val LOGIN = "LoginScreen"
+    const val REGISTER = "RegisterScreen"
 }
