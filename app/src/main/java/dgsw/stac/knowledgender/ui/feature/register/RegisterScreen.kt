@@ -140,6 +140,14 @@ private fun Body(viewModel: RegisterViewModel) {
             isError = viewModel.pwError,
             isPw = true
         )
+        TextFieldSet(
+            textContent = "비밀번호 확인",
+            textFieldPlaceHolder = "비밀번호를 다시 입력해주세요",
+            errorMsg = "비밀번호가 다릅니다",
+            value = viewModel.pwCheck,
+            isError = viewModel.pwCheckError,
+            isPw = true
+        )
         BaseText(
             modifier = Modifier.padding(top = 8.dp),
             text = "이름",

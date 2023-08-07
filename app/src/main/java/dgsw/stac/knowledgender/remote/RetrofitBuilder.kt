@@ -8,7 +8,7 @@ object RetrofitBuilder {
 
     init {
         val retrofit = Retrofit.Builder()
-            .baseUrl("대충 주소")
+            .baseUrl("52.78.246.108:8080")
             .addConverterFactory(GsonConverterFactory.create())
             .build()
 

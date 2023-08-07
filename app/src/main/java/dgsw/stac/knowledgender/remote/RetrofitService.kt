@@ -20,7 +20,7 @@ interface RetrofitService {
     @POST("/api/auth/login")
     suspend fun login(
         @Body login: LoginRequest
-    ): Boolean
+    ): LoginResponse
 
     @POST()
     suspend fun fetchUsername(): String

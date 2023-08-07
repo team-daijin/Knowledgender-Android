@@ -12,8 +12,10 @@ class RegisterViewModel: ViewModel() {
     val name = mutableStateOf("")
     val age = mutableStateOf(0)
     val gender = mutableStateOf("")
+    val pwCheck = mutableStateOf("")
     var idError = false
     var pwError = false
+    var pwCheckError = false
 
 //    fun registerPOST(userInfo: Register) {
 //        RetrofitBuilder.retrofitService.register(userInfo).enqueue(object : Callback<Boolean> {
@@ -32,9 +34,9 @@ class RegisterViewModel: ViewModel() {
         kotlin.runCatching {
             RetrofitBuilder.retrofitService.register(userInfo)
         }.onSuccess { response ->
-            response
+            Log.d("euya", "회원가입 성공")
         }.onFailure {
-            Log.d("euya", "실패")
+            Log.d("euya", "회원가입 실패")
         }
     }
 }
