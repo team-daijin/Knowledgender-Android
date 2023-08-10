@@ -2,10 +2,6 @@ package dgsw.stac.knowledgender.ui.feature.login
 
 import android.content.res.Configuration.UI_MODE_NIGHT_NO
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
-import android.os.Bundle
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
-import androidx.activity.viewModels
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -30,21 +26,21 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
-import androidx.navigation.compose.rememberNavController
+import dgsw.stac.knowledgender.R
 import dgsw.stac.knowledgender.ui.Route
-import dgsw.stac.knowledgender.ui.feature.register.RegisterScreen
-import dgsw.stac.knowledgender.ui.feature.register.RegisterViewModel
+import dgsw.stac.knowledgender.ui.components.BaseButton
+import dgsw.stac.knowledgender.ui.components.BaseText
+import dgsw.stac.knowledgender.ui.components.TextFieldSet
 import dgsw.stac.knowledgender.ui.theme.BasePurple
 import dgsw.stac.knowledgender.ui.theme.DarkestPurple
 import dgsw.stac.knowledgender.ui.theme.KnowledgenderTheme
 import dgsw.stac.knowledgender.ui.theme.LightBlack
 import dgsw.stac.knowledgender.ui.theme.LightSky
 import dgsw.stac.knowledgender.ui.theme.pretendard
-import dgsw.stac.knowledgender.util.Utility.BaseButton
-import dgsw.stac.knowledgender.util.Utility.BaseText
-import dgsw.stac.knowledgender.util.Utility.TextFieldSet
+import dgsw.stac.knowledgender.util.Utility.getStringFromResource
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 
 @Composable
@@ -99,22 +95,27 @@ private fun Header() {
 private fun Body(viewModel: LoginViewModel, onNavigationRequested: (String) -> Unit) {
     Column() {
         TextFieldSet(
-            textContent = "아이디",
-            textFieldPlaceHolder = "아이디를 입력해주세요",
-            errorMsg = "아이디를 다시 입력해주세요",
+            textContent = getStringFromResource(value = R.string.id),
+            textFieldPlaceHolder = getStringFromResource(value = R.string.id_placeholder),
+            errorMsg = getStringFromResource(value = R.string.id_wrong),
             value = viewModel.id,
             isError = viewModel.idError
         )
         TextFieldSet(
-            textContent = "비밀번호",
-            textFieldPlaceHolder = "비밀번호를 입력해주세요",
-            errorMsg = "비밀번호를 다시 입력해주세요",
+            textContent = getStringFromResource(value = R.string.pw),
+            textFieldPlaceHolder = getStringFromResource(value = R.string.pw_placeholder),
+            errorMsg = getStringFromResource(value = R.string.pw_wrong),
             value = viewModel.pw,
             isError = viewModel.pwError,
             isPw = true
         )
         BaseButton(
-            onClick = { },
+            onClick = {
+                CoroutineScope(Dispatchers.IO).launch {
+                    viewModel.loginPOST()
+                }
+
+            },
             modifier = Modifier
                 .fillMaxWidth()
                 .heightIn(32.dp)
@@ -122,7 +123,7 @@ private fun Body(viewModel: LoginViewModel, onNavigationRequested: (String) -> U
             color = ButtonDefaults.buttonColors(
                 containerColor = if (viewModel.id.value.isNotEmpty() && viewModel.pw.value.isNotEmpty()) BasePurple else LightSky
             ),
-            text = "로그인",
+            text = getStringFromResource(value = R.string.login),
             textColor = Color.White,
             textStyle = TextStyle(
                 fontFamily = pretendard,
@@ -140,7 +141,7 @@ private fun Body(viewModel: LoginViewModel, onNavigationRequested: (String) -> U
             ClickableText(
                 text = buildAnnotatedString {
                     withStyle(style = SpanStyle(color = BasePurple)) {
-                        append("회원가입")
+                        append(getStringFromResource(value = R.string.register))
                     }
                 },
                 onClick = { onNavigationRequested(Route.REGISTER) },
@@ -164,7 +165,6 @@ private fun Body(viewModel: LoginViewModel, onNavigationRequested: (String) -> U
                 )
             )
         }
-
     }
 }
 
@@ -182,7 +182,7 @@ fun GreetingPreview() {
             modifier = Modifier.fillMaxSize(),
             color = MaterialTheme.colorScheme.background,
         ) {
-            LoginScreen(viewModel = LoginViewModel(),onNavigationRequested = {
+            LoginScreen(viewModel = LoginViewModel(), onNavigationRequested = {
 
             })
         }
@@ -198,7 +198,7 @@ fun GreetingDarkPreview() {
             modifier = Modifier.fillMaxSize(),
             color = MaterialTheme.colorScheme.background,
         ) {
-            LoginScreen(viewModel = LoginViewModel(),onNavigationRequested = {
+            LoginScreen(viewModel = LoginViewModel(), onNavigationRequested = {
 
             })
         }

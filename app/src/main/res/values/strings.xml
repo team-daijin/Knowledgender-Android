@@ -5,4 +5,36 @@
     <string name="title_home">Home</string>
     <string name="title_dashboard">Dashboard</string>
     <string name="title_notifications">Notifications</string>
+
+    <string name="title">알고싶었성</string>
+    <string name="subtitle">우리가 몰랐던 성지식</string>
+
+    <string name="login">로그인</string>
+    <string name="register">회원가입</string>
+    <string name="register_description">회원가입을 위해 필요한 정보를 입력해 주세요</string>
+
+    <string name="id_placeholder">아이디를 입력해주세요</string>
+    <string name="pw_placeholder">비밀번호를 입력해주세요</string>
+    <string name="pw_check_placeholder">비밀번호를 다시 입력해주세요</string>
+    <string name="name_placeholder">이름을 입력해주세요</string>
+
+    <string name="complete">완료하기</string>
+
+    <string name="id_wrong">아이디를 다시 입력해주세요</string>
+    <string name="id_duplicated">이미 존재하는 아이디입니다</string>
+    <string name="pw_wrong">비밀번호를 다시 입력해주세요</string>
+    <string name="pw_unfulfilled">영문, 숫자, 특수기호 포함 8자리 이상으로 입력해주세요</string>
+    <string name="pw_check_dismatch">비밀번호가 일치하지 않습니다</string>
+
+    <string name="id">아이디</string>
+    <string name="pw">비밀번호</string>
+    <string name="pw_check">비밀번호 확인</string>
+    <string name="name">이름</string>
+    <string name="age">나이(세)</string>
+    <string name="gender">성</string>
+
+    <string name="gender_male">남성</string>
+    <string name="gender_female">여성</string>
+    <string name="title_activity_my_page">MyPageActivity</string>
+
 </resources>

@@ -25,6 +25,8 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -38,8 +40,13 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.sd.lib.compose.wheel_picker.FVerticalWheelPicker
+import com.sd.lib.compose.wheel_picker.rememberFWheelPickerState
 import dgsw.stac.knowledgender.R
 import dgsw.stac.knowledgender.ui.Route
+import dgsw.stac.knowledgender.ui.components.BaseButton
+import dgsw.stac.knowledgender.ui.components.BaseText
+import dgsw.stac.knowledgender.ui.components.BaseTextField
+import dgsw.stac.knowledgender.ui.components.TextFieldSet
 import dgsw.stac.knowledgender.ui.theme.BasePurple
 import dgsw.stac.knowledgender.ui.theme.DarkBlack
 import dgsw.stac.knowledgender.ui.theme.DarkestBlack
@@ -48,25 +55,27 @@ import dgsw.stac.knowledgender.ui.theme.KnowledgenderTheme
 import dgsw.stac.knowledgender.ui.theme.LightBlack
 import dgsw.stac.knowledgender.ui.theme.LightSky
 import dgsw.stac.knowledgender.ui.theme.pretendard
-import dgsw.stac.knowledgender.util.Utility.BaseButton
-import dgsw.stac.knowledgender.util.Utility.BaseText
-import dgsw.stac.knowledgender.util.Utility.BaseTextField
-import dgsw.stac.knowledgender.util.Utility.TextFieldSet
+import dgsw.stac.knowledgender.util.Utility.getStringFromResource
 
 
 @Composable
-fun RegisterScreen(viewModel: RegisterViewModel, modifier: Modifier = Modifier,onNavigationRequested: (String)->Unit) {
+fun RegisterScreen(
+    viewModel: RegisterViewModel,
+    modifier: Modifier = Modifier,
+    onNavigationRequested: (String) -> Unit
+) {
     val scrollState = rememberScrollState()
     Column(
         Modifier
             .fillMaxSize()
             .padding(start = 32.dp, top = 60.dp, end = 32.dp, bottom = 32.dp)
-            .verticalScroll(scrollState),
-        Arrangement.SpaceBetween
+            .verticalScroll(scrollState)
     ) {
         Header()
+        Box(modifier = Modifier.height(32.dp))
         Body(viewModel)
-        Footer(viewModel,onNavigationRequested)
+        Box(modifier = Modifier.height(32.dp))
+        Footer(viewModel, onNavigationRequested)
     }
 
 }
@@ -82,7 +91,7 @@ private fun Header() {
         ) {
             Image(
                 painter = painterResource(id = R.drawable.logo_register),
-                contentDescription = "",
+                contentDescription = "logo",
                 modifier = Modifier.height(50.dp)
 
             )
@@ -100,7 +109,7 @@ private fun Header() {
 
         BaseText(
             modifier = Modifier.padding(top = 8.dp),
-            text = "회원가입",
+            text = getStringFromResource(value = R.string.register),
             color = DarkestBlack,
             style = TextStyle(
                 fontFamily = pretendard,
@@ -110,7 +119,7 @@ private fun Header() {
         )
         BaseText(
             modifier = Modifier.padding(top = 4.dp),
-            text = "회원가입을 위해 필요한 정보를 입력해 주세요",
+            text = getStringFromResource(value = R.string.register_description),
             color = DarkBlack,
             style = TextStyle(
                 fontFamily = pretendard,
@@ -123,34 +132,35 @@ private fun Header() {
 
 @Composable
 private fun Body(viewModel: RegisterViewModel) {
+    val wheelPickerState = rememberFWheelPickerState()
     Column(
     ) {
         TextFieldSet(
-            textContent = "아이디",
-            textFieldPlaceHolder = "아이디를 입력해주세요",
-            errorMsg = "이미 존재하는 아이디입니다",
+            textContent = getStringFromResource(value = R.string.id),
+            textFieldPlaceHolder = getStringFromResource(value = R.string.id_placeholder),
+            errorMsg = getStringFromResource(value = R.string.id_duplicated),
             value = viewModel.id,
             isError = viewModel.idError
         )
         TextFieldSet(
-            textContent = "비밀번호",
-            textFieldPlaceHolder = "비밀번호를 입력해주세요",
-            errorMsg = "영문, 숫자, 특수기호 포함 8자리 이상으로 입력해주세요",
+            textContent = getStringFromResource(value = R.string.pw),
+            textFieldPlaceHolder = getStringFromResource(value = R.string.pw_placeholder),
+            errorMsg = getStringFromResource(value = R.string.pw_unfulfilled),
             value = viewModel.pw,
             isError = viewModel.pwError,
             isPw = true
         )
         TextFieldSet(
-            textContent = "비밀번호 확인",
-            textFieldPlaceHolder = "비밀번호를 다시 입력해주세요",
-            errorMsg = "비밀번호가 다릅니다",
+            textContent = getStringFromResource(value = R.string.pw_check),
+            textFieldPlaceHolder = getStringFromResource(value = R.string.pw_check_placeholder),
+            errorMsg = getStringFromResource(value = R.string.pw_check_dismatch),
             value = viewModel.pwCheck,
             isError = viewModel.pwCheckError,
             isPw = true
         )
         BaseText(
             modifier = Modifier.padding(top = 8.dp),
-            text = "이름",
+            text = getStringFromResource(value = R.string.name),
             color = DarkestPurple,
             style = TextStyle(
                 fontSize = 16.sp,
@@ -161,11 +171,10 @@ private fun Body(viewModel: RegisterViewModel) {
         BaseTextField(
             modifier = Modifier.padding(top = 4.dp),
             value = viewModel.name.value,
-            placeHolder = "이름을 입력해주세요",
+            placeHolder = getStringFromResource(value = R.string.name_placeholder),
             onValueChange = {
                 viewModel.name.value = it
             },
-
         )
         Row(
             Modifier
@@ -179,7 +188,7 @@ private fun Body(viewModel: RegisterViewModel) {
             ) {
                 BaseText(
                     modifier = Modifier.padding(bottom = 4.dp),
-                    text = "나이(세)",
+                    text = getStringFromResource(value = R.string.age),
                     color = BasePurple,
                     style = TextStyle(
                         fontFamily = pretendard,
@@ -194,10 +203,16 @@ private fun Body(viewModel: RegisterViewModel) {
                 ) {
                     FVerticalWheelPicker(
                         modifier = Modifier.width(158.dp),
-                        count = 100
-                    ) {
-                        Text(it.toString())
-                        viewModel.age.value = it
+                        count = 100,
+                        state = wheelPickerState
+                    ) { index ->
+                        Text(index.toString())
+                        LaunchedEffect(state) {
+                            snapshotFlow { state.currentIndex }
+                                .collect { ageValue ->
+                                    viewModel.age.value = ageValue
+                                }
+                        }
                     }
                 }
             }
@@ -206,7 +221,7 @@ private fun Body(viewModel: RegisterViewModel) {
             ) {
                 BaseText(
                     modifier = Modifier.padding(bottom = 4.dp),
-                    text = "성별",
+                    text = getStringFromResource(value = R.string.gender),
                     color = BasePurple,
                     style = TextStyle(
                         fontFamily = pretendard,
@@ -230,7 +245,7 @@ private fun Body(viewModel: RegisterViewModel) {
                         )
                     ) {
                         Text(
-                            text = "남성",
+                            text = getStringFromResource(value = R.string.gender_male),
                             style = TextStyle(
                                 fontFamily = pretendard,
                                 fontWeight = FontWeight.Normal,
@@ -258,7 +273,7 @@ private fun Body(viewModel: RegisterViewModel) {
                         )
                     ) {
                         Text(
-                            text = "여성",
+                            text = getStringFromResource(value = R.string.gender_female),
                             style = TextStyle(
                                 fontFamily = pretendard,
                                 fontWeight = FontWeight.Normal,
@@ -279,24 +294,16 @@ private fun Body(viewModel: RegisterViewModel) {
 }
 
 @Composable
-private fun Footer(viewModel: RegisterViewModel,onNavigationRequested: (String) -> Unit) {
-    Column {
+private fun Footer(viewModel: RegisterViewModel, onNavigationRequested: (String) -> Unit) {
+    Column(Modifier.wrapContentHeight()) {
         BaseButton(
             onClick = {
-//                viewModel.registerPOST(
-//                    RegisterRequest(
-//                        accountId = viewModel.id.value,
-//                        password = viewModel.pw.value,
-//                        name = viewModel.name.value,
-//                        age = viewModel.age.value,
-//                        gender = viewModel.gender.value
-//                    )
-//                )
+                viewModel.registerPOST()
+
             },
             modifier = Modifier
                 .fillMaxWidth()
-                .heightIn(32.dp)
-                .padding(top = 22.dp),
+                .heightIn(45.dp),
             color = ButtonDefaults.buttonColors(
                 containerColor = if (
                     viewModel.id.value.isNotEmpty() &&

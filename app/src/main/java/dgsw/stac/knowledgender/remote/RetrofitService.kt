@@ -1,8 +1,11 @@
 package dgsw.stac.knowledgender.remote
 
 import retrofit2.Call
+import retrofit2.Response
 import retrofit2.http.Body
+import retrofit2.http.GET
 import retrofit2.http.POST
+import retrofit2.http.Path
 
 interface RetrofitService {
 //    @POST()
@@ -10,18 +13,15 @@ interface RetrofitService {
 //        @Body register: Register
 //    ): Call<Boolean>
 
-
-    @POST("/api/auth/register")
-    suspend fun register(
-        @Body register: RegisterRequest
-    ): Boolean
+    @POST("api/auth/user/register")
+    suspend fun register(@Body register: RegisterRequest)
 
 
-    @POST("/api/auth/login")
-    suspend fun login(
-        @Body login: LoginRequest
-    ): LoginResponse
+    @POST("api/auth/login")
+    suspend fun login(@Body login: LoginRequest): LoginResponse
 
-    @POST()
-    suspend fun fetchUsername(): String
+    @GET("api/card/{id}")
+    suspend fun getCardNewsDetail(
+        @Path("id") cardNewsId: Int
+    ): CardNewsDetailResponse
 }
