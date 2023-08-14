@@ -25,3 +25,17 @@ data class CardNewsDetailResponse(
     val content: String,
     val image: String
 )
+
+data class CardCategoryResponse(
+    val id: UUID,
+    val title: String,
+    val writer: String,
+    val category: Category,
+    val content: String,
+    val image: String
+)
+data class BannerResponse(
+    val id : UUID,
+    val banner : String,
+    val redirect : String
+)
