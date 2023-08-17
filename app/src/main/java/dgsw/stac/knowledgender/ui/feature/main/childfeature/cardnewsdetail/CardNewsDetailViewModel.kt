@@ -16,12 +16,12 @@ class CardNewsDetailViewModel @Inject constructor() : ViewModel() {
 
 
     private val _cardNewsDetail = MutableStateFlow<CardNewsDetailResponse?>(null)
-    val cardNewsDetail: StateFlow<CardNewsDetailResponse?> = _cardNewsDetail!!.asStateFlow()
+    val cardNewsDetail: StateFlow<CardNewsDetailResponse?> = _cardNewsDetail.asStateFlow()
 
     fun getDetailInfo(id: String) = viewModelScope.launch {
         kotlin.runCatching {
             RetrofitBuilder.apiService.getCardNewsDetail(id)
-        }.onSuccess { _cardNewsDetail?.value = it }
+        }.onSuccess { _cardNewsDetail.value = it }
     }
 
 
