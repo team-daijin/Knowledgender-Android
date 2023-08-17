@@ -37,7 +37,6 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import dagger.hilt.android.AndroidEntryPoint
 import dgsw.stac.knowledgender.R
-import dgsw.stac.knowledgender.remote.CardNewsDetailResponse
 import dgsw.stac.knowledgender.ui.feature.main.childfeature.cardnews.CardNewsScreen
 import dgsw.stac.knowledgender.ui.feature.main.childfeature.cardnews.CardNewsViewModel
 import dgsw.stac.knowledgender.ui.feature.main.childfeature.cardnewsdetail.CardNewsDetailScreen
@@ -179,17 +178,20 @@ fun Navigation(navController: NavHostController) {
 @Composable
 fun CardNewsDestination(category: String, navController: NavHostController) {
     val viewModel: CardNewsViewModel = hiltViewModel()
-    CardNewsScreen(category,viewModel = viewModel){
-        navController.navigate(it)
-    }
+    CardNewsScreen(category, viewModel = viewModel, backRequested = {navController.popBackStack()}, onNavigateRequested = { navController.navigate(it) })
 }
 
 @Composable
 fun CardNewsDetailDestination(id: String, navController: NavHostController) {
     val viewModel: CardNewsDetailViewModel = hiltViewModel()
-    CardNewsDetailScreen(id = id,viewModel = viewModel){
-        navController.navigate(it)
-    }
+    CardNewsDetailScreen(
+        id = id,
+        viewModel = viewModel,
+        onNavigationRequested = { navController.navigate(it) },
+        backRequested = {
+            navController.popBackStack()
+        }
+    )
 }
 
 @Composable
