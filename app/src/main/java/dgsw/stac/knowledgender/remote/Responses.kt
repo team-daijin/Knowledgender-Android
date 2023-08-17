@@ -1,7 +1,5 @@
 package dgsw.stac.knowledgender.remote
 
-import java.util.UUID
-
 enum class Category{
     HEART,
     BODY,
@@ -18,7 +16,7 @@ data class LoginResponse(
 //"refreshToken": String
 
 data class CardNewsDetailResponse(
-    val id: UUID,
+    val id: String,
     val title: String,
     val writer: String,
     val category: Category,
@@ -27,7 +25,7 @@ data class CardNewsDetailResponse(
 )
 
 data class CardCategoryResponse(
-    val id: UUID,
+    val id: String,
     val title: String,
     val writer: String,
     val category: Category,
@@ -35,7 +33,7 @@ data class CardCategoryResponse(
     val image: String
 )
 data class BannerResponse(
-    val id : UUID,
+    val id : String,
     val banner : String,
     val redirect : String
 )

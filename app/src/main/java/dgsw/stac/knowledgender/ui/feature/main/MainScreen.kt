@@ -12,7 +12,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.BottomNavigation
 import androidx.compose.material.BottomNavigationItem
 import androidx.compose.material3.MaterialTheme
@@ -30,13 +29,22 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import dagger.hilt.android.AndroidEntryPoint
 import dgsw.stac.knowledgender.R
-import dgsw.stac.knowledgender.ui.feature.main.ui.theme.KnowledgenderAndroidTheme
+import dgsw.stac.knowledgender.remote.CardNewsDetailResponse
+import dgsw.stac.knowledgender.ui.feature.main.childfeature.cardnews.CardNewsScreen
+import dgsw.stac.knowledgender.ui.feature.main.childfeature.cardnews.CardNewsViewModel
+import dgsw.stac.knowledgender.ui.feature.main.childfeature.cardnewsdetail.CardNewsDetailScreen
+import dgsw.stac.knowledgender.ui.feature.main.childfeature.cardnewsdetail.CardNewsDetailViewModel
+import dgsw.stac.knowledgender.ui.feature.main.childfeature.home.HomeScreen
+import dgsw.stac.knowledgender.ui.feature.main.childfeature.home.HomeViewModel
+import dgsw.stac.knowledgender.ui.feature.main.childfeature.map.MapScreen
 import dgsw.stac.knowledgender.ui.theme.KnowledgenderTheme
 import dgsw.stac.knowledgender.ui.theme.LightPurple
 import dgsw.stac.knowledgender.ui.theme.LighterBlack
@@ -61,14 +69,17 @@ class MainScreen : ComponentActivity() {
 }
 
 sealed class BottomNavItem(val name: String, val icon: Int, val route: String) {
-    object Home : BottomNavItem(name = "Home", icon = R.drawable.home, HOME)
     object Center : BottomNavItem(name = "Center", icon = R.drawable.center, CENTER)
+    object Home : BottomNavItem(name = "Home", icon = R.drawable.home, HOME)
     object My : BottomNavItem(name = "My", icon = R.drawable.my, MY)
 }
 
 const val HOME = "HOME"
 const val CENTER = "CENTER"
 const val MY = "MY"
+const val CARDNEWS = "CARDNEWS"
+const val CARDNEWSDETAIL = "CARDNEWSDETAIL"
+
 @Composable
 fun MainBottomNav() {
     val navController = rememberNavController()
@@ -139,40 +150,70 @@ fun Navigation(navController: NavHostController) {
             HomeScreenDestination(navController = navController)
         }
         composable(BottomNavItem.Center.route) {
-            CenterScreenDestination()
+            MapScreenDestination()
         }
         composable(BottomNavItem.My.route) {
             MyScreenDestination()
         }
+        composable(
+            "$CARDNEWS/{category}",
+            listOf(navArgument("category") {
+                type = NavType.StringType
+            })
+        ) {
+            val category = it.arguments?.getString("category")
+            CardNewsDestination(category = category!!, navController = navController)
+        }
+        composable(
+            "$CARDNEWSDETAIL/{id}",
+            listOf(navArgument("id") {
+                type = NavType.StringType
+            })
+        ) {
+            val id = it.arguments?.getString("id")
+            CardNewsDetailDestination(id = id!!, navController = navController)
+        }
+    }
+}
+
+@Composable
+fun CardNewsDestination(category: String, navController: NavHostController) {
+    val viewModel: CardNewsViewModel = hiltViewModel()
+    CardNewsScreen(category,viewModel = viewModel){
+        navController.navigate(it)
+    }
+}
+
+@Composable
+fun CardNewsDetailDestination(id: String, navController: NavHostController) {
+    val viewModel: CardNewsDetailViewModel = hiltViewModel()
+    CardNewsDetailScreen(id = id,viewModel = viewModel){
+        navController.navigate(it)
     }
 }
 
 @Composable
 fun HomeScreenDestination(navController: NavHostController) {
-    val viewModel: MainViewModel = hiltViewModel()
-    Column {
-        HomeScreen(viewModel = viewModel)
+    val viewModel: HomeViewModel = hiltViewModel()
+    HomeScreen(viewModel = viewModel) {
+        navController.navigate(it)
     }
 }
 
 @Composable
-fun CenterScreenDestination() {
-    Column {
-
-    }
+fun MapScreenDestination() {
+    MapScreen()
 }
 
 @Composable
 fun MyScreenDestination() {
-    Column {
 
-    }
 }
 
 @Preview(showBackground = true)
 @Composable
 fun GreetingPreview3() {
-    KnowledgenderAndroidTheme {
+    KnowledgenderTheme {
         Surface(
             modifier = Modifier.fillMaxSize(),
             color = MaterialTheme.colorScheme.background,

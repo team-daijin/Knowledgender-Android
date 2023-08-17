@@ -49,7 +49,6 @@ fun BaseTextField(
     val isFocused by interactionSource.collectIsFocusedAsState()
 
     //password toggle's state
-    var password by rememberSaveable { mutableStateOf("") }
     var passwordVisible by rememberSaveable { mutableStateOf(false) }
 
     val image = if (passwordVisible)

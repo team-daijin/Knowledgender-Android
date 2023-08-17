@@ -15,9 +15,12 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.buildAnnotatedString
@@ -26,7 +29,10 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import dgsw.stac.knowledgender.R
+import dgsw.stac.knowledgender.pref.Pref
+import dgsw.stac.knowledgender.pref.PrefImpl
 import dgsw.stac.knowledgender.ui.Route
 import dgsw.stac.knowledgender.ui.components.BaseButton
 import dgsw.stac.knowledgender.ui.components.BaseText
@@ -37,10 +43,6 @@ import dgsw.stac.knowledgender.ui.theme.KnowledgenderTheme
 import dgsw.stac.knowledgender.ui.theme.LightBlack
 import dgsw.stac.knowledgender.ui.theme.LightSky
 import dgsw.stac.knowledgender.ui.theme.pretendard
-import dgsw.stac.knowledgender.util.Utility.getStringFromResource
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 
 
 @Composable
@@ -49,8 +51,6 @@ fun LoginScreen(
     viewModel: LoginViewModel,
     onNavigationRequested: (String) -> Unit
 ) {
-
-
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -79,7 +79,7 @@ private fun Header() {
             )
         )
         BaseText(
-            text = "알고싶었성",
+            text = stringResource(R.string.title),
             color = DarkestPurple,
             style = TextStyle(
                 fontFamily = pretendard,
@@ -93,37 +93,44 @@ private fun Header() {
 
 @Composable
 private fun Body(viewModel: LoginViewModel, onNavigationRequested: (String) -> Unit) {
-    Column() {
+    val isValidLoginData by viewModel.enabledButton.collectAsState()
+
+    Column {
         TextFieldSet(
-            textContent = getStringFromResource(value = R.string.id),
-            textFieldPlaceHolder = getStringFromResource(value = R.string.id_placeholder),
-            errorMsg = getStringFromResource(value = R.string.id_wrong),
+            textContent = stringResource(id = R.string.id),
+            textFieldPlaceHolder = stringResource(id = R.string.id_placeholder),
+            errorMsg = stringResource(id = R.string.id_wrong),
             value = viewModel.id,
-            isError = viewModel.idError
+            isError = viewModel.idError,
+            onValueChange = {
+                viewModel.id = it
+            }
         )
         TextFieldSet(
-            textContent = getStringFromResource(value = R.string.pw),
-            textFieldPlaceHolder = getStringFromResource(value = R.string.pw_placeholder),
-            errorMsg = getStringFromResource(value = R.string.pw_wrong),
+            textContent = stringResource(id = R.string.pw),
+            textFieldPlaceHolder = stringResource(id = R.string.pw_placeholder),
+            errorMsg = stringResource(id = R.string.pw_wrong),
             value = viewModel.pw,
             isError = viewModel.pwError,
-            isPw = true
+            isPw = true,
+            onValueChange = {
+                viewModel.pw = it
+            }
         )
         BaseButton(
             onClick = {
-                CoroutineScope(Dispatchers.IO).launch {
-                    viewModel.loginPOST()
+                if (isValidLoginData) {
+                    viewModel.loginPOST(onNavigationRequested)
                 }
-
             },
             modifier = Modifier
                 .fillMaxWidth()
                 .heightIn(32.dp)
                 .padding(top = 22.dp),
             color = ButtonDefaults.buttonColors(
-                containerColor = if (viewModel.id.value.isNotEmpty() && viewModel.pw.value.isNotEmpty()) BasePurple else LightSky
+                containerColor = if (isValidLoginData) BasePurple else LightSky
             ),
-            text = getStringFromResource(value = R.string.login),
+            text = stringResource(id = R.string.login),
             textColor = Color.White,
             textStyle = TextStyle(
                 fontFamily = pretendard,
@@ -141,7 +148,7 @@ private fun Body(viewModel: LoginViewModel, onNavigationRequested: (String) -> U
             ClickableText(
                 text = buildAnnotatedString {
                     withStyle(style = SpanStyle(color = BasePurple)) {
-                        append(getStringFromResource(value = R.string.register))
+                        append(stringResource(id = R.string.register))
                     }
                 },
                 onClick = { onNavigationRequested(Route.REGISTER) },
@@ -182,7 +189,7 @@ fun GreetingPreview() {
             modifier = Modifier.fillMaxSize(),
             color = MaterialTheme.colorScheme.background,
         ) {
-            LoginScreen(viewModel = LoginViewModel(), onNavigationRequested = {
+            LoginScreen(viewModel = hiltViewModel(), onNavigationRequested = {
 
             })
         }
@@ -198,7 +205,7 @@ fun GreetingDarkPreview() {
             modifier = Modifier.fillMaxSize(),
             color = MaterialTheme.colorScheme.background,
         ) {
-            LoginScreen(viewModel = LoginViewModel(), onNavigationRequested = {
+            LoginScreen(viewModel = hiltViewModel(), onNavigationRequested = {
 
             })
         }

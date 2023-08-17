@@ -26,11 +26,13 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.buildAnnotatedString
@@ -55,7 +57,6 @@ import dgsw.stac.knowledgender.ui.theme.KnowledgenderTheme
 import dgsw.stac.knowledgender.ui.theme.LightBlack
 import dgsw.stac.knowledgender.ui.theme.LightSky
 import dgsw.stac.knowledgender.ui.theme.pretendard
-import dgsw.stac.knowledgender.util.Utility.getStringFromResource
 
 
 @Composable
@@ -109,7 +110,7 @@ private fun Header() {
 
         BaseText(
             modifier = Modifier.padding(top = 8.dp),
-            text = getStringFromResource(value = R.string.register),
+            text = stringResource(id = R.string.register),
             color = DarkestBlack,
             style = TextStyle(
                 fontFamily = pretendard,
@@ -119,7 +120,7 @@ private fun Header() {
         )
         BaseText(
             modifier = Modifier.padding(top = 4.dp),
-            text = getStringFromResource(value = R.string.register_description),
+            text = stringResource(id = R.string.register_description),
             color = DarkBlack,
             style = TextStyle(
                 fontFamily = pretendard,
@@ -136,31 +137,34 @@ private fun Body(viewModel: RegisterViewModel) {
     Column(
     ) {
         TextFieldSet(
-            textContent = getStringFromResource(value = R.string.id),
-            textFieldPlaceHolder = getStringFromResource(value = R.string.id_placeholder),
-            errorMsg = getStringFromResource(value = R.string.id_duplicated),
-            value = viewModel.id,
-            isError = viewModel.idError
+            textContent = stringResource(id = R.string.id),
+            textFieldPlaceHolder = stringResource(id = R.string.id_placeholder),
+            errorMsg = stringResource(id = R.string.id_duplicated),
+            value = viewModel.id.collectAsState().value,
+            isError = viewModel.idError.value,
+            onValueChange = { viewModel.id.value = it }
         )
         TextFieldSet(
-            textContent = getStringFromResource(value = R.string.pw),
-            textFieldPlaceHolder = getStringFromResource(value = R.string.pw_placeholder),
-            errorMsg = getStringFromResource(value = R.string.pw_unfulfilled),
-            value = viewModel.pw,
-            isError = viewModel.pwError,
-            isPw = true
+            textContent = stringResource(id = R.string.pw),
+            textFieldPlaceHolder = stringResource(id = R.string.pw_placeholder),
+            errorMsg = stringResource(id = R.string.pw_unfulfilled),
+            value = viewModel.pw.collectAsState().value,
+            isError = viewModel.pwError.value,
+            isPw = true,
+            onValueChange = { viewModel.pw.value = it }
         )
         TextFieldSet(
-            textContent = getStringFromResource(value = R.string.pw_check),
-            textFieldPlaceHolder = getStringFromResource(value = R.string.pw_check_placeholder),
-            errorMsg = getStringFromResource(value = R.string.pw_check_dismatch),
-            value = viewModel.pwCheck,
-            isError = viewModel.pwCheckError,
-            isPw = true
+            textContent = stringResource(id = R.string.pw_check),
+            textFieldPlaceHolder = stringResource(id = R.string.pw_check_placeholder),
+            errorMsg = stringResource(id = R.string.pw_check_dismatch),
+            value = viewModel.pwCheck.collectAsState().value,
+            isError = viewModel.pwCheckError.value,
+            isPw = true,
+            onValueChange = { viewModel.pwCheck.value = it }
         )
         BaseText(
             modifier = Modifier.padding(top = 8.dp),
-            text = getStringFromResource(value = R.string.name),
+            text = stringResource(id = R.string.name),
             color = DarkestPurple,
             style = TextStyle(
                 fontSize = 16.sp,
@@ -170,8 +174,8 @@ private fun Body(viewModel: RegisterViewModel) {
         )
         BaseTextField(
             modifier = Modifier.padding(top = 4.dp),
-            value = viewModel.name.value,
-            placeHolder = getStringFromResource(value = R.string.name_placeholder),
+            value = viewModel.name.collectAsState().value,
+            placeHolder = stringResource(id = R.string.name_placeholder),
             onValueChange = {
                 viewModel.name.value = it
             },
@@ -188,7 +192,7 @@ private fun Body(viewModel: RegisterViewModel) {
             ) {
                 BaseText(
                     modifier = Modifier.padding(bottom = 4.dp),
-                    text = getStringFromResource(value = R.string.age),
+                    text = stringResource(id = R.string.age),
                     color = BasePurple,
                     style = TextStyle(
                         fontFamily = pretendard,
@@ -221,7 +225,7 @@ private fun Body(viewModel: RegisterViewModel) {
             ) {
                 BaseText(
                     modifier = Modifier.padding(bottom = 4.dp),
-                    text = getStringFromResource(value = R.string.gender),
+                    text = stringResource(id = R.string.gender),
                     color = BasePurple,
                     style = TextStyle(
                         fontFamily = pretendard,
@@ -237,21 +241,21 @@ private fun Body(viewModel: RegisterViewModel) {
                             .height(40.dp),
                         shape = RoundedCornerShape(topStart = 5.dp, bottomStart = 5.dp),
                         colors = ButtonDefaults.buttonColors(
-                            containerColor = if (viewModel.gender.value == "남성") BasePurple else Color.Transparent
+                            containerColor = if (viewModel.gender.collectAsState().value == "남성") BasePurple else Color.Transparent
                         ),
-                        border = if (viewModel.gender.value == "남성") null else BorderStroke(
+                        border = if (viewModel.gender.collectAsState().value == "남성") null else BorderStroke(
                             1.dp,
                             LightSky
                         )
                     ) {
                         Text(
-                            text = getStringFromResource(value = R.string.gender_male),
+                            text = stringResource(id = R.string.gender_male),
                             style = TextStyle(
                                 fontFamily = pretendard,
                                 fontWeight = FontWeight.Normal,
                                 fontSize = 16.sp
                             ),
-                            color = if (viewModel.gender.value == "남성") {
+                            color = if (viewModel.gender.collectAsState().value == "남성") {
                                 Color.White
                             } else {
                                 LightBlack
@@ -265,21 +269,21 @@ private fun Body(viewModel: RegisterViewModel) {
                             .height(40.dp),
                         shape = RoundedCornerShape(topEnd = 5.dp, bottomEnd = 5.dp),
                         colors = ButtonDefaults.buttonColors(
-                            containerColor = if (viewModel.gender.value == "여성") BasePurple else Color.Transparent
+                            containerColor = if (viewModel.gender.collectAsState().value == "여성") BasePurple else Color.Transparent
                         ),
-                        border = if (viewModel.gender.value == "여성") null else BorderStroke(
+                        border = if (viewModel.gender.collectAsState().value == "여성") null else BorderStroke(
                             1.dp,
                             LightSky
                         )
                     ) {
                         Text(
-                            text = getStringFromResource(value = R.string.gender_female),
+                            text = stringResource(id = R.string.gender_female),
                             style = TextStyle(
                                 fontFamily = pretendard,
                                 fontWeight = FontWeight.Normal,
                                 fontSize = 16.sp
                             ),
-                            color = if (viewModel.gender.value == "여성") {
+                            color = if (viewModel.gender.collectAsState().value == "여성") {
                                 Color.White
                             } else {
                                 LightBlack
@@ -298,20 +302,17 @@ private fun Footer(viewModel: RegisterViewModel, onNavigationRequested: (String)
     Column(Modifier.wrapContentHeight()) {
         BaseButton(
             onClick = {
-                viewModel.registerPOST()
-
+                if (viewModel.enabledButton.value) {
+                    viewModel.registerProcess {
+                        onNavigationRequested(Route.LOGIN)
+                    }
+                }
             },
             modifier = Modifier
                 .fillMaxWidth()
                 .heightIn(45.dp),
             color = ButtonDefaults.buttonColors(
-                containerColor = if (
-                    viewModel.id.value.isNotEmpty() &&
-                    viewModel.pw.value.isNotEmpty() &&
-                    viewModel.name.value.isNotEmpty() &&
-                    (viewModel.age.value != 0) &&
-                    viewModel.gender.value.isNotEmpty()
-                ) {
+                containerColor = if (viewModel.enabledButton.collectAsState().value) {
                     BasePurple
                 } else {
                     LightSky

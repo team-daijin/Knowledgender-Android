@@ -21,6 +21,7 @@ val LightBlack = Color(0xFF6C7072)
 val LighterBlack = Color(0xFF72777A)
 val BaseBlack = Color(0xFF404446)
 
+val BaseSky = Color(0xFFD9D9D9)
 val LightSky = Color(0xFFE2E2E2)
 val LighterSky = Color(0xFFF2F4F5)
 

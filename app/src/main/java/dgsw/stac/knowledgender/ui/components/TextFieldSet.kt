@@ -16,9 +16,10 @@ fun TextFieldSet(
     textContent: String,
     textFieldPlaceHolder: String,
     errorMsg: String,
-    value: MutableState<String>,
+    value: String,
     isError: Boolean,
-    isPw: Boolean = false
+    isPw: Boolean = false,
+    onValueChange: (String) -> Unit
 ) {
     BaseText(
         text = textContent,
@@ -31,9 +32,9 @@ fun TextFieldSet(
     )
     BaseTextField(
         modifier = Modifier.padding(top = 4.dp),
-        value = value.value,
+        value = value,
         placeHolder = textFieldPlaceHolder,
-        onValueChange = { value.value = it },
+        onValueChange = onValueChange,
         textFieldError = isError,
         isPw = isPw
     )

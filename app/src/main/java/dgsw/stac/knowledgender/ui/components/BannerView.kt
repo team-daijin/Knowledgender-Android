@@ -1,4 +1,4 @@
-package dgsw.stac.knowledgender.ui.feature.main
+package dgsw.stac.knowledgender.ui.components
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image

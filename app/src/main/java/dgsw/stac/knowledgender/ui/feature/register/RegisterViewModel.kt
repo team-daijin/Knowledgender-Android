@@ -1,57 +1,66 @@
 package dgsw.stac.knowledgender.ui.feature.register
 
-import android.util.Log
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dgsw.stac.knowledgender.remote.RegisterRequest
 import dgsw.stac.knowledgender.remote.RetrofitBuilder
-import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import javax.inject.Inject
 
 @HiltViewModel
-class RegisterViewModel : ViewModel() {
-    val id = mutableStateOf("")
-    val pw = mutableStateOf("")
-    val name = mutableStateOf("")
-    val age = mutableStateOf(0)
-    val gender = mutableStateOf("")
-    val pwCheck = mutableStateOf("")
-    var idError = false
-    var pwError = false
-    var pwCheckError = false
+class RegisterViewModel @Inject constructor() : ViewModel() {
 
-//    fun registerPOST(userInfo: Register) {
-//        RetrofitBuilder.retrofitService.register(userInfo).enqueue(object : Callback<Boolean> {
-//            override fun onResponse(call: Call<Boolean>, response: Response<Boolean>) {
-//
-//            }
-//
-//            override fun onFailure(call: Call<Boolean>, t: Throwable) {
-//                Log.d("euya", "실패")
-//            }
-//
-//        })
-//    }
+    var id = MutableStateFlow("")
+    var pw = MutableStateFlow("")
+    var name = MutableStateFlow("")
+    var age = MutableStateFlow(0)
+    var gender = MutableStateFlow("")
+    var pwCheck = MutableStateFlow("")
+    var idError = mutableStateOf(false)
+    var pwError = mutableStateOf(false)
+    var pwCheckError = mutableStateOf(false)
 
 
-    fun registerPOST() {
+    val enabledButton = combine(id, pw, pwCheck, name, gender) { id, pw, pwCheck, name, gender ->
+        id.isNotBlank() && pw.isNotBlank() && name.matches(Regex("^[가-힣]*\$")) && name.isNotBlank() && gender.isNotBlank() && age.value != 0
+    }.stateIn(viewModelScope, SharingStarted.Lazily, false)
+
+    private fun checkInfo() {
+        if (!(pw.value.matches(Regex("^.*(?=^.{8}\$)(?=.*\\d)(?=.*[a-zA-Z])(?=.*[!@#\$%^&+=]).*\$")))) {
+            pwError.value = true
+        }
+        if (!(pwCheck.value == pw.value)) {
+            pwCheckError.value = true
+        }
+    }
+
+    fun registerProcess(onSuccess: () -> Unit) {
+        checkInfo()
         viewModelScope.launch {
-            RetrofitBuilder.apiService.register(
-                RegisterRequest(
-                    accountId = id.value,
-                    password = pw.value,
-                    name = name.value,
-                    age = age.value,
-                    gender = when (gender.value) {
-                        "남성" -> "MALE"
-                        else -> "FEMALE"
-                    }
+            kotlin.runCatching {
+                RetrofitBuilder.apiService.register(
+                    RegisterRequest(
+                        accountId = id.value,
+                        password = pw.value,
+                        name = name.value,
+                        age = age.value,
+                        gender = when (gender.value) {
+                            "남성" -> "MALE"
+                            else -> "FEMALE"
+                        }
+                    )
                 )
-            )
+            }.onSuccess { onSuccess }.onFailure { idError.value = true }
         }
 
     }
+//    private val username = flow {
+//        emit(RetrofitBuilder.retrofitService.fetchUsername())
+//    }.stateIn(viewModelScope, SharingStarted.Lazily, "")
 }
