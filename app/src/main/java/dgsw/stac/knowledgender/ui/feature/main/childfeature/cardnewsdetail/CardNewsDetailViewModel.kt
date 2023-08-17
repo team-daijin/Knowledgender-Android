@@ -15,8 +15,8 @@ import javax.inject.Inject
 class CardNewsDetailViewModel @Inject constructor() : ViewModel() {
 
 
-    private val _cardNewsDetail: MutableStateFlow<CardNewsDetailResponse>? = null
-    val cardNewsDetail: StateFlow<CardNewsDetailResponse> = _cardNewsDetail!!.asStateFlow()
+    private val _cardNewsDetail = MutableStateFlow<CardNewsDetailResponse?>(null)
+    val cardNewsDetail: StateFlow<CardNewsDetailResponse?> = _cardNewsDetail!!.asStateFlow()
 
     fun getDetailInfo(id: String) = viewModelScope.launch {
         kotlin.runCatching {
