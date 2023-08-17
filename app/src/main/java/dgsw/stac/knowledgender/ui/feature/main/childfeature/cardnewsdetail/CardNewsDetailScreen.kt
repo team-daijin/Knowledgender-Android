@@ -74,8 +74,8 @@ fun CardNewsDetailScreen(
                     .padding(24.dp)
                     .verticalScroll(scrollState)
             ) {
-                Header(state.title,state.writer,categoryToString(state.category))
-                Body(state.content,URL(state.image))
+                Header(state!!.title,state!!.writer,categoryToString(state!!.category))
+                Body(state!!.content,URL(state!!.image))
             }
             Footer(
                 Modifier
