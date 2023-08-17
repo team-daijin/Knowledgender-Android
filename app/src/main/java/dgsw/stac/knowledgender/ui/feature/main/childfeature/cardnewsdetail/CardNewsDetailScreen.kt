@@ -1,5 +1,6 @@
 package dgsw.stac.knowledgender.ui.feature.main.childfeature.cardnewsdetail
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -34,6 +35,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavHostController
 import dgsw.stac.knowledgender.R
 import dgsw.stac.knowledgender.ui.components.BaseText
 import dgsw.stac.knowledgender.ui.theme.BasePurple
@@ -50,6 +52,7 @@ import java.net.URL
 fun CardNewsDetailScreen(
     id: String,
     viewModel: CardNewsDetailViewModel = hiltViewModel(),
+    backRequested: () -> Unit,
     modifier: Modifier = Modifier,
     onNavigationRequested: (String) -> Unit
 ) {
@@ -58,6 +61,9 @@ fun CardNewsDetailScreen(
 
     LaunchedEffect(true) {
         viewModel.getDetailInfo(id)
+    }
+    BackHandler(enabled = true) {
+        backRequested.invoke()
     }
     
     Column {
@@ -299,7 +305,7 @@ fun GreetingPreview4() {
             modifier = Modifier.fillMaxSize(),
             color = MaterialTheme.colorScheme.background
         ) {
-            CardNewsDetailScreen("", hiltViewModel()){
+            CardNewsDetailScreen("", hiltViewModel(),{}){
 
             }
         }

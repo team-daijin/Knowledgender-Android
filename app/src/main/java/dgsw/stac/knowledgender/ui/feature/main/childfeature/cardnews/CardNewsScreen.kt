@@ -1,6 +1,7 @@
 package dgsw.stac.knowledgender.ui.feature.main.childfeature.cardnews
 
 import android.content.res.Configuration
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -44,12 +45,15 @@ import dgsw.stac.knowledgender.ui.theme.KnowledgenderTheme
 
 
 @Composable
-fun CardNewsScreen(cartegory: String,viewModel: CardNewsViewModel, onNavigateRequested: (String) -> Unit) {
+fun CardNewsScreen(cartegory: String,viewModel: CardNewsViewModel, onNavigateRequested: (String) -> Unit,backRequested: ()->Unit) {
 
     val scrollState = rememberScrollState()
 
     LaunchedEffect(key1 = Unit){
         viewModel.getCardNewsByCategory(cartegory)
+    }
+    BackHandler(enabled = true) {
+        backRequested.invoke()
     }
 
     Column(
@@ -170,9 +174,7 @@ fun CardNewsPreview() {
             modifier = Modifier.fillMaxSize(),
             color = MaterialTheme.colorScheme.background,
         ) {
-            CardNewsScreen("",hiltViewModel()){
-
-            }
+            CardNewsScreen("",hiltViewModel(),{},{})
         }
     }
 }
