@@ -12,7 +12,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
@@ -22,6 +21,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.produceState
 import androidx.compose.ui.Alignment
@@ -29,26 +29,25 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import dgsw.stac.knowledgender.R
+import dgsw.stac.knowledgender.model.CardItem
 import dgsw.stac.knowledgender.remote.Category
 import dgsw.stac.knowledgender.ui.components.BannerView
-import dgsw.stac.knowledgender.ui.components.CardList
-import dgsw.stac.knowledgender.ui.feature.main.CARDNEWSDETAIL
-import dgsw.stac.knowledgender.ui.feature.main.CardItem
-import dgsw.stac.knowledgender.ui.feature.main.childfeature.home.IconClickedPath.BODY
-import dgsw.stac.knowledgender.ui.feature.main.childfeature.home.IconClickedPath.CRIME
-import dgsw.stac.knowledgender.ui.feature.main.childfeature.home.IconClickedPath.EQUALITY
-import dgsw.stac.knowledgender.ui.feature.main.childfeature.home.IconClickedPath.HEART
-import dgsw.stac.knowledgender.ui.feature.main.childfeature.home.IconClickedPath.RELATIONSHIP
+import dgsw.stac.knowledgender.ui.components.CardLists
+import dgsw.stac.knowledgender.ui.components.NoNetworkChecking
+import dgsw.stac.knowledgender.ui.feature.main.CARDNEWS
 import dgsw.stac.knowledgender.ui.theme.BaseBlack
-import dgsw.stac.knowledgender.ui.theme.DarkestBlack
 import dgsw.stac.knowledgender.ui.theme.KnowledgenderTheme
-import dgsw.stac.knowledgender.ui.theme.LighterBlack
+import dgsw.stac.knowledgender.util.BODY
+import dgsw.stac.knowledgender.util.CRIME
+import dgsw.stac.knowledgender.util.EQUALITY
+import dgsw.stac.knowledgender.util.HEART
+import dgsw.stac.knowledgender.util.RELATIONSHIP
+import dgsw.stac.knowledgender.util.networkCheck
 
 @Composable
 fun HomeScreen(
@@ -57,30 +56,31 @@ fun HomeScreen(
     onNavigationRequested: (String) -> Unit
 ) {
     val scrollState = rememberScrollState()
-
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .verticalScroll(scrollState),
-        verticalArrangement = Arrangement.SpaceBetween
-    ) {
-        Header(viewModel)
-        Body(viewModel, onNavigationRequested)
-        Footer()
+    if(networkCheck()||viewModel.cardNewsAvailable) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .verticalScroll(scrollState),
+            verticalArrangement = Arrangement.SpaceBetween
+        ) {
+            Header(viewModel)
+            Body(viewModel, onNavigationRequested)
+        }
+    } else {
+        Box(
+            modifier = Modifier
+                .fillMaxWidth(),
+            contentAlignment = Alignment.Center
+        ) {
+//                    CircularProgressIndicator()
+            NoNetworkChecking()
+        }
     }
-
 }
 
-data class IconData(val img: Int, val title: String,val category: String)
+data class IconData(val img: Int, val title: String, val category: String)
 data class CardListData(val dataList: List<CardItem>, val topic: String, val des: String)
 
-object IconClickedPath{
-    val HEART = "Heart"
-    val BODY = "Body"
-    val CRIME = "Crime"
-    val RELATIONSHIP = "Relationship"
-    val EQUALITY = "Equality"
-}
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -102,11 +102,11 @@ fun Body(
     onNavigationRequested: (String) -> Unit
 ) {
     val iconData = listOf(
-        IconData(R.drawable.heart, "마음",HEART),
-        IconData(R.drawable.body, "신체",BODY),
-        IconData(R.drawable.crime, "폭력",CRIME),
-        IconData(R.drawable.relationship, "관계",RELATIONSHIP),
-        IconData(R.drawable.equality, "평등",EQUALITY)
+        IconData(R.drawable.heart, "마음", HEART),
+        IconData(R.drawable.body, "신체", BODY),
+        IconData(R.drawable.crime, "폭력", CRIME),
+        IconData(R.drawable.relationship, "관계", RELATIONSHIP),
+        IconData(R.drawable.equality, "평등", EQUALITY)
     )
     val cardData by produceState(initialValue = emptyList<CardListData>(), producer = {
         value = listOf(
@@ -129,17 +129,14 @@ fun Body(
     })
 
     Icons(iconData, onNavigationRequested)
-    CardLists(cardData,onNavigationRequested)
+    CardLists(cardData, onNavigationRequested)
 }
 
-@Composable
-fun Footer() {
-}
 @Composable
 fun Icon(data: IconData, onNavigateTo: (String) -> Unit) {
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
         IconButton(onClick = {
-            onNavigateTo(data.category)
+            onNavigateTo("$CARDNEWS/${data.category}")
 //            onNavigationRequested = { navController.navigate( CardNewsStringToEnum(data.title) ) }
             Log.d("TAG", "${data.title}: 페이지 ${data.title} 클릭 ")
         }) {
@@ -170,42 +167,7 @@ fun Icons(dataList: List<IconData>, onNavigateTo: (String) -> Unit) {
     }
 }
 
-@Composable
-fun Card(data: CardListData,onRowItemClicked: (String) -> Unit) {
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(10.dp)
-    ) {
-        Text(
-            text = data.topic, modifier = Modifier.padding(5.dp), style = TextStyle(
-                fontSize = 20.sp,
-                color = DarkestBlack,
-                textAlign = TextAlign.Left,
-                fontWeight = FontWeight.Medium
-            )
-        )
-        Text(
-            text = data.des, modifier = Modifier.padding(5.dp), style = TextStyle(
-                fontSize = 14.sp,
-                color = LighterBlack,
-                textAlign = TextAlign.Left,
-                fontWeight = FontWeight.Normal
-            )
-        )
-        Spacer(modifier = Modifier.width(120.dp))
-        CardList(data.dataList,onRowItemClicked)
-    }
-}
 
-@Composable
-fun CardLists(data: List<CardListData>,onNavigationRequested: (String) -> Unit) {
-    data.forEach {
-        Card(it) { data ->
-            onNavigationRequested("$CARDNEWSDETAIL/{$data}")
-        }
-    }
-}
 
 //@Preview(showBackground = true)
 //@Composable
@@ -215,16 +177,3 @@ fun CardLists(data: List<CardListData>,onNavigationRequested: (String) -> Unit) 
 //    }
 //}
 
-
-@Preview(uiMode = Configuration.UI_MODE_NIGHT_NO)
-@Composable
-fun HomePreview() {
-    KnowledgenderTheme {
-        Surface(
-            modifier = Modifier.fillMaxSize(),
-            color = MaterialTheme.colorScheme.background,
-        ) {
-            HomeScreen(viewModel = hiltViewModel(), onNavigationRequested = {})
-        }
-    }
-}

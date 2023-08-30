@@ -10,13 +10,15 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import dgsw.stac.knowledgender.remote.BannerResponse
 import dgsw.stac.knowledgender.remote.Category
 import dgsw.stac.knowledgender.remote.RetrofitBuilder
-import dgsw.stac.knowledgender.ui.feature.main.CardItem
+import dgsw.stac.knowledgender.model.CardItem
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor() : ViewModel() {
     var bannerData by mutableStateOf<List<BannerResponse>>(emptyList())
+
+    var cardNewsAvailable = false
 
     init {
         viewModelScope.launch {
@@ -53,8 +55,9 @@ class HomeViewModel @Inject constructor() : ViewModel() {
         return kotlin.runCatching {
             RetrofitBuilder.apiService.cardCategory(category.name)
         }.map {
-            it.map {
-                CardItem(it.id, it.title, it.category, it.image)
+            it.map { data ->
+                cardNewsAvailable = true
+                CardItem(data.id, data.title, data.category, data.image)
             }
         }.onFailure {
             // TODO 오류 발생 시 토스트, 스낵바, 알렛 표시

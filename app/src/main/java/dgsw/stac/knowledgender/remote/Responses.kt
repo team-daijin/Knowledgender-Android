@@ -28,10 +28,20 @@ data class CardCategoryResponse(
     val id: String,
     val title: String,
     val writer: String,
-    val category: Category,
+    val category: String,
     val content: String,
     val image: String
 )
+
+//data class CategoryCardItem(
+//    val id: String,
+//    val title: String,
+//    val writer: String,
+//    val category: Category,
+//    val content: String,
+//    val image: String
+//)
+
 data class BannerResponse(
     val id : String,
     val banner : String,

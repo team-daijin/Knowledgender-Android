@@ -2,6 +2,9 @@ package dgsw.stac.knowledgender.ui.feature.login
 
 import android.content.res.Configuration.UI_MODE_NIGHT_NO
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
+import android.os.Bundle
+import androidx.activity.ComponentActivity
+import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -29,11 +32,11 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.view.WindowCompat.setDecorFitsSystemWindows
 import androidx.hilt.navigation.compose.hiltViewModel
+import dagger.hilt.android.AndroidEntryPoint
 import dgsw.stac.knowledgender.R
-import dgsw.stac.knowledgender.pref.Pref
-import dgsw.stac.knowledgender.pref.PrefImpl
-import dgsw.stac.knowledgender.ui.Route
+import dgsw.stac.knowledgender.navigation.Route
 import dgsw.stac.knowledgender.ui.components.BaseButton
 import dgsw.stac.knowledgender.ui.components.BaseText
 import dgsw.stac.knowledgender.ui.components.TextFieldSet
@@ -179,36 +182,3 @@ private fun Body(viewModel: LoginViewModel, onNavigationRequested: (String) -> U
 private fun Footer() {
 
 }
-
-
-@Preview(uiMode = UI_MODE_NIGHT_NO)
-@Composable
-fun GreetingPreview() {
-    KnowledgenderTheme {
-        Surface(
-            modifier = Modifier.fillMaxSize(),
-            color = MaterialTheme.colorScheme.background,
-        ) {
-            LoginScreen(viewModel = hiltViewModel(), onNavigationRequested = {
-
-            })
-        }
-    }
-}
-
-
-@Preview(uiMode = UI_MODE_NIGHT_YES)
-@Composable
-fun GreetingDarkPreview() {
-    KnowledgenderTheme {
-        Surface(
-            modifier = Modifier.fillMaxSize(),
-            color = MaterialTheme.colorScheme.background,
-        ) {
-            LoginScreen(viewModel = hiltViewModel(), onNavigationRequested = {
-
-            })
-        }
-    }
-}
-

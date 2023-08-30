@@ -17,10 +17,53 @@ class PrefImpl(private val dataStore: DataStore<Preferences>): Pref {
         }
     }
 
+    override fun getUserName(): Flow<String> {
+        return dataStore.data.catch {
+            emit(emptyPreferences())
+        }.map {
+            it[USERNAME] ?: ""
+        }
+    }
+
+    override fun getUserAge(): Flow<Int> {
+        return dataStore.data.catch {
+            emit(emptyPreferences())
+        }.map {
+            it[USERAGE] ?: 0
+        }
+    }
+
+    override fun getUserGender(): Flow<String> {
+        return dataStore.data.catch {
+            emit(emptyPreferences())
+        }.map {
+            it[USERGENDER] ?: ""
+        }
+    }
+
+
     override suspend fun saveToken(accessToken: String, refreshToken: String) {
         dataStore.edit {
             it[ACCESSTOKEN_KEY] = accessToken
             it[REFRESHTOKEN_KEY] = refreshToken
+        }
+    }
+
+    override suspend fun saveUserName(name: String) {
+        dataStore.edit {
+            it[USERNAME] = name
+        }
+    }
+
+    override suspend fun saveUserAge(age: Int) {
+        dataStore.edit {
+            it[USERAGE] = age
+        }
+    }
+
+    override suspend fun saveUserGender(gender: String) {
+        dataStore.edit {
+            it[USERGENDER] = gender
         }
     }
 

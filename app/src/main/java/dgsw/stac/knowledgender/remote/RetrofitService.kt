@@ -5,6 +5,7 @@ import retrofit2.Call
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
+import retrofit2.http.Header
 import retrofit2.http.POST
 import retrofit2.http.Path
 import retrofit2.http.Query
@@ -28,8 +29,11 @@ interface RetrofitService {
         @Path("id") cardNewsId: String
     ): CardNewsDetailResponse
 
-    @GET("/api/card/?category=category")
+    @GET("/api/card/")
     suspend fun cardCategory(@Query("category") category: String): List<CardCategoryResponse>
+
+    @POST("/api/room/")
+    suspend fun createRoom(@Header("token")token: String)
 
     @GET("/api/banner/")
     suspend fun banner (): List<BannerResponse>
