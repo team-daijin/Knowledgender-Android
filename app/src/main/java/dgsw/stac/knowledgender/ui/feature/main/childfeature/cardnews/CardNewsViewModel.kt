@@ -1,12 +1,9 @@
 package dgsw.stac.knowledgender.ui.feature.main.childfeature.cardnews
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dgsw.stac.knowledgender.remote.CardCategoryResponse
-import dgsw.stac.knowledgender.remote.CardNewsDetailResponse
-import dgsw.stac.knowledgender.remote.Category
 import dgsw.stac.knowledgender.remote.RetrofitBuilder
 import dgsw.stac.knowledgender.util.BODY
 import dgsw.stac.knowledgender.util.CRIME
@@ -30,7 +27,7 @@ class CardNewsViewModel @Inject constructor() : ViewModel() {
             }.onSuccess { data ->
                 _cardNews.value = data
             }.onFailure {
-                it
+
             }
         }
     }

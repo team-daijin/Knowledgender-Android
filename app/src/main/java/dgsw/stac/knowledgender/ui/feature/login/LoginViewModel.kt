@@ -15,7 +15,6 @@ import dgsw.stac.knowledgender.pref.Pref
 import dgsw.stac.knowledgender.remote.LoginRequest
 import dgsw.stac.knowledgender.remote.RetrofitBuilder
 import dgsw.stac.knowledgender.socket.PushNotification
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.first
@@ -31,8 +30,8 @@ class LoginViewModel @Inject constructor(
     var id by mutableStateOf("")
     var pw by mutableStateOf("")
 
-    val username = MutableStateFlow("")
-    val password = MutableStateFlow("")
+//    val username = MutableStateFlow("")
+//    val password = MutableStateFlow("")
 
 
     val enabledButton = snapshotFlow { id }.combine(snapshotFlow { pw }) { id, pw ->
@@ -63,7 +62,6 @@ class LoginViewModel @Inject constructor(
                 Log.d("euya", "로그인 실패")
                 idError = true
                 pwError = true
-                false
             }
         }
     }

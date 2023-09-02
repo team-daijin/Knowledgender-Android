@@ -173,7 +173,7 @@ private fun Body(viewModel: RegisterViewModel) {
             )
         )
         BaseTextField(
-            modifier = Modifier.padding(top = 4.dp),
+            modifier = Modifier.padding(top = 4.dp).fillMaxWidth(),
             value = viewModel.name.collectAsState().value,
             placeHolder = stringResource(id = R.string.name_placeholder),
             onValueChange = {

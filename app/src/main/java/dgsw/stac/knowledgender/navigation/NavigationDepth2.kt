@@ -1,7 +1,6 @@
 package dgsw.stac.knowledgender.navigation
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
@@ -20,8 +19,6 @@ import dgsw.stac.knowledgender.ui.feature.main.childfeature.home.HomeScreen
 import dgsw.stac.knowledgender.ui.feature.main.childfeature.home.HomeViewModel
 import dgsw.stac.knowledgender.ui.feature.main.childfeature.map.MapScreen
 import dgsw.stac.knowledgender.ui.feature.main.childfeature.mypage.MyPageScreen
-import dgsw.stac.knowledgender.util.NetworkUtility.ConnectionState
-import dgsw.stac.knowledgender.util.NetworkUtility.connectivityState
 
 @Composable
 fun NavigationDepth2(viewModel: MainViewModel,navController: NavHostController,onNavigationRequested: (String) -> Unit) {
@@ -78,7 +75,6 @@ fun CardNewsDetailDestination(id: String, navController: NavHostController) {
     CardNewsDetailScreen(
         id = id,
         viewModel = viewModel,
-        onNavigationRequested = { navController.navigate(it) },
         backRequested = {
             navController.popBackStack()
         }

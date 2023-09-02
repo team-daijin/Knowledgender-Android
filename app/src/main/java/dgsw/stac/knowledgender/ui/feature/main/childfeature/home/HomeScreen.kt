@@ -1,6 +1,5 @@
 package dgsw.stac.knowledgender.ui.feature.main.childfeature.home
 
-import android.content.res.Configuration
 import android.util.Log
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
@@ -17,10 +16,10 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.produceState
@@ -29,19 +28,20 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.hilt.navigation.compose.hiltViewModel
 import dgsw.stac.knowledgender.R
 import dgsw.stac.knowledgender.model.CardItem
 import dgsw.stac.knowledgender.remote.Category
 import dgsw.stac.knowledgender.ui.components.BannerView
+import dgsw.stac.knowledgender.ui.components.BaseText
 import dgsw.stac.knowledgender.ui.components.CardLists
 import dgsw.stac.knowledgender.ui.components.NoNetworkChecking
 import dgsw.stac.knowledgender.ui.feature.main.CARDNEWS
 import dgsw.stac.knowledgender.ui.theme.BaseBlack
-import dgsw.stac.knowledgender.ui.theme.KnowledgenderTheme
+import dgsw.stac.knowledgender.ui.theme.DarkestBlack
+import dgsw.stac.knowledgender.ui.theme.LighterPurple
+import dgsw.stac.knowledgender.ui.theme.pretendard
 import dgsw.stac.knowledgender.util.BODY
 import dgsw.stac.knowledgender.util.CRIME
 import dgsw.stac.knowledgender.util.EQUALITY
@@ -56,9 +56,13 @@ fun HomeScreen(
     onNavigationRequested: (String) -> Unit
 ) {
     val scrollState = rememberScrollState()
-    if(networkCheck()||viewModel.cardNewsAvailable) {
+
+    LaunchedEffect(key1 = Unit) {
+        viewModel.getBannerData()
+    }
+    if (networkCheck() || viewModel.cardNewsAvailable) {
         Column(
-            modifier = Modifier
+            modifier = modifier
                 .fillMaxSize()
                 .verticalScroll(scrollState),
             verticalArrangement = Arrangement.SpaceBetween
@@ -85,14 +89,34 @@ data class CardListData(val dataList: List<CardItem>, val topic: String, val des
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun Header(viewModel: HomeViewModel) {
-    val bannerData = viewModel.bannerData
+    val bannerData = viewModel.bannerData.collectAsState()
 
     Box(
         modifier = Modifier
             .fillMaxWidth()
             .height(330.dp)
     ) {
-        BannerView(bannerData)
+        bannerData.value?.let {
+            BannerView(it)
+        } ?: run {
+            Surface(modifier = Modifier.fillMaxSize(),color = LighterPurple) {
+                Column(
+                    modifier = Modifier.fillMaxSize(),
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                    BaseText(
+                        text = "준비된 배너가 없어요", color = DarkestBlack, style = TextStyle(
+                            fontFamily = pretendard,
+                            fontWeight = FontWeight.Bold,
+                            fontSize = 24.sp
+                        )
+                    )
+                }
+
+            }
+        }
+
     }
 }
 
@@ -108,7 +132,7 @@ fun Body(
         IconData(R.drawable.relationship, "관계", RELATIONSHIP),
         IconData(R.drawable.equality, "평등", EQUALITY)
     )
-    val cardData by produceState(initialValue = emptyList<CardListData>(), producer = {
+    val cardData by produceState(initialValue = emptyList(), producer = {
         value = listOf(
             CardListData(
                 viewModel.getCardCategory(Category.HEART), "마음 상담소로 오세요", "내 안에 숨어있는 마음상담소로 초대합니다!"
@@ -166,7 +190,6 @@ fun Icons(dataList: List<IconData>, onNavigateTo: (String) -> Unit) {
         }
     }
 }
-
 
 
 //@Preview(showBackground = true)

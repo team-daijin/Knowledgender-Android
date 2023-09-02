@@ -2,7 +2,6 @@ package dgsw.stac.knowledgender.ui.components
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
@@ -18,7 +17,7 @@ import dgsw.stac.knowledgender.ui.theme.pretendard
 
 @Composable
 fun NoNetworkChecking(modifier: Modifier = Modifier) {
-    Column(modifier = Modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.Center) {
+    Column(modifier = modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.Center) {
         Image(painter = painterResource(id = R.drawable.nowifi), contentDescription = "noWifi")
         BaseText(
             text = "인터넷에 연결되어 있지 않습니다.",

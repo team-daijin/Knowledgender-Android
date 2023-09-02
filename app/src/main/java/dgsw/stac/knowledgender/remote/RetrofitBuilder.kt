@@ -7,7 +7,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 object RetrofitBuilder {
 
-    private val BASE_URL = "http://52.78.246.108:8080/"
+    private const val BASE_URL = "http://52.78.246.108:8080/"
 //    private val BASE_URL = "https://jsonplaceholder.typicode.com"
     private fun getRetrofit(): Retrofit {
         return Retrofit.Builder()

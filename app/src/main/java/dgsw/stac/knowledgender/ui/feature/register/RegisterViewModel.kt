@@ -35,7 +35,7 @@ class RegisterViewModel @Inject constructor() : ViewModel() {
         if (!(pw.value.matches(Regex("^.*(?=^.{8}\$)(?=.*\\d)(?=.*[a-zA-Z])(?=.*[!@#\$%^&+=]).*\$")))) {
             pwError.value = true
         }
-        if (!(pwCheck.value == pw.value)) {
+        if (pwCheck.value != pw.value) {
             pwCheckError.value = true
         }
     }
@@ -56,7 +56,7 @@ class RegisterViewModel @Inject constructor() : ViewModel() {
                         }
                     )
                 )
-            }.onSuccess { onSuccess }.onFailure { idError.value = true }
+            }.onSuccess { onSuccess.invoke() }.onFailure { idError.value = true }
         }
 
     }

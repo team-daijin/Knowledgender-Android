@@ -1,8 +1,8 @@
 package dgsw.stac.knowledgender.ui.components
 
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -31,7 +31,7 @@ fun TextFieldSet(
         )
     )
     BaseTextField(
-        modifier = Modifier.padding(top = 4.dp),
+        modifier = Modifier.padding(top = 4.dp).fillMaxWidth(),
         value = value,
         placeHolder = textFieldPlaceHolder,
         onValueChange = onValueChange,

@@ -2,7 +2,6 @@ package dgsw.stac.knowledgender.ui.components
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -11,8 +10,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import coil.compose.AsyncImage
 import coil.compose.rememberAsyncImagePainter
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
@@ -37,8 +36,8 @@ fun BannerView(item: List<BannerResponse>) {
             state = pagerState,
             userScrollEnabled = true,
             content = { page ->
-                Image(
-                    painter = rememberAsyncImagePainter(item[page].banner),
+                AsyncImage(
+                    model = item[page].banner,
                     contentDescription = "Banner",
                     modifier = Modifier
                         .height(320.dp)

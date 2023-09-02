@@ -7,6 +7,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import dgsw.stac.knowledgender.ui.feature.chatting.ChattingScreen
+import dgsw.stac.knowledgender.ui.feature.chatting.ChattingViewModel
 import dgsw.stac.knowledgender.ui.feature.login.LoginScreen
 import dgsw.stac.knowledgender.ui.feature.login.LoginViewModel
 import dgsw.stac.knowledgender.ui.feature.main.MainScreen
@@ -68,7 +69,8 @@ private fun MainDestination(navController: NavHostController) {
 
 @Composable
 private fun ChattingDestination(navController: NavHostController) {
-    ChattingScreen()
+    val viewModel: ChattingViewModel = hiltViewModel()
+    ChattingScreen(viewModel = viewModel)
 }
 
 object Route {
