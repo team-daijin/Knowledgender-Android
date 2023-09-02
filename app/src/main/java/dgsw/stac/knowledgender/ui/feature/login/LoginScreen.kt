@@ -1,7 +1,5 @@
 package dgsw.stac.knowledgender.ui.feature.login
 
-import android.content.res.Configuration.UI_MODE_NIGHT_NO
-import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -12,8 +10,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.text.ClickableText
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -26,20 +22,15 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.withStyle
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.hilt.navigation.compose.hiltViewModel
 import dgsw.stac.knowledgender.R
-import dgsw.stac.knowledgender.pref.Pref
-import dgsw.stac.knowledgender.pref.PrefImpl
-import dgsw.stac.knowledgender.ui.Route
+import dgsw.stac.knowledgender.navigation.Route
 import dgsw.stac.knowledgender.ui.components.BaseButton
 import dgsw.stac.knowledgender.ui.components.BaseText
 import dgsw.stac.knowledgender.ui.components.TextFieldSet
 import dgsw.stac.knowledgender.ui.theme.BasePurple
 import dgsw.stac.knowledgender.ui.theme.DarkestPurple
-import dgsw.stac.knowledgender.ui.theme.KnowledgenderTheme
 import dgsw.stac.knowledgender.ui.theme.LightBlack
 import dgsw.stac.knowledgender.ui.theme.LightSky
 import dgsw.stac.knowledgender.ui.theme.pretendard
@@ -179,36 +170,3 @@ private fun Body(viewModel: LoginViewModel, onNavigationRequested: (String) -> U
 private fun Footer() {
 
 }
-
-
-@Preview(uiMode = UI_MODE_NIGHT_NO)
-@Composable
-fun GreetingPreview() {
-    KnowledgenderTheme {
-        Surface(
-            modifier = Modifier.fillMaxSize(),
-            color = MaterialTheme.colorScheme.background,
-        ) {
-            LoginScreen(viewModel = hiltViewModel(), onNavigationRequested = {
-
-            })
-        }
-    }
-}
-
-
-@Preview(uiMode = UI_MODE_NIGHT_YES)
-@Composable
-fun GreetingDarkPreview() {
-    KnowledgenderTheme {
-        Surface(
-            modifier = Modifier.fillMaxSize(),
-            color = MaterialTheme.colorScheme.background,
-        ) {
-            LoginScreen(viewModel = hiltViewModel(), onNavigationRequested = {
-
-            })
-        }
-    }
-}
-

@@ -67,7 +67,6 @@ fun BaseTextField(
         decorationBox = { innerTextField ->
             Box(
                 modifier = modifier
-                    .fillMaxWidth()
                     .heightIn(44.dp)
                     .border(
                         1.dp,

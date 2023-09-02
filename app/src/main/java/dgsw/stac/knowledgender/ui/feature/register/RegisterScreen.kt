@@ -44,7 +44,7 @@ import androidx.compose.ui.unit.sp
 import com.sd.lib.compose.wheel_picker.FVerticalWheelPicker
 import com.sd.lib.compose.wheel_picker.rememberFWheelPickerState
 import dgsw.stac.knowledgender.R
-import dgsw.stac.knowledgender.ui.Route
+import dgsw.stac.knowledgender.navigation.Route
 import dgsw.stac.knowledgender.ui.components.BaseButton
 import dgsw.stac.knowledgender.ui.components.BaseText
 import dgsw.stac.knowledgender.ui.components.BaseTextField
@@ -91,7 +91,7 @@ private fun Header() {
             verticalAlignment = Alignment.CenterVertically
         ) {
             Image(
-                painter = painterResource(id = R.drawable.logo_register),
+                painter = painterResource(id = R.drawable.knowledgender_logo),
                 contentDescription = "logo",
                 modifier = Modifier.height(50.dp)
 
@@ -173,7 +173,7 @@ private fun Body(viewModel: RegisterViewModel) {
             )
         )
         BaseTextField(
-            modifier = Modifier.padding(top = 4.dp),
+            modifier = Modifier.padding(top = 4.dp).fillMaxWidth(),
             value = viewModel.name.collectAsState().value,
             placeHolder = stringResource(id = R.string.name_placeholder),
             onValueChange = {

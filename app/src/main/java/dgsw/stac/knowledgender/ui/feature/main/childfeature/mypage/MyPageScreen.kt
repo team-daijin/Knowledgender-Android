@@ -15,9 +15,10 @@ import dgsw.stac.knowledgender.ui.theme.KnowledgenderTheme
 
 @Composable
 fun MyPageScreen(modifier: Modifier = Modifier) {
-    Column(Modifier.fillMaxSize(),
+    Column(modifier =  modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center) {
+        verticalArrangement = Arrangement.Center
+    ) {
         Image(painter = painterResource(id = R.drawable.fixing_img), contentDescription = "준비 안됨")
         Text(text = "아직 준비중입니다...")
     }

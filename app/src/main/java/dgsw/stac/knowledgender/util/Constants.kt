@@ -1,11 +1,9 @@
 package dgsw.stac.knowledgender.util
 
-import android.content.Context
-import androidx.datastore.core.DataStore
-import androidx.datastore.preferences.preferencesDataStore
-import java.util.prefs.Preferences
 
-object Constants{
 
-}
-
+const val HEART = "Heart"
+const val BODY = "Body"
+const val CRIME = "Crime"
+const val RELATIONSHIP = "Relationship"
+const val EQUALITY = "Equality"

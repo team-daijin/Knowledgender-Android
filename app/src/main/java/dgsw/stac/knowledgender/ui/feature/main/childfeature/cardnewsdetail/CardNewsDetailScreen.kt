@@ -13,48 +13,42 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavHostController
+import coil.compose.AsyncImage
+import coil.compose.rememberAsyncImagePainter
+import coil.request.ImageRequest
 import dgsw.stac.knowledgender.R
 import dgsw.stac.knowledgender.ui.components.BaseText
+import dgsw.stac.knowledgender.ui.components.NoNetworkChecking
 import dgsw.stac.knowledgender.ui.theme.BasePurple
 import dgsw.stac.knowledgender.ui.theme.BaseSky
 import dgsw.stac.knowledgender.ui.theme.DarkestBlack
-import dgsw.stac.knowledgender.ui.theme.DarkestPurple
-import dgsw.stac.knowledgender.ui.theme.KnowledgenderTheme
 import dgsw.stac.knowledgender.ui.theme.LightBlack
 import dgsw.stac.knowledgender.ui.theme.pretendard
-import dgsw.stac.knowledgender.util.Utility.categoryToString
-import java.net.URL
 
 @Composable
 fun CardNewsDetailScreen(
     id: String,
     viewModel: CardNewsDetailViewModel = hiltViewModel(),
     backRequested: () -> Unit,
-    modifier: Modifier = Modifier,
-    onNavigationRequested: (String) -> Unit
+    modifier: Modifier = Modifier
 ) {
     val scrollState = rememberScrollState()
     val state by viewModel.cardNewsDetail.collectAsState()
@@ -65,25 +59,36 @@ fun CardNewsDetailScreen(
     BackHandler(enabled = true) {
         backRequested.invoke()
     }
-    
+
     Column {
         Banner()
-        Box(Modifier.fillMaxSize()) {
-            Column(
-                modifier = Modifier
-                    .padding(24.dp)
-                    .verticalScroll(scrollState)
-            ) {
-                Header(state!!.title,state!!.writer,categoryToString(state!!.category))
-                Body(state!!.content,URL(state!!.image))
+        Column(modifier.fillMaxSize()) {
+            state?.let { state ->
+                Column(
+                    modifier = Modifier
+                        .padding(24.dp)
+                        .weight(1f)
+                        .verticalScroll(scrollState)
+                ) {
+                    Header(state.title, state.writer, "SEX")
+                    Body(state.content,state.image)
+                }
+            } ?: run {
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .weight(1f),
+                    contentAlignment = Alignment.Center
+                ) {
+//                    CircularProgressIndicator()
+                    NoNetworkChecking()
+                }
             }
-            Footer(
-                Modifier
-                    .align(Alignment.BottomCenter)
-                    .padding(bottom = 68.dp),
-                onClickPrev = { },
-                onClickNext = { },
-            )
+//            Footer(
+//                Modifier.padding(bottom = 68.dp),
+//                onClickPrev = {  },
+//                onClickNext = { },
+//            )
         }
 
     }
@@ -105,8 +110,7 @@ private fun Banner() {
 }
 
 @Composable
-private fun Header(title: String, writer: String,category: String) {
-
+private fun Header(title: String, writer: String, category: String) {
     Column {
         BaseText(
             text = title,
@@ -171,8 +175,7 @@ private fun Header(title: String, writer: String,category: String) {
 }
 
 @Composable
-private fun Body(content: String,image:URL) {
-
+private fun Body(content: String,image: String) {
     Column(
         Modifier
             .fillMaxSize()
@@ -188,126 +191,111 @@ private fun Body(content: String,image:URL) {
                 fontSize = 16.sp
             )
         )
-        Image(
-            modifier = Modifier.fillMaxWidth(),
-            painter = painterResource(id = R.drawable.android_sample),
-            contentDescription = "으야",
+        AsyncImage(
+            model = image,
+            modifier = Modifier.fillMaxWidth().wrapContentHeight(),
+            contentDescription = "image",
             contentScale = ContentScale.Crop
         )
     }
 }
 
-@Composable
-private fun Footer(
-    modifier: Modifier = Modifier,
-    onClickPrev: () -> Unit,
-    onClickNext: () -> Unit,
-) {
-    Column(modifier = modifier) {
-        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-            Button(
-                onClick = onClickPrev,
-                Modifier
-                    .width(140.dp)
-                    .height(56.dp),
-                shape = RoundedCornerShape(topEnd = 32.dp, bottomEnd = 32.dp),
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = DarkestPurple
-                ),
-            ) {
-                Row(
-                    Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.Start,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Image(
-                        painter = painterResource(id = R.drawable.knowledgedner_arrow_left),
-                        contentDescription = "Left Arrow",
-                        Modifier
-                            .height(12.dp)
-                            .width(8.dp)
-                    )
-                    Column(Modifier.padding(start = 16.dp)) {
-                        BaseText(
-                            text = "이전 글",
-                            color = Color.White,
-                            style = TextStyle(
-                                fontFamily = pretendard,
-                                fontWeight = FontWeight.Normal,
-                                fontSize = 10.sp
-                            )
-                        )
-                        BaseText(
-                            text = "글 제목",
-                            color = Color.White,
-                            style = TextStyle(
-                                fontFamily = pretendard,
-                                fontWeight = FontWeight.Bold,
-                                fontSize = 12.sp
-                            )
-                        )
-                    }
-                }
-            }
-            Button(
-                onClick = onClickNext,
-                Modifier
-                    .width(140.dp)
-                    .height(56.dp),
-                shape = RoundedCornerShape(topStart = 32.dp, bottomStart = 32.dp),
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = DarkestPurple
-                ),
-            ) {
-                Row(
-                    Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.End,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Column(Modifier.padding(end = 16.dp)) {
-                        BaseText(
-                            text = "다음 글",
-                            color = Color.White,
-                            style = TextStyle(
-                                fontFamily = pretendard,
-                                fontWeight = FontWeight.Normal,
-                                fontSize = 10.sp
-                            )
-                        )
-                        BaseText(
-                            text = "글 제목",
-                            color = Color.White,
-                            style = TextStyle(
-                                fontFamily = pretendard,
-                                fontWeight = FontWeight.Bold,
-                                fontSize = 12.sp
-                            )
-                        )
-                    }
-                    Image(
-                        painter = painterResource(id = R.drawable.knowledgender_arrow_right),
-                        contentDescription = "Riht Arrow",
-                        Modifier
-                            .height(12.dp)
-                            .width(8.dp)
-                    )
-                }
-            }
-        }
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview4() {
-    KnowledgenderTheme {
-        Surface(
-            modifier = Modifier.fillMaxSize(),
-            color = MaterialTheme.colorScheme.background
-        ) {
-            CardNewsDetailScreen("", hiltViewModel(),{}){
-
-            }
-        }
-    }
-}
+//@Composable
+//private fun Footer(
+//    modifier: Modifier = Modifier,
+//    onClickPrev: () -> Unit,
+//    onClickNext: () -> Unit,
+//) {
+//    Column(modifier = modifier) {
+//        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+//            Button(
+//                onClick = onClickPrev,
+//                Modifier
+//                    .width(140.dp)
+//                    .height(56.dp),
+//                shape = RoundedCornerShape(topEnd = 32.dp, bottomEnd = 32.dp),
+//                colors = ButtonDefaults.buttonColors(
+//                    containerColor = DarkestPurple
+//                ),
+//            ) {
+//                Row(
+//                    Modifier.fillMaxWidth(),
+//                    horizontalArrangement = Arrangement.Start,
+//                    verticalAlignment = Alignment.CenterVertically
+//                ) {
+//                    Image(
+//                        painter = painterResource(id = R.drawable.knowledgedner_arrow_left),
+//                        contentDescription = "Left Arrow",
+//                        Modifier
+//                            .height(12.dp)
+//                            .width(8.dp)
+//                    )
+//                    Column(Modifier.padding(start = 16.dp)) {
+//                        BaseText(
+//                            text = "이전 글",
+//                            color = Color.White,
+//                            style = TextStyle(
+//                                fontFamily = pretendard,
+//                                fontWeight = FontWeight.Normal,
+//                                fontSize = 10.sp
+//                            )
+//                        )
+//                        BaseText(
+//                            text = "글 제목",
+//                            color = Color.White,
+//                            style = TextStyle(
+//                                fontFamily = pretendard,
+//                                fontWeight = FontWeight.Bold,
+//                                fontSize = 12.sp
+//                            )
+//                        )
+//                    }
+//                }
+//            }
+//            Button(
+//                onClick = onClickNext,
+//                Modifier
+//                    .width(140.dp)
+//                    .height(56.dp),
+//                shape = RoundedCornerShape(topStart = 32.dp, bottomStart = 32.dp),
+//                colors = ButtonDefaults.buttonColors(
+//                    containerColor = DarkestPurple
+//                ),
+//            ) {
+//                Row(
+//                    Modifier.fillMaxWidth(),
+//                    horizontalArrangement = Arrangement.End,
+//                    verticalAlignment = Alignment.CenterVertically
+//                ) {
+//                    Column(Modifier.padding(end = 16.dp)) {
+//                        BaseText(
+//                            text = "다음 글",
+//                            color = Color.White,
+//                            style = TextStyle(
+//                                fontFamily = pretendard,
+//                                fontWeight = FontWeight.Normal,
+//                                fontSize = 10.sp
+//                            )
+//                        )
+//                        BaseText(
+//                            text = "글 제목",
+//                            color = Color.White,
+//                            style = TextStyle(
+//                                fontFamily = pretendard,
+//                                fontWeight = FontWeight.Bold,
+//                                fontSize = 12.sp
+//                            )
+//                        )
+//                    }
+//                    Image(
+//                        painter = painterResource(id = R.drawable.knowledgender_arrow_right),
+//                        contentDescription = "Riht Arrow",
+//                        Modifier
+//                            .height(12.dp)
+//                            .width(8.dp)
+//                    )
+//                }
+//            }
+//        }
+//    }
+//}
