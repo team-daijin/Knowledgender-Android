@@ -8,6 +8,12 @@ enum class Category{
     EQUALITY
 }
 
+data class Profile(
+    val name: String,
+    val age: String,
+    val gender: String
+)
+
 data class LoginResponse(
     val accessToken: String,
     val refreshToken: String

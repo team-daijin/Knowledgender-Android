@@ -42,7 +42,9 @@ import androidx.navigation.compose.rememberNavController
 import dgsw.stac.knowledgender.R
 import dgsw.stac.knowledgender.navigation.NavigationDepth2
 import dgsw.stac.knowledgender.navigation.Route
+import dgsw.stac.knowledgender.navigation.Route.LOGIN
 import dgsw.stac.knowledgender.ui.components.BaseText
+import dgsw.stac.knowledgender.ui.components.NoLoginDialog
 import dgsw.stac.knowledgender.ui.components.NotReadyDialog
 import dgsw.stac.knowledgender.ui.theme.BasePurple
 import dgsw.stac.knowledgender.ui.theme.LightPurple
@@ -89,7 +91,9 @@ fun MainScreen(viewModel: MainViewModel, onNavigationRequested: (String) -> Unit
 
             if (onLoginRequested.value) {
 //                NoLoginDialog(
-//                    onLoginRequested = { onNavigationRequested(LOGIN) },
+//                    onLoginRequested = {
+//                        onNavigationRequested(LOGIN)
+//                    },
 //                    openDialogCustom = onLoginRequested
 //                )
                 NotReadyDialog(openDialogCustom = onLoginRequested)
@@ -132,7 +136,7 @@ fun TopBar(
             .wrapContentHeight()
             .padding(horizontal = 24.dp, vertical = 16.dp),
         horizontalArrangement = Arrangement.SpaceBetween,
-        ) {
+    ) {
         Row(verticalAlignment = Alignment.CenterVertically) {
             Image(
                 painter = painterResource(id = R.drawable.knowledgender_logo),

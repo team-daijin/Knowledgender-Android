@@ -16,7 +16,6 @@ interface RetrofitService {
     @POST("api/auth/user/register")
     suspend fun register(@Body register: RegisterRequest)
 
-
     @POST("api/auth/login")
     suspend fun login(@Body login: LoginRequest): LoginResponse
 
@@ -29,8 +28,11 @@ interface RetrofitService {
     suspend fun cardCategory(@Query("category") category: String): List<CardCategoryResponse>
 
     @POST("/api/room/")
-    suspend fun createRoom(@Header("token")token: String)
+    suspend fun createRoom(@Header("authorization")token: String)
 
     @GET("/api/banner/")
     suspend fun banner (): List<BannerResponse>
+
+    @GET("/api/user/")
+    suspend fun getUserInfo(@Header("authorization")token: String): Profile
 }

@@ -73,7 +73,7 @@ fun CardNewsScreen(
 
     Column(
         modifier = Modifier
-            .padding(top = 48.dp)
+            .padding(top = 56.dp)
             .fillMaxSize()
             .verticalScroll(scrollState),
         verticalArrangement = Arrangement.SpaceBetween

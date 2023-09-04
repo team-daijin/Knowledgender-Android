@@ -19,9 +19,6 @@ class HomeViewModel @Inject constructor() : ViewModel() {
 
     var cardNewsAvailable = false
 
-    init {
-
-    }
 
     suspend fun getBannerData(){
         viewModelScope.launch {

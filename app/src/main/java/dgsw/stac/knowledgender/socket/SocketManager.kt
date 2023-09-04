@@ -12,7 +12,7 @@ class SocketManager {
 
         fun getSocket(token: String): Socket {
             val options = IO.Options()
-            options.query = "authorization=Bearer{$token}"
+            options.query = "authorization=Bearer $token"
             return SOCKET ?: synchronized(this) {
                 val socket = IO.socket("ws://52.78.246.108:8085",options)
                 SOCKET = socket

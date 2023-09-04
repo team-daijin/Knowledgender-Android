@@ -60,7 +60,7 @@ fun CardNewsDetailScreen(
         backRequested.invoke()
     }
 
-    Column {
+    Column(modifier = Modifier.padding(top = 56.dp)) {
         Banner()
         Column(modifier.fillMaxSize()) {
             state?.let { state ->
