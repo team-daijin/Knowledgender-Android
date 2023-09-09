@@ -53,3 +53,12 @@ data class BannerResponse(
     val banner : String,
     val redirect : String
 )
+data class AppointmentResponse(
+    val id:String,
+    val name: String,
+    val address: String,
+    val contact: String,
+    val introduce: String,
+    val image: String,
+    val appointmentAvailable: Boolean
+)

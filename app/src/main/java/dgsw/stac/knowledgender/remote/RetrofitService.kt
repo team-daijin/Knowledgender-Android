@@ -35,4 +35,11 @@ interface RetrofitService {
 
     @GET("/api/user/")
     suspend fun getUserInfo(@Header("authorization")token: String): Profile
+
+
+    @GET("/api/clinic/")
+    suspend fun appointmentView (@Query("latitude") latitude: Double,
+                                 @Query("longitude") longitude: Double) : List<AppointmentResponse>
+    @POST("/api/appointment/")
+    suspend fun getReservation (@Header("Authorization") token: String, @Body data: AppointmentReservationRequest )
 }

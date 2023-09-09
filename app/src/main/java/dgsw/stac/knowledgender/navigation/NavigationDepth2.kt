@@ -18,6 +18,7 @@ import dgsw.stac.knowledgender.ui.feature.main.childfeature.cardnewsdetail.CardN
 import dgsw.stac.knowledgender.ui.feature.main.childfeature.home.HomeScreen
 import dgsw.stac.knowledgender.ui.feature.main.childfeature.home.HomeViewModel
 import dgsw.stac.knowledgender.ui.feature.main.childfeature.map.MapScreen
+import dgsw.stac.knowledgender.ui.feature.main.childfeature.map.MapViewModel
 import dgsw.stac.knowledgender.ui.feature.main.childfeature.mypage.MyPageScreen
 import dgsw.stac.knowledgender.ui.feature.main.childfeature.mypage.MyPageViewModel
 
@@ -92,7 +93,10 @@ fun HomeScreenDestination(navController: NavHostController) {
 
 @Composable
 fun MapScreenDestination(main: MainViewModel,navController: NavHostController) {
-    MapScreen()
+    val viewModel: MapViewModel = hiltViewModel()
+    MapScreen(viewModel = viewModel){
+        navController.navigate(it)
+    }
 }
 
 @Composable
