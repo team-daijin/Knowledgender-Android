@@ -2,6 +2,7 @@ package dgsw.stac.knowledgender.util
 
 import android.app.Activity
 import android.content.Context
+import android.location.Location
 import android.net.ConnectivityManager
 import android.net.Network
 import android.net.NetworkCapabilities
@@ -18,6 +19,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Dp
+import com.google.android.gms.maps.model.LatLng
 import dagger.hilt.android.AndroidEntryPoint
 import dgsw.stac.knowledgender.pref.Pref
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -53,8 +55,17 @@ fun networkCheck(): Boolean {
     return connection == NetworkUtility.ConnectionState.Available
 }
 
-
+object Utility {
+    var reg = LatLng(0.0, 0.0)
+    val locationListener = object : android.location.LocationListener {
+        override fun onLocationChanged(location: Location) {
+            // 위치가 변경되었을 때 호출
+            reg = LatLng(location.latitude, location.longitude)
+        }
+    }
+}
 object NetworkUtility {
+
     private val Context.currentConnectivityState: ConnectionState
         get() {
             val connectivityManager =

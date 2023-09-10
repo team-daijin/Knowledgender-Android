@@ -40,4 +40,11 @@ interface RetrofitService {
 
     @DELETE("/api/user/")
     suspend fun deleteUserInfo(@Header("Authorization")token: String)
+
+
+    @GET("/api/clinic/")
+    suspend fun appointmentView (@Query("latitude") latitude: Double,
+                                 @Query("longitude") longitude: Double) : List<AppointmentResponse>
+    @POST("/api/appointment/")
+    suspend fun getReservation (@Header("Authorization") token: String, @Body data: AppointmentReservationRequest )
 }
