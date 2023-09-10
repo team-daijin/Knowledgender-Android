@@ -50,9 +50,11 @@ import dgsw.stac.knowledgender.ui.theme.BasePurple
 import dgsw.stac.knowledgender.ui.theme.LightPurple
 import dgsw.stac.knowledgender.ui.theme.LighterBlack
 import dgsw.stac.knowledgender.ui.theme.pretendard
+import dgsw.stac.knowledgender.util.BackOnPressed
+import dgsw.stac.knowledgender.util.dpToSp
 
-sealed class BottomNavItem(val name: String, val icon: Int, val route: String) {
-    object Center : BottomNavItem(name = "상담센터", icon = R.drawable.knowledgender_center, CENTER)
+enum class BottomNavItem(val name: String, val icon: Int, val route: String) {
+    Center("상담센터", R.drawable.knowledgender_center, CENTER)
     object Home : BottomNavItem(name = "홈", icon = R.drawable.knowledgender_home, HOME)
     object My : BottomNavItem(name = "마이", icon = R.drawable.knowledgender_my, MY)
 }
@@ -69,8 +71,11 @@ fun MainScreen(viewModel: MainViewModel, onNavigationRequested: (String) -> Unit
     val navController = rememberNavController()
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
+
     val isLogin by viewModel.isLogin.collectAsState()
     val onLoginRequested = remember { mutableStateOf(false) }
+    val notReady = remember { mutableStateOf(false) }
+    BackOnPressed()
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         bottomBar = {
@@ -90,13 +95,15 @@ fun MainScreen(viewModel: MainViewModel, onNavigationRequested: (String) -> Unit
         ) {
 
             if (onLoginRequested.value) {
-//                NoLoginDialog(
-//                    onLoginRequested = {
-//                        onNavigationRequested(LOGIN)
-//                    },
-//                    openDialogCustom = onLoginRequested
-//                )
-                NotReadyDialog(openDialogCustom = onLoginRequested)
+                NoLoginDialog(
+                    onLoginRequested = {
+                        onNavigationRequested(LOGIN)
+                    },
+                    openDialogCustom = onLoginRequested
+                )
+            }
+            if (notReady.value) {
+                NotReadyDialog(openDialogCustom = notReady)
             }
             NavigationDepth2(
                 navController = navController,
@@ -115,7 +122,8 @@ fun MainScreen(viewModel: MainViewModel, onNavigationRequested: (String) -> Unit
                     onLoginRequested,
                     onNavigationRequested,
                     currentRoute = currentRoute,
-                    isLogin
+                    isLogin,
+                    notReady = notReady
                 )
             }
         }
@@ -127,7 +135,8 @@ fun TopBar(
     onLoginRequested: MutableState<Boolean>,
     onNavigationRequested: (String) -> Unit,
     currentRoute: String?,
-    isLogin: Boolean
+    isLogin: Boolean,
+    notReady: MutableState<Boolean>
 ) {
 
     Row(
@@ -162,7 +171,7 @@ fun TopBar(
                 style = TextStyle(
                     fontFamily = pretendard,
                     fontWeight = FontWeight.SemiBold,
-                    fontSize = 16.sp
+                    fontSize = dpToSp(16.dp)
                 )
             )
         }
@@ -173,11 +182,12 @@ fun TopBar(
                 .width(22.5.dp)
                 .height(22.5.dp)
                 .clickable {
-                    if (!isLogin) {
-                        onLoginRequested.value = true
-                    } else {
-                        onNavigationRequested(Route.CHAT)
-                    }
+                    notReady.value = true
+//                    if (!isLogin) {
+//                        onLoginRequested.value = true
+//                    } else {
+//                        onNavigationRequested(Route.CHAT)
+//                    }
                 },
             colorFilter = if (currentRoute == HOME) {
                 ColorFilter.tint(Color.White)
@@ -224,8 +234,12 @@ fun BottomNavigationView(
                 label = {
                     Text(
                         text = item.name,
-                        style = TextStyle(fontSize = 9.sp),
-                        color = if (currentRoute == item.route) LightPurple else LighterBlack
+                        style = TextStyle(fontSize = dpToSp(9.dp)),
+                        color = when {
+                            currentRoute == item.route && currentRoute == HOME -> LightPurple
+                            else -> LighterBlack
+                        }
+
                     )
                 },
                 selectedContentColor = LightPurple,
@@ -237,8 +251,11 @@ fun BottomNavigationView(
                         onLoginRequested.value = true
                     } else {
                         navController.navigate(item.route) {
-                            navController.graph.startDestinationRoute?.let {
-                                popUpTo(it) { saveState = true }
+                            navController.graph.id.let {
+                                popUpTo(it) {
+                                    saveState = true
+                                    inclusive = true
+                                }
                             }
                             launchSingleTop = true
                             restoreState = true

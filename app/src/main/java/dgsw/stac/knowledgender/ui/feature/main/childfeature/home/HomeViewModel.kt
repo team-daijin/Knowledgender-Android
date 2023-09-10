@@ -57,7 +57,7 @@ class HomeViewModel @Inject constructor() : ViewModel() {
         }.map {
             it.map { data ->
                 cardNewsAvailable = true
-                CardItem(data.id, data.title, data.category, data.image)
+                CardItem(data.id, data.title, data.category, data.thumbnail)
             }
         }.onFailure {
             // TODO 오류 발생 시 토스트, 스낵바, 알렛 표시

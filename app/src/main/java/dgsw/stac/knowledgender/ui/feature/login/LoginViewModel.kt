@@ -55,7 +55,7 @@ class LoginViewModel @Inject constructor(
                 onSuccess(Route.MAIN)
                 application.startService(
                     Intent(application, PushNotification::class.java).apply {
-                        putExtra("Access", pref.getAccessToken().first())
+                        putExtra("Access", response.accessToken)
                     }
                 )
             }.onFailure {

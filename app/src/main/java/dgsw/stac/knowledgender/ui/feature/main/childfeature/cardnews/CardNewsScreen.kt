@@ -50,6 +50,7 @@ import dgsw.stac.knowledgender.ui.theme.BasePurple
 import dgsw.stac.knowledgender.ui.theme.DarkGradient
 import dgsw.stac.knowledgender.ui.theme.DarkestPurple
 import dgsw.stac.knowledgender.ui.theme.LightGradient
+import dgsw.stac.knowledgender.util.dpToSp
 
 
 @Composable
@@ -117,7 +118,7 @@ fun Body(
         Text(
             text = title,
             modifier = Modifier.padding(top = 28.dp, start = 28.dp), style = TextStyle(
-                fontSize = 24.sp,
+                fontSize = dpToSp(24.dp),
                 color = Color.White,
                 textAlign = TextAlign.Left,
                 fontWeight = FontWeight.Bold
@@ -126,7 +127,7 @@ fun Body(
         Text(
             text = des,
             modifier = Modifier.padding(top = 4.dp, start = 28.dp), style = TextStyle(
-                fontSize = 16.sp,
+                fontSize = dpToSp(16.dp),
                 color = Color.White,
                 textAlign = TextAlign.Left,
                 fontWeight = FontWeight.Normal
@@ -188,7 +189,7 @@ fun CardNewsItemView(item: CardCategoryResponse, onNavigationRequested: (String)
     Column(modifier = Modifier.clickable { onNavigationRequested(CARDNEWSDETAIL + "/" + item.id) }
     ) {
         AsyncImage(
-            model = item.image,
+            model = item.thumbnail,
             contentDescription = null,
             modifier = Modifier
                 .height(100.dp)
@@ -199,7 +200,7 @@ fun CardNewsItemView(item: CardCategoryResponse, onNavigationRequested: (String)
         Text(
             text = item.title,
             color = BasePurple,
-            fontSize = 20.sp,
+            fontSize = dpToSp(dp = 20.dp) ,
             textAlign = TextAlign.Left
         )
         Spacer(modifier = Modifier.height(14.dp))
@@ -214,7 +215,7 @@ fun CardNewsItemView(item: CardCategoryResponse, onNavigationRequested: (String)
                 modifier = Modifier.padding(25.dp, 5.dp, 25.dp, 5.dp),
                 text = item.category,
                 style = TextStyle(
-                    fontSize = 15.sp,
+                    fontSize = dpToSp(15.dp),
                     color = DarkestPurple,
                     textAlign = TextAlign.Left
                 )

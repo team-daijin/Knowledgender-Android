@@ -42,6 +42,7 @@ import dgsw.stac.knowledgender.ui.theme.BaseSky
 import dgsw.stac.knowledgender.ui.theme.DarkestBlack
 import dgsw.stac.knowledgender.ui.theme.LightBlack
 import dgsw.stac.knowledgender.ui.theme.pretendard
+import dgsw.stac.knowledgender.util.dpToSp
 
 @Composable
 fun CardNewsDetailScreen(
@@ -118,7 +119,7 @@ private fun Header(title: String, writer: String, category: String) {
             style = TextStyle(
                 fontFamily = pretendard,
                 fontWeight = FontWeight.Bold,
-                fontSize = 24.sp
+                fontSize = dpToSp(24.dp)
             )
         )
         Row(
@@ -140,7 +141,7 @@ private fun Header(title: String, writer: String, category: String) {
                     style = TextStyle(
                         fontFamily = pretendard,
                         fontWeight = FontWeight.Normal,
-                        fontSize = 12.sp
+                        fontSize = dpToSp(12.dp)
                     )
                 )
             }
@@ -158,7 +159,7 @@ private fun Header(title: String, writer: String, category: String) {
                     style = TextStyle(
                         fontFamily = pretendard,
                         fontWeight = FontWeight.Medium,
-                        fontSize = 12.sp
+                        fontSize = dpToSp(12.dp)
                     )
                 )
             }
@@ -188,7 +189,7 @@ private fun Body(content: String,image: String) {
             style = TextStyle(
                 fontFamily = pretendard,
                 fontWeight = FontWeight.Normal,
-                fontSize = 16.sp
+                fontSize = dpToSp(16.dp)
             )
         )
         AsyncImage(
@@ -237,7 +238,7 @@ private fun Body(content: String,image: String) {
 //                            style = TextStyle(
 //                                fontFamily = pretendard,
 //                                fontWeight = FontWeight.Normal,
-//                                fontSize = 10.sp
+//                                fontSize = dpToSp(10.dp)
 //                            )
 //                        )
 //                        BaseText(
@@ -246,7 +247,7 @@ private fun Body(content: String,image: String) {
 //                            style = TextStyle(
 //                                fontFamily = pretendard,
 //                                fontWeight = FontWeight.Bold,
-//                                fontSize = 12.sp
+//                                fontSize = dpToSp(12.dp)
 //                            )
 //                        )
 //                    }
@@ -274,7 +275,7 @@ private fun Body(content: String,image: String) {
 //                            style = TextStyle(
 //                                fontFamily = pretendard,
 //                                fontWeight = FontWeight.Normal,
-//                                fontSize = 10.sp
+//                                fontSize = dpToSp(10.dp)
 //                            )
 //                        )
 //                        BaseText(
@@ -283,7 +284,7 @@ private fun Body(content: String,image: String) {
 //                            style = TextStyle(
 //                                fontFamily = pretendard,
 //                                fontWeight = FontWeight.Bold,
-//                                fontSize = 12.sp
+//                                fontSize = dpToSp(12.dp)
 //                            )
 //                        )
 //                    }

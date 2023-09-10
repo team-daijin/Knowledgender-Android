@@ -34,6 +34,7 @@ import dgsw.stac.knowledgender.ui.theme.BasePurple
 import dgsw.stac.knowledgender.ui.theme.KnowledgenderTheme
 import dgsw.stac.knowledgender.ui.theme.LightSky
 import dgsw.stac.knowledgender.ui.theme.pretendard
+import dgsw.stac.knowledgender.util.dpToSp
 
 @Composable
 fun ChattingScreen(viewModel: ChattingViewModel) {
@@ -101,7 +102,7 @@ private fun Footer(message: State<String>, viewModel: ChattingViewModel) {
                     style = TextStyle(
                         fontFamily = pretendard,
                         fontWeight = FontWeight.Medium,
-                        fontSize = 16.sp
+                        fontSize = dpToSp(16.dp)
                     )
                 )
             }

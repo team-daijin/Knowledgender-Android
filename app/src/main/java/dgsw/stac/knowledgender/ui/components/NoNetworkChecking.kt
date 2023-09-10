@@ -10,10 +10,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import dgsw.stac.knowledgender.R
 import dgsw.stac.knowledgender.ui.theme.LighterRed
 import dgsw.stac.knowledgender.ui.theme.pretendard
+import dgsw.stac.knowledgender.util.dpToSp
 
 @Composable
 fun NoNetworkChecking(modifier: Modifier = Modifier) {
@@ -25,7 +27,7 @@ fun NoNetworkChecking(modifier: Modifier = Modifier) {
             style = TextStyle(
                 fontFamily = pretendard,
                 fontWeight = FontWeight.Normal,
-                fontSize = 16.sp
+                fontSize = dpToSp(16.dp)
             )
         )
     }

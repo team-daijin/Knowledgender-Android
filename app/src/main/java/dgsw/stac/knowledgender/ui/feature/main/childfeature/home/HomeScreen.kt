@@ -1,22 +1,20 @@
 package dgsw.stac.knowledgender.ui.feature.main.childfeature.home
 
-import android.util.Log
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -29,24 +27,21 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import dgsw.stac.knowledgender.R
 import dgsw.stac.knowledgender.model.CardItem
+import dgsw.stac.knowledgender.remote.BannerResponse
 import dgsw.stac.knowledgender.remote.Category
 import dgsw.stac.knowledgender.ui.components.BannerView
-import dgsw.stac.knowledgender.ui.components.BaseText
 import dgsw.stac.knowledgender.ui.components.CardLists
 import dgsw.stac.knowledgender.ui.components.NoNetworkChecking
 import dgsw.stac.knowledgender.ui.feature.main.CARDNEWS
 import dgsw.stac.knowledgender.ui.theme.BaseBlack
-import dgsw.stac.knowledgender.ui.theme.DarkestBlack
-import dgsw.stac.knowledgender.ui.theme.LighterPurple
-import dgsw.stac.knowledgender.ui.theme.pretendard
 import dgsw.stac.knowledgender.util.BODY
 import dgsw.stac.knowledgender.util.CRIME
 import dgsw.stac.knowledgender.util.EQUALITY
 import dgsw.stac.knowledgender.util.HEART
 import dgsw.stac.knowledgender.util.RELATIONSHIP
+import dgsw.stac.knowledgender.util.dpToSp
 import dgsw.stac.knowledgender.util.networkCheck
 
 @Composable
@@ -64,8 +59,7 @@ fun HomeScreen(
         Column(
             modifier = modifier
                 .fillMaxSize()
-                .verticalScroll(scrollState),
-            verticalArrangement = Arrangement.SpaceBetween
+                .verticalScroll(scrollState)
         ) {
             Header(viewModel)
             Body(viewModel, onNavigationRequested)
@@ -94,28 +88,39 @@ fun Header(viewModel: HomeViewModel) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .height(330.dp)
+            .height(300.dp)
     ) {
-        bannerData.value?.let {
-            BannerView(it)
-        } ?: run {
-            Surface(modifier = Modifier.fillMaxSize(),color = LighterPurple) {
-                Column(
-                    modifier = Modifier.fillMaxSize(),
-                    verticalArrangement = Arrangement.Center,
-                    horizontalAlignment = Alignment.CenterHorizontally
-                    ) {
-                    BaseText(
-                        text = "준비된 배너가 없어요", color = DarkestBlack, style = TextStyle(
-                            fontFamily = pretendard,
-                            fontWeight = FontWeight.Bold,
-                            fontSize = 24.sp
-                        )
-                    )
-                }
-
-            }
-        }
+        BannerView(
+            listOf(
+                BannerResponse("1", "https://url.kr/ad7b69", "1"),
+                BannerResponse(
+                    "1",
+                    "https://demo.ycart.kr/shopboth_farm_max5_001/data/editor/1612/cd2f39a0598c81712450b871c218164f_1482469221_493.jpg",
+                    "1"
+                ),
+                BannerResponse("1","https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSlrXPiQcj25vya6gJ71K_9W_4TSLoNPMEaXQ&usqp=CAU","1")
+            )
+        )
+//        bannerData.value?.let {
+//          BannerView(it)
+//        } ?: run {
+//            Surface(modifier = Modifier.fillMaxSize(),color = LightSky) {
+//                Column(
+//                    modifier = Modifier.fillMaxSize(),
+//                    verticalArrangement = Arrangement.Center,
+//                    horizontalAlignment = Alignment.CenterHorizontally
+//                    ) {
+//                    BaseText(
+//                        text = "준비된 배너가 없어요", color = DarkestBlack, style = TextStyle(
+//                            fontFamily = pretendard,
+//                            fontWeight = FontWeight.Bold,
+//                            fontSize = dpToSp(24.dp)
+//                        )
+//                    )
+//                }
+//
+//            }
+//        }
 
     }
 }
@@ -128,8 +133,8 @@ fun Body(
     val iconData = listOf(
         IconData(R.drawable.heart, "마음", HEART),
         IconData(R.drawable.body, "신체", BODY),
-        IconData(R.drawable.crime, "폭력", CRIME),
         IconData(R.drawable.relationship, "관계", RELATIONSHIP),
+        IconData(R.drawable.crime, "폭력", CRIME),
         IconData(R.drawable.equality, "평등", EQUALITY)
     )
     val cardData by produceState(initialValue = emptyList(), producer = {
@@ -151,19 +156,19 @@ fun Body(
             )
         )
     })
-
     Icons(iconData, onNavigationRequested)
     CardLists(cardData, onNavigationRequested)
 }
 
 @Composable
 fun Icon(data: IconData, onNavigateTo: (String) -> Unit) {
-    Column(horizontalAlignment = Alignment.CenterHorizontally) {
-        IconButton(onClick = {
-            onNavigateTo("$CARDNEWS/${data.category}")
-//            onNavigationRequested = { navController.navigate( CardNewsStringToEnum(data.title) ) }
-            Log.d("TAG", "${data.title}: 페이지 ${data.title} 클릭 ")
-        }) {
+    Column(modifier = Modifier.wrapContentHeight(),horizontalAlignment = Alignment.CenterHorizontally) {
+        IconButton(
+            modifier = Modifier.size(60.dp),
+            onClick = {
+                onNavigateTo("$CARDNEWS/${data.category}")
+            }
+        ) {
             Image(
                 painter = painterResource(data.img),
                 contentDescription = data.title,
@@ -172,17 +177,22 @@ fun Icon(data: IconData, onNavigateTo: (String) -> Unit) {
         }
         Text(
             text = data.title,
-            style = TextStyle(fontSize = 14.sp, color = BaseBlack, fontWeight = FontWeight.Medium)
+            style = TextStyle(
+                fontSize = dpToSp(dp = 14.dp),
+                color = BaseBlack,
+                fontWeight = FontWeight.Medium
+            )
         )
     }
-    Spacer(modifier = Modifier.width(10.dp))
 }
 
 @Composable
 fun Icons(dataList: List<IconData>, onNavigateTo: (String) -> Unit) {
     Row(
-        modifier = Modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.Center,
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(top = 20.dp),
+        horizontalArrangement = Arrangement.SpaceEvenly,
         verticalAlignment = Alignment.CenterVertically
     ) {
         dataList.forEach {
@@ -190,13 +200,3 @@ fun Icons(dataList: List<IconData>, onNavigateTo: (String) -> Unit) {
         }
     }
 }
-
-
-//@Preview(showBackground = true)
-//@Composable
-//fun GreetingPreview4() {
-//    KnowledgenderAndroidTheme {
-//        HomeScreen(viewModel = MainViewModel(), onNavigateTo = )
-//    }
-//}
-

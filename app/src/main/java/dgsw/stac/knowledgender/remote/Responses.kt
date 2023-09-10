@@ -27,6 +27,7 @@ data class CardNewsDetailResponse(
     val writer: String,
     val category: Category,
     val content: String,
+    val thumbnail: String,
     val image: String
 )
 
@@ -36,6 +37,7 @@ data class CardCategoryResponse(
     val writer: String,
     val category: String,
     val content: String,
+    val thumbnail: String,
     val image: String
 )
 

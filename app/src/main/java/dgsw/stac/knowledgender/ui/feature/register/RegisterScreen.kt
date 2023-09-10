@@ -57,6 +57,7 @@ import dgsw.stac.knowledgender.ui.theme.KnowledgenderTheme
 import dgsw.stac.knowledgender.ui.theme.LightBlack
 import dgsw.stac.knowledgender.ui.theme.LightSky
 import dgsw.stac.knowledgender.ui.theme.pretendard
+import dgsw.stac.knowledgender.util.dpToSp
 
 
 @Composable
@@ -103,7 +104,7 @@ private fun Header() {
                 style = TextStyle(
                     fontFamily = pretendard,
                     fontWeight = FontWeight.SemiBold,
-                    fontSize = 20.sp
+                    fontSize = dpToSp(20.dp)
                 )
             )
         }
@@ -115,7 +116,7 @@ private fun Header() {
             style = TextStyle(
                 fontFamily = pretendard,
                 fontWeight = FontWeight.Bold,
-                fontSize = 20.sp
+                fontSize = dpToSp(20.dp)
             )
         )
         BaseText(
@@ -125,7 +126,7 @@ private fun Header() {
             style = TextStyle(
                 fontFamily = pretendard,
                 fontWeight = FontWeight.Normal,
-                fontSize = 14.sp
+                fontSize = dpToSp(14.dp)
             )
         )
     }
@@ -167,7 +168,7 @@ private fun Body(viewModel: RegisterViewModel) {
             text = stringResource(id = R.string.name),
             color = DarkestPurple,
             style = TextStyle(
-                fontSize = 16.sp,
+                fontSize = dpToSp(16.dp),
                 fontFamily = pretendard,
                 fontWeight = FontWeight.Medium
             )
@@ -197,7 +198,7 @@ private fun Body(viewModel: RegisterViewModel) {
                     style = TextStyle(
                         fontFamily = pretendard,
                         fontWeight = FontWeight.Normal,
-                        fontSize = 16.sp
+                        fontSize = dpToSp(16.dp)
                     )
                 )
                 Box(
@@ -230,7 +231,7 @@ private fun Body(viewModel: RegisterViewModel) {
                     style = TextStyle(
                         fontFamily = pretendard,
                         fontWeight = FontWeight.Normal,
-                        fontSize = 16.sp
+                        fontSize = dpToSp(16.dp)
                     )
                 )
                 Row() {
@@ -253,7 +254,7 @@ private fun Body(viewModel: RegisterViewModel) {
                             style = TextStyle(
                                 fontFamily = pretendard,
                                 fontWeight = FontWeight.Normal,
-                                fontSize = 16.sp
+                                fontSize = dpToSp(16.dp)
                             ),
                             color = if (viewModel.gender.collectAsState().value == "남성") {
                                 Color.White
@@ -281,7 +282,7 @@ private fun Body(viewModel: RegisterViewModel) {
                             style = TextStyle(
                                 fontFamily = pretendard,
                                 fontWeight = FontWeight.Normal,
-                                fontSize = 16.sp
+                                fontSize = dpToSp(16.dp)
                             ),
                             color = if (viewModel.gender.collectAsState().value == "여성") {
                                 Color.White
@@ -323,7 +324,7 @@ private fun Footer(viewModel: RegisterViewModel, onNavigationRequested: (String)
             textStyle = TextStyle(
                 fontFamily = pretendard,
                 fontWeight = FontWeight.SemiBold,
-                fontSize = 16.sp
+                fontSize = dpToSp(16.dp)
             )
         )
         ClickableText(
@@ -339,7 +340,7 @@ private fun Footer(viewModel: RegisterViewModel, onNavigationRequested: (String)
             style = TextStyle(
                 fontFamily = pretendard,
                 fontWeight = FontWeight.Light,
-                fontSize = 16.sp
+                fontSize = dpToSp(16.dp)
             )
         )
     }

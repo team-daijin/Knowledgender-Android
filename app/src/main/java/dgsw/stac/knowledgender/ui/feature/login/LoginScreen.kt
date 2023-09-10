@@ -34,6 +34,7 @@ import dgsw.stac.knowledgender.ui.theme.DarkestPurple
 import dgsw.stac.knowledgender.ui.theme.LightBlack
 import dgsw.stac.knowledgender.ui.theme.LightSky
 import dgsw.stac.knowledgender.ui.theme.pretendard
+import dgsw.stac.knowledgender.util.dpToSp
 
 
 @Composable
@@ -66,7 +67,7 @@ private fun Header() {
             style = TextStyle(
                 fontFamily = pretendard,
                 fontWeight = FontWeight.Light,
-                fontSize = 16.sp
+                fontSize = dpToSp(16.dp)
             )
         )
         BaseText(
@@ -75,7 +76,7 @@ private fun Header() {
             style = TextStyle(
                 fontFamily = pretendard,
                 fontWeight = FontWeight.SemiBold,
-                fontSize = 36.sp
+                fontSize = dpToSp(36.dp)
             )
         )
     }
@@ -126,7 +127,7 @@ private fun Body(viewModel: LoginViewModel, onNavigationRequested: (String) -> U
             textStyle = TextStyle(
                 fontFamily = pretendard,
                 fontWeight = FontWeight.SemiBold,
-                fontSize = 16.sp
+                fontSize = dpToSp(16.dp)
             )
         )
         Row(
@@ -146,7 +147,7 @@ private fun Body(viewModel: LoginViewModel, onNavigationRequested: (String) -> U
                 style = TextStyle(
                     fontFamily = pretendard,
                     fontWeight = FontWeight.Light,
-                    fontSize = 16.sp
+                    fontSize = dpToSp(16.dp)
                 )
             )
             ClickableText(
@@ -159,7 +160,7 @@ private fun Body(viewModel: LoginViewModel, onNavigationRequested: (String) -> U
                 style = TextStyle(
                     fontFamily = pretendard,
                     fontWeight = FontWeight.Light,
-                    fontSize = 16.sp
+                    fontSize = dpToSp(16.dp)
                 )
             )
         }
