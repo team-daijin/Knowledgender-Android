@@ -38,7 +38,6 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import dgsw.stac.knowledgender.R
 import dgsw.stac.knowledgender.navigation.NavigationDepth2
 import dgsw.stac.knowledgender.navigation.Route.LOGIN
@@ -200,7 +199,6 @@ fun TopBar(
 
 }
 
-@OptIn(ExperimentalPermissionsApi::class)
 @Composable
 fun BottomNavigationView(
     onLoginRequested: MutableState<Boolean>,
@@ -248,19 +246,8 @@ fun BottomNavigationView(
                 alwaysShowLabel = true,
                 onClick = {
                     if (!isLogin && item.route != HOME) {
-                        notReady.value = true
-//                        onLoginRequested.value = true
+                        onLoginRequested.value = true
                     }
-//                        when {
-//                            fineLocationPermission.hasPermission -> {
-//
-//                            }
-//                            else -> {
-//                                // Request the permission
-//                                fineLocationPermission.launchPermissionRequest()
-//                                coarseLocationPermission.launchPermissionRequest()
-//                            }
-//                        }
                         else {
                         navController.navigate(item.route) {
                             navController.graph.id.let {

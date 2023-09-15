@@ -2,34 +2,23 @@ package dgsw.stac.knowledgender.ui.feature.main.childfeature.map
 
 
 
-import android.app.Application
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.util.Log
-import android.view.MotionEvent
-import android.widget.Toast
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.windowInsetsBottomHeight
-import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.BottomSheetState
-import androidx.compose.material.BottomSheetValue
-import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.rememberBottomSheetState
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.BottomSheetDefaults
 import androidx.compose.material3.BottomSheetScaffold
@@ -37,9 +26,7 @@ import androidx.compose.material3.BottomSheetScaffoldState
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberBottomSheetScaffoldState
 import androidx.compose.runtime.Composable
@@ -54,18 +41,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.input.pointer.pointerInteropFilter
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat
 import coil.compose.AsyncImage
 import com.google.android.gms.location.LocationRequest
-import com.google.android.gms.maps.GoogleMapOptions
 import com.google.android.gms.maps.model.BitmapDescriptor
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.CameraPosition
@@ -81,13 +64,9 @@ import dgsw.stac.knowledgender.R
 import dgsw.stac.knowledgender.model.MarkerItem
 import dgsw.stac.knowledgender.ui.components.MapItemList
 import dgsw.stac.knowledgender.ui.components.TextFieldSet
-import dgsw.stac.knowledgender.ui.feature.main.childfeature.home.Body
-import dgsw.stac.knowledgender.ui.feature.register.RegisterScreen
-import dgsw.stac.knowledgender.ui.feature.register.RegisterViewModel
 import dgsw.stac.knowledgender.ui.theme.BaseBlack
 import dgsw.stac.knowledgender.ui.theme.BasePurple
 import dgsw.stac.knowledgender.ui.theme.DarkBlack
-import dgsw.stac.knowledgender.ui.theme.KnowledgenderTheme
 import dgsw.stac.knowledgender.ui.theme.LightBlack
 import dgsw.stac.knowledgender.ui.theme.pretendard
 import kotlinx.coroutines.CoroutineScope
@@ -178,7 +157,6 @@ fun body(viewModel: MapViewModel, scope: CoroutineScope, state: BottomSheetScaff
         mutableStateOf(
             MapUiSettings(
                 scrollGesturesEnabled = true,
-                zoomControlsEnabled = true,
                 zoomGesturesEnabled = true,
                 myLocationButtonEnabled = true
             )
@@ -215,16 +193,6 @@ fun body(viewModel: MapViewModel, scope: CoroutineScope, state: BottomSheetScaff
         cameraPositionState = cameraPositionState,
         modifier = Modifier
             .fillMaxSize()
-//            .pointerInteropFilter {
-//                when (it.action) {
-//                    MotionEvent.ACTION_DOWN, MotionEvent.ACTION_MOVE, MotionEvent.ACTION_UP -> {
-//                        viewModel.viewState = 0
-//                    }
-//
-//                    else -> false
-//                }
-//                true
-//            },
     ) {
         for (markerItem in markerItems) {
             val markerReg = LatLng(markerItem.latitude, markerItem.longitude)
