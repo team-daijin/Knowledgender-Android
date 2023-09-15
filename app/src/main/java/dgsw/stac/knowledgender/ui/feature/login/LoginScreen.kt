@@ -86,14 +86,16 @@ private fun Header() {
 @Composable
 private fun Body(viewModel: LoginViewModel, onNavigationRequested: (String) -> Unit) {
     val isValidLoginData by viewModel.enabledButton.collectAsState()
+    val isError by viewModel.error.collectAsState()
+    val errorMSG by viewModel.errorMSG.collectAsState()
 
     Column {
         TextFieldSet(
             textContent = stringResource(id = R.string.id),
             textFieldPlaceHolder = stringResource(id = R.string.id_placeholder),
-            errorMsg = stringResource(id = R.string.id_wrong),
+            errorMsg = "",
             value = viewModel.id,
-            isError = viewModel.idError,
+            isError = isError,
             onValueChange = {
                 viewModel.id = it
             }
@@ -101,9 +103,9 @@ private fun Body(viewModel: LoginViewModel, onNavigationRequested: (String) -> U
         TextFieldSet(
             textContent = stringResource(id = R.string.pw),
             textFieldPlaceHolder = stringResource(id = R.string.pw_placeholder),
-            errorMsg = stringResource(id = R.string.pw_wrong),
+            errorMsg = errorMSG,
             value = viewModel.pw,
-            isError = viewModel.pwError,
+            isError = isError,
             isPw = true,
             onValueChange = {
                 viewModel.pw = it

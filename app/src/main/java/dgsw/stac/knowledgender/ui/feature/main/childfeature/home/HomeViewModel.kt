@@ -51,11 +51,11 @@ class HomeViewModel @Inject constructor() : ViewModel() {
 //        }
 //        return data
 //    }
-    suspend fun getCardCategory(category: Category): List<CardItem> {
+    suspend fun getCardCategory(category: String): List<CardItem> {
         return kotlin.runCatching {
-            RetrofitBuilder.apiService.cardCategory(category.name)
+            RetrofitBuilder.apiService.cardCategory(category)
         }.map {
-            it.map { data ->
+            it.cardResponseList.map {data ->
                 cardNewsAvailable = true
                 CardItem(data.id, data.title, data.category, data.thumbnail)
             }

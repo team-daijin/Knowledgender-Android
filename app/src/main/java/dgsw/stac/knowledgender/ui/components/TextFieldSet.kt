@@ -18,7 +18,7 @@ fun TextFieldSet(
     textFieldPlaceHolder: String,
     errorMsg: String,
     value: String,
-    isError: Boolean,
+    isError: Boolean = false,
     isPw: Boolean = false,
     onValueChange: (String) -> Unit
 ) {

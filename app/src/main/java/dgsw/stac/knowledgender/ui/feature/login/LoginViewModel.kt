@@ -2,7 +2,6 @@ package dgsw.stac.knowledgender.ui.feature.login
 
 import android.app.Application
 import android.content.Intent
-import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -15,9 +14,10 @@ import dgsw.stac.knowledgender.pref.Pref
 import dgsw.stac.knowledgender.remote.LoginRequest
 import dgsw.stac.knowledgender.remote.RetrofitBuilder
 import dgsw.stac.knowledgender.socket.PushNotification
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -38,8 +38,11 @@ class LoginViewModel @Inject constructor(
         id.isNotEmpty() && pw.isNotEmpty()
     }.stateIn(viewModelScope, SharingStarted.Lazily, false)
 
-    var idError = false
-    var pwError = false
+    private val _errorMSG = MutableStateFlow("")
+    val errorMSG: StateFlow<String> = _errorMSG
+
+    private val _error = MutableStateFlow(false)
+    val error: StateFlow<Boolean> = _error
 
     fun loginPOST(onSuccess: (String) -> Unit) {
         viewModelScope.launch {
@@ -51,7 +54,8 @@ class LoginViewModel @Inject constructor(
                     )
                 )
             }.onSuccess { response ->
-                pref.saveToken(response.accessToken, response.refreshToken)
+                pref.saveAccessToken(response.accessToken)
+                pref.saveRefreshToken(response.refreshToken)
                 onSuccess(Route.MAIN)
                 application.startService(
                     Intent(application, PushNotification::class.java).apply {
@@ -59,9 +63,12 @@ class LoginViewModel @Inject constructor(
                     }
                 )
             }.onFailure {
-                Log.d("euya", "로그인 실패")
-                idError = true
-                pwError = true
+                when(it.message.toString()){
+                    "HTTP 500" -> _errorMSG.value = "서버가 원활하지 않습니다.."
+                    "HTTP 404" -> _errorMSG.value = "해당 유저를 찾지 못했습니다."
+                    "HTTP 400" -> _errorMSG.value = "로그인에 실패했습니다."
+                }
+                _error.value = true
             }
         }
     }

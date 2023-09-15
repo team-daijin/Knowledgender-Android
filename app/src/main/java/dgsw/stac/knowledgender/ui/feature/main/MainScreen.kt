@@ -35,13 +35,12 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import dgsw.stac.knowledgender.R
 import dgsw.stac.knowledgender.navigation.NavigationDepth2
-import dgsw.stac.knowledgender.navigation.Route
 import dgsw.stac.knowledgender.navigation.Route.LOGIN
 import dgsw.stac.knowledgender.ui.components.BaseText
 import dgsw.stac.knowledgender.ui.components.NoLoginDialog
@@ -53,8 +52,10 @@ import dgsw.stac.knowledgender.ui.theme.pretendard
 import dgsw.stac.knowledgender.util.BackOnPressed
 import dgsw.stac.knowledgender.util.dpToSp
 
-enum class BottomNavItem(val name: String, val icon: Int, val route: String) {
-    Center("상담센터", R.drawable.knowledgender_center, CENTER)
+sealed class BottomNavItem(val name: String, val icon: Int, val route: String) {
+    object Center :
+        BottomNavItem(name = "상담센터", icon = R.drawable.knowledgender_center, route = CENTER)
+
     object Home : BottomNavItem(name = "홈", icon = R.drawable.knowledgender_home, HOME)
     object My : BottomNavItem(name = "마이", icon = R.drawable.knowledgender_my, MY)
 }
@@ -83,7 +84,8 @@ fun MainScreen(viewModel: MainViewModel, onNavigationRequested: (String) -> Unit
                 onLoginRequested,
                 navController = navController,
                 currentRoute = currentRoute,
-                isLogin = isLogin
+                isLogin = isLogin,
+                notReady = notReady
             )
         }
     )
@@ -200,19 +202,20 @@ fun TopBar(
 
 }
 
+@OptIn(ExperimentalPermissionsApi::class)
 @Composable
 fun BottomNavigationView(
     onLoginRequested: MutableState<Boolean>,
     navController: NavHostController,
     currentRoute: String?,
-    isLogin: Boolean
+    isLogin: Boolean,
+    notReady: MutableState<Boolean>
 ) {
     val items = listOf(
         BottomNavItem.Center,
         BottomNavItem.Home,
         BottomNavItem.My
     )
-
     BottomNavigation(
         modifier = Modifier
             .fillMaxWidth()
@@ -239,7 +242,6 @@ fun BottomNavigationView(
                             currentRoute == item.route && currentRoute == HOME -> LightPurple
                             else -> LighterBlack
                         }
-
                     )
                 },
                 selectedContentColor = LightPurple,
@@ -248,8 +250,20 @@ fun BottomNavigationView(
                 alwaysShowLabel = true,
                 onClick = {
                     if (!isLogin && item.route != HOME) {
-                        onLoginRequested.value = true
-                    } else {
+                        notReady.value = true
+//                        onLoginRequested.value = true
+                    }
+//                        when {
+//                            fineLocationPermission.hasPermission -> {
+//
+//                            }
+//                            else -> {
+//                                // Request the permission
+//                                fineLocationPermission.launchPermissionRequest()
+//                                coarseLocationPermission.launchPermissionRequest()
+//                            }
+//                        }
+                        else {
                         navController.navigate(item.route) {
                             navController.graph.id.let {
                                 popUpTo(it) {

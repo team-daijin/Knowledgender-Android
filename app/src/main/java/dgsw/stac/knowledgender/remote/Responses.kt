@@ -5,7 +5,8 @@ enum class Category{
     BODY,
     CRIME,
     RELATIONSHIP,
-    EQUALITY
+    EQUALITY,
+    NONE
 }
 
 data class Profile(
@@ -21,17 +22,7 @@ data class LoginResponse(
 //"accessToken": String,
 //"refreshToken": String
 
-data class CardNewsDetailResponse(
-    val id: String,
-    val title: String,
-    val writer: String,
-    val category: Category,
-    val content: String,
-    val thumbnail: String,
-    val image: String
-)
-
-data class CardCategoryResponse(
+data class CardResponse(
     val id: String,
     val title: String,
     val writer: String,
@@ -39,6 +30,10 @@ data class CardCategoryResponse(
     val content: String,
     val thumbnail: String,
     val image: String
+)
+
+data class CardResponseList(
+    val cardResponseList: List<CardResponse>
 )
 
 //data class CategoryCardItem(

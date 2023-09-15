@@ -3,7 +3,8 @@ package dgsw.stac.knowledgender.ui.feature.main.childfeature.cardnews
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import dgsw.stac.knowledgender.remote.CardCategoryResponse
+import dgsw.stac.knowledgender.remote.CardResponse
+import dgsw.stac.knowledgender.remote.CardResponseList
 import dgsw.stac.knowledgender.remote.RetrofitBuilder
 import dgsw.stac.knowledgender.util.BODY
 import dgsw.stac.knowledgender.util.CRIME
@@ -17,8 +18,11 @@ import javax.inject.Inject
 
 @HiltViewModel
 class CardNewsViewModel @Inject constructor() : ViewModel() {
-    private val _cardNews: MutableStateFlow<List<CardCategoryResponse>?> = MutableStateFlow(emptyList())
-    val cardNews: StateFlow<List<CardCategoryResponse>?> = _cardNews.asStateFlow()
+    private val _cardNews: MutableStateFlow<CardResponseList?> = MutableStateFlow(
+        CardResponseList(
+            emptyList())
+    )
+    val cardNews: StateFlow<CardResponseList?> = _cardNews.asStateFlow()
 
     fun getCardNewsByCategory(category: String) {
         viewModelScope.launch {
