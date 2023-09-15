@@ -53,8 +53,8 @@ import dgsw.stac.knowledgender.ui.theme.pretendard
 import dgsw.stac.knowledgender.util.BackOnPressed
 import dgsw.stac.knowledgender.util.dpToSp
 
-enum class BottomNavItem(val name: String, val icon: Int, val route: String) {
-    Center("상담센터", R.drawable.knowledgender_center, CENTER)
+sealed class BottomNavItem(val name: String, val icon: Int, val route: String) {
+    object Center: BottomNavItem(name = "상담센터",icon = R.drawable.knowledgender_center, CENTER)
     object Home : BottomNavItem(name = "홈", icon = R.drawable.knowledgender_home, HOME)
     object My : BottomNavItem(name = "마이", icon = R.drawable.knowledgender_my, MY)
 }

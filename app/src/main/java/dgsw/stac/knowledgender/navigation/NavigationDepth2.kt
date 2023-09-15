@@ -34,7 +34,7 @@ fun NavigationDepth2(
             HomeScreenDestination(navController = navController)
         }
         composable(BottomNavItem.Center.route) {
-            MapScreenDestination(viewModel, navController)
+            MapScreenDestination(navController)
         }
         composable(BottomNavItem.My.route) {
             MyScreenDestination(viewModel, navController)
@@ -96,7 +96,7 @@ fun HomeScreenDestination(navController: NavHostController) {
 }
 
 @Composable
-fun MapScreenDestination(main: MainViewModel,navController: NavHostController) {
+fun MapScreenDestination(navController: NavHostController) {
     val viewModel: MapViewModel = hiltViewModel()
     MapScreen(viewModel = viewModel){
         navController.navigate(it)
