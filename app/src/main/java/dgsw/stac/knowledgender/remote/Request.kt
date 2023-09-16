@@ -22,3 +22,9 @@ data class LoginRequest(
 //"accountId": String,
 //"password": String
 
+data class AppointmentReservationRequest(
+    val date : String,
+    val time : String,
+    val content: String,
+    val clientId: String
+)

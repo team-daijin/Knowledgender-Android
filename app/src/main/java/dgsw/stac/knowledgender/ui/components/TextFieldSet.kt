@@ -10,6 +10,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import dgsw.stac.knowledgender.ui.theme.DarkestPurple
 import dgsw.stac.knowledgender.ui.theme.pretendard
+import dgsw.stac.knowledgender.util.dpToSp
 
 @Composable
 fun TextFieldSet(
@@ -17,7 +18,7 @@ fun TextFieldSet(
     textFieldPlaceHolder: String,
     errorMsg: String,
     value: String,
-    isError: Boolean,
+    isError: Boolean = false,
     isPw: Boolean = false,
     onValueChange: (String) -> Unit
 ) {
@@ -25,7 +26,7 @@ fun TextFieldSet(
         text = textContent,
         color = DarkestPurple,
         style = TextStyle(
-            fontSize = 16.sp,
+            fontSize = dpToSp(16.dp),
             fontFamily = pretendard,
             fontWeight = FontWeight.Medium
         )

@@ -23,6 +23,7 @@ import dgsw.stac.knowledgender.ui.theme.BasePurple
 import dgsw.stac.knowledgender.ui.theme.DarkestBlack
 import dgsw.stac.knowledgender.ui.theme.LighterPurple
 import dgsw.stac.knowledgender.ui.theme.pretendard
+import dgsw.stac.knowledgender.util.dpToSp
 
 @Composable
 fun NotReadyDialog(openDialogCustom: MutableState<Boolean>) {
@@ -48,7 +49,7 @@ private fun DialogView(openDialogCustom: MutableState<Boolean>) {
                 style = TextStyle(
                     fontFamily = pretendard,
                     fontWeight = FontWeight.SemiBold,
-                    fontSize = 24.sp
+                    fontSize = dpToSp(24.dp)
                 )
             )
             Button(
@@ -67,7 +68,7 @@ private fun DialogView(openDialogCustom: MutableState<Boolean>) {
                     style = TextStyle(
                         fontFamily = pretendard,
                         fontWeight = FontWeight.Medium,
-                        fontSize = 16.sp
+                        fontSize = dpToSp(16.dp)
                     )
                 )
             }

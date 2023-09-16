@@ -34,6 +34,7 @@ import dgsw.stac.knowledgender.ui.theme.DarkestPurple
 import dgsw.stac.knowledgender.ui.theme.LightBlack
 import dgsw.stac.knowledgender.ui.theme.LightSky
 import dgsw.stac.knowledgender.ui.theme.pretendard
+import dgsw.stac.knowledgender.util.dpToSp
 
 
 @Composable
@@ -66,7 +67,7 @@ private fun Header() {
             style = TextStyle(
                 fontFamily = pretendard,
                 fontWeight = FontWeight.Light,
-                fontSize = 16.sp
+                fontSize = dpToSp(16.dp)
             )
         )
         BaseText(
@@ -75,7 +76,7 @@ private fun Header() {
             style = TextStyle(
                 fontFamily = pretendard,
                 fontWeight = FontWeight.SemiBold,
-                fontSize = 36.sp
+                fontSize = dpToSp(36.dp)
             )
         )
     }
@@ -85,14 +86,16 @@ private fun Header() {
 @Composable
 private fun Body(viewModel: LoginViewModel, onNavigationRequested: (String) -> Unit) {
     val isValidLoginData by viewModel.enabledButton.collectAsState()
+    val isError by viewModel.error.collectAsState()
+    val errorMSG by viewModel.errorMSG.collectAsState()
 
     Column {
         TextFieldSet(
             textContent = stringResource(id = R.string.id),
             textFieldPlaceHolder = stringResource(id = R.string.id_placeholder),
-            errorMsg = stringResource(id = R.string.id_wrong),
+            errorMsg = "",
             value = viewModel.id,
-            isError = viewModel.idError,
+            isError = isError,
             onValueChange = {
                 viewModel.id = it
             }
@@ -100,9 +103,9 @@ private fun Body(viewModel: LoginViewModel, onNavigationRequested: (String) -> U
         TextFieldSet(
             textContent = stringResource(id = R.string.pw),
             textFieldPlaceHolder = stringResource(id = R.string.pw_placeholder),
-            errorMsg = stringResource(id = R.string.pw_wrong),
+            errorMsg = errorMSG,
             value = viewModel.pw,
-            isError = viewModel.pwError,
+            isError = isError,
             isPw = true,
             onValueChange = {
                 viewModel.pw = it
@@ -126,7 +129,7 @@ private fun Body(viewModel: LoginViewModel, onNavigationRequested: (String) -> U
             textStyle = TextStyle(
                 fontFamily = pretendard,
                 fontWeight = FontWeight.SemiBold,
-                fontSize = 16.sp
+                fontSize = dpToSp(16.dp)
             )
         )
         Row(
@@ -146,7 +149,7 @@ private fun Body(viewModel: LoginViewModel, onNavigationRequested: (String) -> U
                 style = TextStyle(
                     fontFamily = pretendard,
                     fontWeight = FontWeight.Light,
-                    fontSize = 16.sp
+                    fontSize = dpToSp(16.dp)
                 )
             )
             ClickableText(
@@ -159,7 +162,7 @@ private fun Body(viewModel: LoginViewModel, onNavigationRequested: (String) -> U
                 style = TextStyle(
                     fontFamily = pretendard,
                     fontWeight = FontWeight.Light,
-                    fontSize = 16.sp
+                    fontSize = dpToSp(16.dp)
                 )
             )
         }

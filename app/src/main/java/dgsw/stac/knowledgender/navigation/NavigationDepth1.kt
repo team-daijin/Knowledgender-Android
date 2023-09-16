@@ -16,7 +16,7 @@ import dgsw.stac.knowledgender.ui.feature.register.RegisterScreen
 import dgsw.stac.knowledgender.ui.feature.register.RegisterViewModel
 
 @Composable
-fun navigationDepth1() {
+fun NavigationDepth1() {
     val navController = rememberNavController()
     NavHost(
         navController = navController,

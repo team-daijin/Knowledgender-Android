@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Knowledgender</string>
+    <string name="app_name">알고싶었성</string>
     <string name="title_activity_register">RegisterActivity</string>
     <string name="title_activity_main">MainActivity</string>
     <string name="title_home">Home</string>

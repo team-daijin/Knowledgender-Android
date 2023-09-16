@@ -10,7 +10,6 @@ import androidx.navigation.navArgument
 import dgsw.stac.knowledgender.ui.feature.main.BottomNavItem
 import dgsw.stac.knowledgender.ui.feature.main.CARDNEWS
 import dgsw.stac.knowledgender.ui.feature.main.CARDNEWSDETAIL
-import dgsw.stac.knowledgender.ui.feature.main.MainViewModel
 import dgsw.stac.knowledgender.ui.feature.main.childfeature.cardnews.CardNewsScreen
 import dgsw.stac.knowledgender.ui.feature.main.childfeature.cardnews.CardNewsViewModel
 import dgsw.stac.knowledgender.ui.feature.main.childfeature.cardnewsdetail.CardNewsDetailScreen
@@ -18,27 +17,31 @@ import dgsw.stac.knowledgender.ui.feature.main.childfeature.cardnewsdetail.CardN
 import dgsw.stac.knowledgender.ui.feature.main.childfeature.home.HomeScreen
 import dgsw.stac.knowledgender.ui.feature.main.childfeature.home.HomeViewModel
 import dgsw.stac.knowledgender.ui.feature.main.childfeature.map.MapScreen
+import dgsw.stac.knowledgender.ui.feature.main.childfeature.map.MapViewModel
 import dgsw.stac.knowledgender.ui.feature.main.childfeature.mypage.MyPageScreen
+import dgsw.stac.knowledgender.ui.feature.main.childfeature.mypage.MyPageViewModel
 
 @Composable
-fun NavigationDepth2(viewModel: MainViewModel,navController: NavHostController,onNavigationRequested: (String) -> Unit) {
+fun NavigationDepth2(
+    navController: NavHostController
+) {
 
     NavHost(navController = navController, startDestination = BottomNavItem.Home.route) {
         composable(BottomNavItem.Home.route) {
             HomeScreenDestination(navController = navController)
         }
         composable(BottomNavItem.Center.route) {
-            MapScreenDestination(viewModel,navController)
+            MapScreenDestination(navController)
         }
         composable(BottomNavItem.My.route) {
-            MyScreenDestination(viewModel,navController)
+            MyScreenDestination(navController)
         }
         composable(
-            "$CARDNEWS/{category}",
+            "${CARDNEWS}/{category}",
             listOf(navArgument("category") {
                 type = NavType.StringType
             })
-        ) {backStack ->
+        ) { backStack ->
             val category = backStack.arguments?.getString("category")
 
             if (category != null) {
@@ -90,11 +93,17 @@ fun HomeScreenDestination(navController: NavHostController) {
 }
 
 @Composable
-fun MapScreenDestination(main: MainViewModel,navController: NavHostController) {
-    MapScreen()
+fun MapScreenDestination(navController: NavHostController) {
+    val viewModel: MapViewModel = hiltViewModel()
+    MapScreen(viewModel = viewModel){
+        navController.navigate(it)
+    }
 }
 
 @Composable
-fun MyScreenDestination(main: MainViewModel,navController: NavHostController) {
-    MyPageScreen()
+fun MyScreenDestination(navController: NavHostController) {
+    val viewModel: MyPageViewModel = hiltViewModel()
+    MyPageScreen(viewModel = viewModel) {
+        navController.navigate(it)
+    }
 }

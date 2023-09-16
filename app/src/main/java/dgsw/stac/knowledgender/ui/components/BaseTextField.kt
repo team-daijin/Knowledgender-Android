@@ -58,6 +58,7 @@ fun BaseTextField(
     val description = if (passwordVisible) "Hide password" else "Show password"
 
     BasicTextField(
+        singleLine = true,
         value = value,
         onValueChange = onValueChange,
         interactionSource = interactionSource,

@@ -11,19 +11,19 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import dgsw.stac.knowledgender.R
+import dgsw.stac.knowledgender.ui.theme.LighterBlack
 import dgsw.stac.knowledgender.ui.theme.LighterRed
 import dgsw.stac.knowledgender.ui.theme.pretendard
 import dgsw.stac.knowledgender.util.dpToSp
 
 @Composable
-fun NoNetworkChecking(modifier: Modifier = Modifier) {
+fun NoData(modifier: Modifier = Modifier) {
     Column(modifier = modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.Center) {
-        Image(painter = painterResource(id = R.drawable.nowifi), contentDescription = "noWifi")
+        Image(painter = painterResource(id = R.drawable.dataslash), contentDescription = "noData")
         BaseText(
-            text = "인터넷에 연결되어 있지 않습니다.",
-            color = LighterRed,
+            text = "근처에 연계된 상담소가 없어요",
+            color = LighterBlack,
             style = TextStyle(
                 fontFamily = pretendard,
                 fontWeight = FontWeight.Normal,

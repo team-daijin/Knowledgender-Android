@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentWidth
@@ -35,19 +36,21 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import dgsw.stac.knowledgender.R
 import dgsw.stac.knowledgender.navigation.NavigationDepth2
-import dgsw.stac.knowledgender.navigation.Route
+import dgsw.stac.knowledgender.navigation.Route.LOGIN
 import dgsw.stac.knowledgender.ui.components.BaseText
+import dgsw.stac.knowledgender.ui.components.NoLoginDialog
 import dgsw.stac.knowledgender.ui.components.NotReadyDialog
 import dgsw.stac.knowledgender.ui.theme.BasePurple
 import dgsw.stac.knowledgender.ui.theme.LightPurple
 import dgsw.stac.knowledgender.ui.theme.LighterBlack
 import dgsw.stac.knowledgender.ui.theme.pretendard
+import dgsw.stac.knowledgender.util.BackOnPressed
+import dgsw.stac.knowledgender.util.dpToSp
 
 sealed class BottomNavItem(val name: String, val icon: Int, val route: String) {
     object Center : BottomNavItem(name = "상담센터", icon = R.drawable.knowledgender_center, CENTER)
@@ -67,8 +70,11 @@ fun MainScreen(viewModel: MainViewModel, onNavigationRequested: (String) -> Unit
     val navController = rememberNavController()
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
+
     val isLogin by viewModel.isLogin.collectAsState()
     val onLoginRequested = remember { mutableStateOf(false) }
+    val notReady = remember { mutableStateOf(false) }
+    BackOnPressed()
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         bottomBar = {
@@ -76,7 +82,8 @@ fun MainScreen(viewModel: MainViewModel, onNavigationRequested: (String) -> Unit
                 onLoginRequested,
                 navController = navController,
                 currentRoute = currentRoute,
-                isLogin = isLogin
+                isLogin = isLogin,
+                notReady = notReady
             )
         }
     )
@@ -88,16 +95,18 @@ fun MainScreen(viewModel: MainViewModel, onNavigationRequested: (String) -> Unit
         ) {
 
             if (onLoginRequested.value) {
-//                NoLoginDialog(
-//                    onLoginRequested = { onNavigationRequested(LOGIN) },
-//                    openDialogCustom = onLoginRequested
-//                )
-                NotReadyDialog(openDialogCustom = onLoginRequested)
+                NoLoginDialog(
+                    onLoginRequested = {
+                        onNavigationRequested(LOGIN)
+                    },
+                    openDialogCustom = onLoginRequested
+                )
+            }
+            if (notReady.value) {
+                NotReadyDialog(openDialogCustom = notReady)
             }
             NavigationDepth2(
-                navController = navController,
-                viewModel = viewModel,
-                onNavigationRequested = onNavigationRequested
+                navController = navController
             )
             TopAppBar(
                 elevation = 0.dp,
@@ -111,7 +120,8 @@ fun MainScreen(viewModel: MainViewModel, onNavigationRequested: (String) -> Unit
                     onLoginRequested,
                     onNavigationRequested,
                     currentRoute = currentRoute,
-                    isLogin
+                    isLogin,
+                    notReady = notReady
                 )
             }
         }
@@ -123,7 +133,8 @@ fun TopBar(
     onLoginRequested: MutableState<Boolean>,
     onNavigationRequested: (String) -> Unit,
     currentRoute: String?,
-    isLogin: Boolean
+    isLogin: Boolean,
+    notReady: MutableState<Boolean>
 ) {
 
     Row(
@@ -132,7 +143,7 @@ fun TopBar(
             .wrapContentHeight()
             .padding(horizontal = 24.dp, vertical = 16.dp),
         horizontalArrangement = Arrangement.SpaceBetween,
-        ) {
+    ) {
         Row(verticalAlignment = Alignment.CenterVertically) {
             Image(
                 painter = painterResource(id = R.drawable.knowledgender_logo),
@@ -158,7 +169,7 @@ fun TopBar(
                 style = TextStyle(
                     fontFamily = pretendard,
                     fontWeight = FontWeight.SemiBold,
-                    fontSize = 16.sp
+                    fontSize = dpToSp(16.dp)
                 )
             )
         }
@@ -169,11 +180,12 @@ fun TopBar(
                 .width(22.5.dp)
                 .height(22.5.dp)
                 .clickable {
-                    if (!isLogin) {
-                        onLoginRequested.value = true
-                    } else {
-                        onNavigationRequested(Route.CHAT)
-                    }
+                    notReady.value = true
+//                    if (!isLogin) {
+//                        onLoginRequested.value = true
+//                    } else {
+//                        onNavigationRequested(Route.CHAT)
+//                    }
                 },
             colorFilter = if (currentRoute == HOME) {
                 ColorFilter.tint(Color.White)
@@ -191,14 +203,14 @@ fun BottomNavigationView(
     onLoginRequested: MutableState<Boolean>,
     navController: NavHostController,
     currentRoute: String?,
-    isLogin: Boolean
+    isLogin: Boolean,
+    notReady: MutableState<Boolean>
 ) {
     val items = listOf(
         BottomNavItem.Center,
         BottomNavItem.Home,
         BottomNavItem.My
     )
-
     BottomNavigation(
         modifier = Modifier
             .fillMaxWidth()
@@ -212,16 +224,18 @@ fun BottomNavigationView(
                         painter = painterResource(id = item.icon),
                         contentDescription = item.name,
                         modifier = Modifier
-                            .width(26.dp)
-                            .height(26.dp),
+                            .size(26.dp),
                         tint = if (currentRoute == item.route) LightPurple else LighterBlack
                     )
                 },
                 label = {
                     Text(
                         text = item.name,
-                        style = TextStyle(fontSize = 9.sp),
-                        color = if (currentRoute == item.route) LightPurple else LighterBlack
+                        style = TextStyle(fontSize = dpToSp(9.dp)),
+                        color = when {
+                            currentRoute == item.route && currentRoute == HOME -> LightPurple
+                            else -> LighterBlack
+                        }
                     )
                 },
                 selectedContentColor = LightPurple,
@@ -233,8 +247,11 @@ fun BottomNavigationView(
                         onLoginRequested.value = true
                     } else {
                         navController.navigate(item.route) {
-                            navController.graph.startDestinationRoute?.let {
-                                popUpTo(it) { saveState = true }
+                            navController.graph.id.let {
+                                popUpTo(it) {
+                                    saveState = true
+                                    inclusive = true
+                                }
                             }
                             launchSingleTop = true
                             restoreState = true

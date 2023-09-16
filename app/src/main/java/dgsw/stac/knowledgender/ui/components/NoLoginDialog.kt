@@ -25,6 +25,7 @@ import dgsw.stac.knowledgender.ui.theme.DarkestBlack
 import dgsw.stac.knowledgender.ui.theme.LighterBlack
 import dgsw.stac.knowledgender.ui.theme.LighterPurple
 import dgsw.stac.knowledgender.ui.theme.pretendard
+import dgsw.stac.knowledgender.util.dpToSp
 
 @Composable
 fun NoLoginDialog(openDialogCustom: MutableState<Boolean>, onLoginRequested: () -> Unit) {
@@ -50,7 +51,7 @@ private fun DialogView(onLoginRequested: () -> Unit, openDialogCustom: MutableSt
                 style = TextStyle(
                     fontFamily = pretendard,
                     fontWeight = FontWeight.SemiBold,
-                    fontSize = 24.sp
+                    fontSize = dpToSp(24.dp)
                 )
             )
             BaseText(
@@ -60,7 +61,7 @@ private fun DialogView(onLoginRequested: () -> Unit, openDialogCustom: MutableSt
                 style = TextStyle(
                     fontFamily = pretendard,
                     fontWeight = FontWeight.Normal,
-                    fontSize = 16.sp
+                    fontSize = dpToSp(16.dp)
                 )
             )
             Row(modifier = Modifier.padding(top = 24.dp)) {
@@ -79,7 +80,7 @@ private fun DialogView(onLoginRequested: () -> Unit, openDialogCustom: MutableSt
                         style = TextStyle(
                             fontFamily = pretendard,
                             fontWeight = FontWeight.Medium,
-                            fontSize = 16.sp
+                            fontSize = dpToSp(16.dp)
                         )
                     )
                 }
@@ -101,7 +102,7 @@ private fun DialogView(onLoginRequested: () -> Unit, openDialogCustom: MutableSt
                         style = TextStyle(
                             fontFamily = pretendard,
                             fontWeight = FontWeight.Medium,
-                            fontSize = 16.sp
+                            fontSize = dpToSp(16.dp)
                         )
                     )
                 }

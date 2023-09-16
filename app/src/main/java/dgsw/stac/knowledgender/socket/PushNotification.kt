@@ -22,10 +22,11 @@ class PushNotification : Service() {
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        val socket = SocketManager.getSocket(intent?.getStringExtra("Access")!!)
-        socket.connect()
+        val socket = intent?.getStringExtra("Access")?.let { SocketManager.getSocket(it) }
+        socket?.connect()
+        Log.d("euya","push on")
         createChannelNotification()
-        socket.on("message"){
+        socket?.on("message"){
             Log.d("check","socket is test: ${it[0]}")
             with(NotificationManagerCompat.from(this)){
                 if (ActivityCompat.checkSelfPermission(

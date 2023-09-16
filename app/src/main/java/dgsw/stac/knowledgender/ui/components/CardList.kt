@@ -14,13 +14,16 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -34,6 +37,7 @@ import dgsw.stac.knowledgender.ui.theme.DarkestPurple
 import dgsw.stac.knowledgender.ui.theme.KnowledgenderTheme
 import dgsw.stac.knowledgender.ui.theme.LighterBlack
 import dgsw.stac.knowledgender.ui.theme.pretendard
+import dgsw.stac.knowledgender.util.dpToSp
 
 @Composable
 fun Card(data: CardListData, onRowItemClicked: (String) -> Unit) {
@@ -97,23 +101,27 @@ fun ListItemView(item: CardItem, onRowItemClicked: (String) -> Unit) {
                 onRowItemClicked(CARDNEWSDETAIL + "/" + item.id)
             }
     ) {
-        AsyncImage(
-            model = item.image,
-            contentDescription = null,
-            modifier = Modifier
-                .height(120.dp)
-                .fillMaxWidth(),
-            contentScale = ContentScale.Crop
-        )
+        Surface(shape = RoundedCornerShape(8.dp)) {
+            AsyncImage(
+                model = item.image,
+                contentDescription = null,
+                modifier = Modifier
+                    .height(120.dp)
+                    .fillMaxWidth(),
+                contentScale = ContentScale.Crop
+            )
+        }
         Spacer(modifier = Modifier.height(20.dp))
-        BaseText(
+        Text(
             text = item.title,
             color = DarkestBlack,
+            maxLines = 1,
             style = TextStyle(
                 fontFamily = pretendard,
                 fontWeight = FontWeight.Normal,
-                fontSize = 16.sp
-            )
+                fontSize = dpToSp(dp = 16.dp)
+            ),
+            overflow = TextOverflow.Ellipsis
         )
         Spacer(modifier = Modifier.height(8.dp))
         Box(

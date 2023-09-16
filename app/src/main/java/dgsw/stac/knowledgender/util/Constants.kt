@@ -2,8 +2,9 @@ package dgsw.stac.knowledgender.util
 
 
 
-const val HEART = "Heart"
-const val BODY = "Body"
-const val CRIME = "Crime"
-const val RELATIONSHIP = "Relationship"
-const val EQUALITY = "Equality"
+const val HEART = "마음"
+const val BODY = "신체"
+const val CRIME = "범죄"
+const val RELATIONSHIP = "관계"
+const val EQUALITY = "평등"
+const val NONE = "없음"

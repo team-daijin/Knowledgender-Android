@@ -17,6 +17,14 @@ class PrefImpl(private val dataStore: DataStore<Preferences>): Pref {
         }
     }
 
+    override fun getRefreshToken(): Flow<String> {
+        return dataStore.data.catch {
+            emit(emptyPreferences())
+        }.map {
+            it[REFRESHTOKEN_KEY] ?: ""
+        }
+    }
+
     override fun getUserName(): Flow<String> {
         return dataStore.data.catch {
             emit(emptyPreferences())
@@ -42,10 +50,16 @@ class PrefImpl(private val dataStore: DataStore<Preferences>): Pref {
     }
 
 
-    override suspend fun saveToken(accessToken: String, refreshToken: String) {
+    override suspend fun saveRefreshToken(refreshToken: String) {
+        dataStore.edit {
+            it[REFRESHTOKEN_KEY] = refreshToken
+        }
+    }
+
+
+    override suspend fun saveAccessToken(accessToken: String) {
         dataStore.edit {
             it[ACCESSTOKEN_KEY] = accessToken
-            it[REFRESHTOKEN_KEY] = refreshToken
         }
     }
 

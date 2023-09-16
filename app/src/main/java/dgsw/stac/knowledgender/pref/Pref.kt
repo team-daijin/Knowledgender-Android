@@ -14,6 +14,7 @@ val USERGENDER = stringPreferencesKey("userGender")
 
 interface Pref {
     fun getAccessToken(): Flow<String>
+    fun getRefreshToken(): Flow<String>
 
     fun getUserName(): Flow<String>
     fun getUserAge(): Flow<Int>
@@ -21,7 +22,9 @@ interface Pref {
 
 
 
-    suspend fun saveToken(accessToken: String, refreshToken: String)
+    suspend fun saveAccessToken(accessToken: String)
+
+    suspend fun saveRefreshToken( refreshToken: String)
 
     suspend fun saveUserName(name: String)
 

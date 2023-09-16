@@ -9,31 +9,26 @@ import dgsw.stac.knowledgender.remote.Category
 import dgsw.stac.knowledgender.remote.RetrofitBuilder
 import dgsw.stac.knowledgender.model.CardItem
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor() : ViewModel() {
-    val _bannerData = MutableStateFlow<List<BannerResponse>?>(null)
-    val bannerData = _bannerData
+    private val _bannerData = MutableStateFlow<List<BannerResponse>?>(emptyList())
+    val bannerData: StateFlow<List<BannerResponse>?> = _bannerData
 
     var cardNewsAvailable = false
 
-    init {
 
-    }
-
-    suspend fun getBannerData(){
-        viewModelScope.launch {
-            getBanner()?.let {
-                Log.d("euya", "있음")
-                _bannerData.value = it
-            } ?: run {
-                Log.d("euya", "없음")
-            }
+    suspend fun getBannerData() {
+        kotlin.runCatching {
+            RetrofitBuilder.apiService.banner()
+        }.onSuccess {
+            Log.d("doqlTlqkf",it.toString())
+            _bannerData.value = it.bannerResponses
         }
     }
-
 
     //    suspend fun gatCardCategory(category: Category): List<CardItem> {
 //        val data = mutableListOf<CardItem>()
@@ -54,13 +49,13 @@ class HomeViewModel @Inject constructor() : ViewModel() {
 //        }
 //        return data
 //    }
-    suspend fun getCardCategory(category: Category): List<CardItem> {
+    suspend fun getCardCategory(category: String): List<CardItem> {
         return kotlin.runCatching {
-            RetrofitBuilder.apiService.cardCategory(category.name)
+            RetrofitBuilder.apiService.cardCategory(category)
         }.map {
-            it.map { data ->
+            it.cardResponseList.map { data ->
                 cardNewsAvailable = true
-                CardItem(data.id, data.title, data.category, data.image)
+                CardItem(data.id, data.title, data.category, data.thumbnail)
             }
         }.onFailure {
             // TODO 오류 발생 시 토스트, 스낵바, 알렛 표시
@@ -81,7 +76,5 @@ class HomeViewModel @Inject constructor() : ViewModel() {
 //        return data
 //    }
 
-    suspend fun getBanner() = runCatching {
-        RetrofitBuilder.apiService.banner()
-    }.getOrNull()
+
 }
