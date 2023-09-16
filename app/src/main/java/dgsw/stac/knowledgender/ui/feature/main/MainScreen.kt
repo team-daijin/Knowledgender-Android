@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentWidth
@@ -52,7 +53,7 @@ import dgsw.stac.knowledgender.util.BackOnPressed
 import dgsw.stac.knowledgender.util.dpToSp
 
 sealed class BottomNavItem(val name: String, val icon: Int, val route: String) {
-    object Center: BottomNavItem(name = "상담센터",icon = R.drawable.knowledgender_center, CENTER)
+    object Center : BottomNavItem(name = "상담센터", icon = R.drawable.knowledgender_center, CENTER)
     object Home : BottomNavItem(name = "홈", icon = R.drawable.knowledgender_home, HOME)
     object My : BottomNavItem(name = "마이", icon = R.drawable.knowledgender_my, MY)
 }
@@ -105,9 +106,7 @@ fun MainScreen(viewModel: MainViewModel, onNavigationRequested: (String) -> Unit
                 NotReadyDialog(openDialogCustom = notReady)
             }
             NavigationDepth2(
-                navController = navController,
-                viewModel = viewModel,
-                onNavigationRequested = onNavigationRequested
+                navController = navController
             )
             TopAppBar(
                 elevation = 0.dp,
@@ -225,8 +224,7 @@ fun BottomNavigationView(
                         painter = painterResource(id = item.icon),
                         contentDescription = item.name,
                         modifier = Modifier
-                            .width(26.dp)
-                            .height(26.dp),
+                            .size(26.dp),
                         tint = if (currentRoute == item.route) LightPurple else LighterBlack
                     )
                 },
@@ -247,8 +245,7 @@ fun BottomNavigationView(
                 onClick = {
                     if (!isLogin && item.route != HOME) {
                         onLoginRequested.value = true
-                    }
-                        else {
+                    } else {
                         navController.navigate(item.route) {
                             navController.graph.id.let {
                                 popUpTo(it) {

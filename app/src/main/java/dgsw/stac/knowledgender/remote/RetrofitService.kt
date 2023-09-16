@@ -33,7 +33,7 @@ interface RetrofitService {
     suspend fun createRoom(@Header("authorization") token: String)
 
     @GET("/api/banner/")
-    suspend fun banner(): List<BannerResponse>
+    suspend fun banner(): BannerResponseList
 
     @GET("/api/user/")
     suspend fun getUserInfo(@Header("Authorization") token: String): Profile

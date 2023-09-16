@@ -45,15 +45,20 @@ data class CardResponseList(
 //    val image: String
 //)
 
+data class BannerResponseList(
+    val bannerResponses: List<BannerResponse>
+)
+
 data class BannerResponse(
-    val id : String,
-    val banner : String,
+    val fileUrl : String,
     val redirect : String
 )
 data class AppointmentResponse(
     val id:String,
     val name: String,
     val address: String,
+    val latitude: Double,
+    val longitude: Double,
     val contact: String,
     val introduce: String,
     val image: String,

@@ -1,5 +1,6 @@
 package dgsw.stac.knowledgender.ui.feature.main.childfeature.home
 
+import android.util.Log
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
@@ -15,6 +16,7 @@ import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -30,12 +32,15 @@ import androidx.compose.ui.unit.dp
 import dgsw.stac.knowledgender.R
 import dgsw.stac.knowledgender.model.CardItem
 import dgsw.stac.knowledgender.remote.BannerResponse
-import dgsw.stac.knowledgender.remote.Category
 import dgsw.stac.knowledgender.ui.components.BannerView
+import dgsw.stac.knowledgender.ui.components.BaseText
 import dgsw.stac.knowledgender.ui.components.CardLists
 import dgsw.stac.knowledgender.ui.components.NoNetworkChecking
 import dgsw.stac.knowledgender.ui.feature.main.CARDNEWS
 import dgsw.stac.knowledgender.ui.theme.BaseBlack
+import dgsw.stac.knowledgender.ui.theme.DarkestBlack
+import dgsw.stac.knowledgender.ui.theme.LightSky
+import dgsw.stac.knowledgender.ui.theme.pretendard
 import dgsw.stac.knowledgender.util.BODY
 import dgsw.stac.knowledgender.util.CRIME
 import dgsw.stac.knowledgender.util.EQUALITY
@@ -51,17 +56,17 @@ fun HomeScreen(
     onNavigationRequested: (String) -> Unit
 ) {
     val scrollState = rememberScrollState()
-
     LaunchedEffect(key1 = Unit) {
         viewModel.getBannerData()
     }
+    val bannerData by viewModel.bannerData.collectAsState()
     if (networkCheck() || viewModel.cardNewsAvailable) {
         Column(
             modifier = modifier
                 .fillMaxSize()
                 .verticalScroll(scrollState)
         ) {
-            Header(viewModel)
+            Header(bannerData)
             Body(viewModel, onNavigationRequested)
         }
     } else {
@@ -82,45 +87,31 @@ data class CardListData(val dataList: List<CardItem>, val topic: String, val des
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun Header(viewModel: HomeViewModel) {
-    val bannerData = viewModel.bannerData.collectAsState()
-
+fun Header(bannerData: List<BannerResponse>?) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
             .height(300.dp)
     ) {
-        BannerView(
-            listOf(
-                BannerResponse("1", "https://url.kr/ad7b69", "1"),
-                BannerResponse(
-                    "1",
-                    "https://demo.ycart.kr/shopboth_farm_max5_001/data/editor/1612/cd2f39a0598c81712450b871c218164f_1482469221_493.jpg",
-                    "1"
-                ),
-                BannerResponse("1","https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSlrXPiQcj25vya6gJ71K_9W_4TSLoNPMEaXQ&usqp=CAU","1")
-            )
-        )
-//        bannerData.value?.let {
-//          BannerView(it)
-//        } ?: run {
-//            Surface(modifier = Modifier.fillMaxSize(),color = LightSky) {
-//                Column(
-//                    modifier = Modifier.fillMaxSize(),
-//                    verticalArrangement = Arrangement.Center,
-//                    horizontalAlignment = Alignment.CenterHorizontally
-//                    ) {
-//                    BaseText(
-//                        text = "준비된 배너가 없어요", color = DarkestBlack, style = TextStyle(
-//                            fontFamily = pretendard,
-//                            fontWeight = FontWeight.Bold,
-//                            fontSize = dpToSp(24.dp)
-//                        )
-//                    )
-//                }
-//
-//            }
-//        }
+        bannerData?.let {
+          BannerView(it)
+        } ?: run {
+            Surface(modifier = Modifier.fillMaxSize(),color = LightSky) {
+                Column(
+                    modifier = Modifier.fillMaxSize(),
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                    BaseText(
+                        text = "준비된 배너가 없어요", color = DarkestBlack, style = TextStyle(
+                            fontFamily = pretendard,
+                            fontWeight = FontWeight.Bold,
+                            fontSize = dpToSp(24.dp)
+                        )
+                    )
+                }
+            }
+        }
 
     }
 }
@@ -162,7 +153,10 @@ fun Body(
 
 @Composable
 fun Icon(data: IconData, onNavigateTo: (String) -> Unit) {
-    Column(modifier = Modifier.wrapContentHeight(),horizontalAlignment = Alignment.CenterHorizontally) {
+    Column(
+        modifier = Modifier.wrapContentHeight(),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
         IconButton(
             modifier = Modifier.size(60.dp),
             onClick = {

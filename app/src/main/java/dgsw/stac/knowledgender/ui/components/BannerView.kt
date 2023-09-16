@@ -3,6 +3,8 @@ package dgsw.stac.knowledgender.ui.components
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -57,20 +59,20 @@ fun BannerView(item: List<BannerResponse>) {
         Alignment.BottomCenter
     ) {
         HorizontalPager(
+            modifier = Modifier.fillMaxHeight(),
             count = item.size,
             state = pagerState,
             userScrollEnabled = true,
             content = {page ->
                 AsyncImage(
-                    model = item[page].banner,
+                    model = item[page].fileUrl,
                     contentDescription = "Banner",
                     modifier = Modifier
-                        .height(300.dp)
-                        .fillMaxWidth(),
-//                        .clickable {},
+                        .fillMaxSize(),
                     contentScale = ContentScale.Crop
                 )
-            })
+            }
+        )
         HorizontalPagerIndicator(
             pagerState = pagerState,
             pageCount = item.size,

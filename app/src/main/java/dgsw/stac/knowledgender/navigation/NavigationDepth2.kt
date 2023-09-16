@@ -10,7 +10,6 @@ import androidx.navigation.navArgument
 import dgsw.stac.knowledgender.ui.feature.main.BottomNavItem
 import dgsw.stac.knowledgender.ui.feature.main.CARDNEWS
 import dgsw.stac.knowledgender.ui.feature.main.CARDNEWSDETAIL
-import dgsw.stac.knowledgender.ui.feature.main.MainViewModel
 import dgsw.stac.knowledgender.ui.feature.main.childfeature.cardnews.CardNewsScreen
 import dgsw.stac.knowledgender.ui.feature.main.childfeature.cardnews.CardNewsViewModel
 import dgsw.stac.knowledgender.ui.feature.main.childfeature.cardnewsdetail.CardNewsDetailScreen
@@ -24,9 +23,7 @@ import dgsw.stac.knowledgender.ui.feature.main.childfeature.mypage.MyPageViewMod
 
 @Composable
 fun NavigationDepth2(
-    viewModel: MainViewModel,
-    navController: NavHostController,
-    onNavigationRequested: (String) -> Unit
+    navController: NavHostController
 ) {
 
     NavHost(navController = navController, startDestination = BottomNavItem.Home.route) {
@@ -37,7 +34,7 @@ fun NavigationDepth2(
             MapScreenDestination(navController)
         }
         composable(BottomNavItem.My.route) {
-            MyScreenDestination(viewModel, navController)
+            MyScreenDestination(navController)
         }
         composable(
             "${CARDNEWS}/{category}",
@@ -104,7 +101,7 @@ fun MapScreenDestination(navController: NavHostController) {
 }
 
 @Composable
-fun MyScreenDestination(main: MainViewModel, navController: NavHostController) {
+fun MyScreenDestination(navController: NavHostController) {
     val viewModel: MyPageViewModel = hiltViewModel()
     MyPageScreen(viewModel = viewModel) {
         navController.navigate(it)
