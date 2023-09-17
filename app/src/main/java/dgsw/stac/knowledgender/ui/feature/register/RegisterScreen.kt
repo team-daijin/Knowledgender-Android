@@ -88,27 +88,12 @@ private fun Header() {
         modifier = Modifier.fillMaxWidth(),
         horizontalAlignment = Alignment.Start
     ) {
-        Row(
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Image(
-                painter = painterResource(id = R.drawable.knowledgender_logo),
-                contentDescription = "logo",
-                modifier = Modifier.height(50.dp)
+        Image(
+            painter = painterResource(id = R.drawable.knowlegender_logo_filled),
+            contentDescription = "logo",
+            modifier = Modifier.width(30.dp)
 
-            )
-            BaseText(
-                modifier = Modifier.padding(start = 8.dp),
-                text = "알고싶었성",
-                color = DarkestPurple,
-                style = TextStyle(
-                    fontFamily = pretendard,
-                    fontWeight = FontWeight.SemiBold,
-                    fontSize = dpToSp(20.dp)
-                )
-            )
-        }
-
+        )
         BaseText(
             modifier = Modifier.padding(top = 8.dp),
             text = stringResource(id = R.string.register),
@@ -174,7 +159,9 @@ private fun Body(viewModel: RegisterViewModel) {
             )
         )
         BaseTextField(
-            modifier = Modifier.padding(top = 4.dp).fillMaxWidth(),
+            modifier = Modifier
+                .padding(top = 4.dp)
+                .fillMaxWidth(),
             value = viewModel.name.collectAsState().value,
             placeHolder = stringResource(id = R.string.name_placeholder),
             onValueChange = {
@@ -186,11 +173,9 @@ private fun Body(viewModel: RegisterViewModel) {
                 .wrapContentHeight()
                 .fillMaxWidth()
                 .padding(top = 40.dp),
-            Arrangement.SpaceBetween
+            Arrangement.SpaceEvenly
         ) {
-            Column(
-
-            ) {
+            Column {
                 BaseText(
                     modifier = Modifier.padding(bottom = 4.dp),
                     text = stringResource(id = R.string.age),
@@ -204,10 +189,10 @@ private fun Body(viewModel: RegisterViewModel) {
                 Box(
                     modifier = Modifier
                         .wrapContentSize()
+                        .width(100.dp)
                         .border(width = 1.dp, color = BasePurple, shape = RoundedCornerShape(5.dp))
                 ) {
                     FVerticalWheelPicker(
-                        modifier = Modifier.width(158.dp),
                         count = 100,
                         state = wheelPickerState
                     ) { index ->
@@ -221,9 +206,7 @@ private fun Body(viewModel: RegisterViewModel) {
                     }
                 }
             }
-            Column(
-
-            ) {
+            Column {
                 BaseText(
                     modifier = Modifier.padding(bottom = 4.dp),
                     text = stringResource(id = R.string.gender),
@@ -234,11 +217,10 @@ private fun Body(viewModel: RegisterViewModel) {
                         fontSize = dpToSp(16.dp)
                     )
                 )
-                Row() {
+                Row(horizontalArrangement = Arrangement.SpaceBetween) {
                     Button(
                         onClick = { viewModel.gender.value = "남성" },
                         Modifier
-                            .width(80.dp)
                             .height(40.dp),
                         shape = RoundedCornerShape(topStart = 5.dp, bottomStart = 5.dp),
                         colors = ButtonDefaults.buttonColors(
@@ -266,7 +248,6 @@ private fun Body(viewModel: RegisterViewModel) {
                     Button(
                         onClick = { viewModel.gender.value = "여성" },
                         Modifier
-                            .width(80.dp)
                             .height(40.dp),
                         shape = RoundedCornerShape(topEnd = 5.dp, bottomEnd = 5.dp),
                         colors = ButtonDefaults.buttonColors(

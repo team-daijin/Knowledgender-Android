@@ -271,8 +271,19 @@ fun Body(
             }
         }
     } else {
-        Column(modifier = Modifier.fillMaxSize(), verticalArrangement = Arrangement.Center, horizontalAlignment = Alignment.CenterHorizontally) {
+        Column(
+            modifier = Modifier.fillMaxSize(),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
             CircularProgressIndicator()
+            Text(
+                text = "최초 로딩은 조금 오래 걸립니다.", color = DarkestBlack, style = TextStyle(
+                    fontFamily = pretendard, fontWeight = FontWeight.Normal, fontSize = dpToSp(
+                        dp = 16.dp
+                    )
+                )
+            )
         }
     }
 }
@@ -332,9 +343,11 @@ fun BottomSheetListScreen(viewModel: MapViewModel) {
 fun BottomSheetDetailScreen(viewModel: MapViewModel) {
     val viewData by viewModel.viewData.collectAsState()
     viewData?.let {
-        Column(modifier = Modifier
-            .fillMaxWidth()
-            .padding(30.dp)) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(30.dp)
+        ) {
             Image(
                 modifier = Modifier
                     .padding(bottom = 8.dp)
