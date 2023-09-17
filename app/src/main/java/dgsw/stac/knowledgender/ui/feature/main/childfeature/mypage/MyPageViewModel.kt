@@ -35,9 +35,10 @@ class MyPageViewModel @Inject constructor(private val pref: Pref) : ViewModel() 
 
     fun userDelete() {
         viewModelScope.launch {
-            RetrofitBuilder.apiService.deleteUserInfo("Bearer ${pref.getAccessToken().first()}")
+            val euya = pref.getAccessToken().first()
             pref.saveAccessToken("")
             pref.saveRefreshToken("")
+            RetrofitBuilder.apiService.deleteUserInfo("Bearer $euya")
         }
     }
 }

@@ -31,34 +31,37 @@ class RegisterViewModel @Inject constructor() : ViewModel() {
         id.isNotBlank() && pw.isNotBlank() && name.matches(Regex("^[가-힣]*\$")) && name.isNotBlank() && gender.isNotBlank() && age.value != 0
     }.stateIn(viewModelScope, SharingStarted.Lazily, false)
 
-    private fun checkInfo() {
+    private fun checkInfo(): Boolean {
         if (!(pw.value.matches(Regex("^.*(?=^.{8}\$)(?=.*\\d)(?=.*[a-zA-Z])(?=.*[!@#\$%^&+=]).*\$")))) {
             pwError.value = true
+            return false
         }
         if (pwCheck.value != pw.value) {
             pwCheckError.value = true
+            return false
         }
+        return true
     }
 
     fun registerProcess(onSuccess: () -> Unit) {
-        checkInfo()
-        viewModelScope.launch {
-            kotlin.runCatching {
-                RetrofitBuilder.apiService.register(
-                    RegisterRequest(
-                        accountId = id.value,
-                        password = pw.value,
-                        name = name.value,
-                        age = age.value,
-                        gender = when (gender.value) {
-                            "남성" -> "MALE"
-                            else -> "FEMALE"
-                        }
+        if (checkInfo()) {
+            viewModelScope.launch {
+                kotlin.runCatching {
+                    RetrofitBuilder.apiService.register(
+                        RegisterRequest(
+                            accountId = id.value,
+                            password = pw.value,
+                            name = name.value,
+                            age = age.value,
+                            gender = when (gender.value) {
+                                "남성" -> "MALE"
+                                else -> "FEMALE"
+                            }
+                        )
                     )
-                )
-            }.onSuccess { onSuccess.invoke() }.onFailure { idError.value = true }
+                }.onSuccess { onSuccess.invoke() }.onFailure { idError.value = true }
+            }
         }
-
     }
 //    private val username = flow {
 //        emit(RetrofitBuilder.retrofitService.fetchUsername())
