@@ -166,7 +166,7 @@ fun Icon(data: IconData, onNavigateTo: (String) -> Unit) {
             Image(
                 painter = painterResource(data.img),
                 contentDescription = data.title,
-                modifier = Modifier.size(60.dp)
+                modifier = Modifier.size(30.dp)
             )
         }
         Text(

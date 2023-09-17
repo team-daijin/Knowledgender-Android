@@ -3,6 +3,7 @@ package dgsw.stac.knowledgender.ui.components
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
@@ -38,10 +39,11 @@ fun NoLoginDialog(openDialogCustom: MutableState<Boolean>, onLoginRequested: () 
 private fun DialogView(onLoginRequested: () -> Unit, openDialogCustom: MutableState<Boolean>) {
     Surface(
         modifier = Modifier
-            .width(328.dp)
-            .height(168.dp),
+            .fillMaxWidth()
+            .height(164.dp),
         shape = RoundedCornerShape(16.dp),
         color = Color.White,
+        shadowElevation = 0.dp
     ) {
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
             BaseText(
@@ -67,7 +69,7 @@ private fun DialogView(onLoginRequested: () -> Unit, openDialogCustom: MutableSt
             Row(modifier = Modifier.padding(top = 24.dp)) {
                 Button(
                     modifier = Modifier
-                        .width(164.dp)
+                        .weight(1f)
                         .height(48.dp),
                     shape = RoundedCornerShape(bottomStart = 16.dp),
                     colors = ButtonDefaults.buttonColors(LighterPurple),
@@ -75,7 +77,7 @@ private fun DialogView(onLoginRequested: () -> Unit, openDialogCustom: MutableSt
                     contentPadding = PaddingValues(1.dp)
                 ) {
                     BaseText(
-                        text = "돌아가기",
+                        text = "취소",
                         color = Color.White,
                         style = TextStyle(
                             fontFamily = pretendard,
@@ -86,7 +88,7 @@ private fun DialogView(onLoginRequested: () -> Unit, openDialogCustom: MutableSt
                 }
                 Button(
                     modifier = Modifier
-                        .width(164.dp)
+                        .weight(1f)
                         .height(48.dp),
                     shape = RoundedCornerShape(bottomEnd = 16.dp),
                     colors = ButtonDefaults.buttonColors(BasePurple),
@@ -94,10 +96,10 @@ private fun DialogView(onLoginRequested: () -> Unit, openDialogCustom: MutableSt
                         onLoginRequested.invoke()
                         openDialogCustom.value = false
                     },
-                    contentPadding = PaddingValues(1.dp)
+                    contentPadding = PaddingValues(0.dp)
                 ) {
                     BaseText(
-                        text = "로그인",
+                        text = "확인",
                         color = Color.White,
                         style = TextStyle(
                             fontFamily = pretendard,
