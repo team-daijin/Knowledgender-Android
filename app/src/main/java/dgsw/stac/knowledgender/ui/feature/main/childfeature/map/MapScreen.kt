@@ -237,7 +237,7 @@ fun Body(
 
 
     if (reg.latitude != 0.0 && reg.longitude != 0.0) {
-        val cameraPositionState = rememberCameraPositionState() {
+        val cameraPositionState = rememberCameraPositionState {
             position = CameraPosition.fromLatLngZoom(reg, 13f)
         }
 
@@ -278,7 +278,7 @@ fun Body(
         ) {
             CircularProgressIndicator()
             Text(
-                text = "최초 로딩은 조금 오래 걸립니다.", color = DarkestBlack, style = TextStyle(
+                text = "잠시만 기다려주세요.\n팁)움직이면 더 빨리 될수도..?", color = DarkestBlack, style = TextStyle(
                     fontFamily = pretendard, fontWeight = FontWeight.Normal, fontSize = dpToSp(
                         dp = 16.dp
                     )

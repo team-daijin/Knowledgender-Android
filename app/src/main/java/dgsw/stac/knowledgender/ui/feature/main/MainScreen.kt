@@ -243,7 +243,7 @@ fun BottomNavigationView(
                 selected = currentRoute == item.route,
                 alwaysShowLabel = true,
                 onClick = {
-                    if (!isLogin && item.route != HOME) {
+                    if (!isLogin && item.route == MY) {
                         onLoginRequested.value = true
                     } else {
                         navController.navigate(item.route) {

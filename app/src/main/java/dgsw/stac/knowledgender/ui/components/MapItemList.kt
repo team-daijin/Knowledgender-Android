@@ -37,11 +37,15 @@ import dgsw.stac.knowledgender.ui.theme.pretendard
 fun MapItemList(viewModel: MapViewModel) {
     val appointmentItems by viewModel.appointmentView.collectAsState()
     appointmentItems?.let {
-        LazyColumn(
-            modifier = Modifier.fillMaxWidth().height(200.dp)
-        ) {
-            items(it) { item ->
-                MapItemView(item)
+        if (it.isEmpty()){
+            NoData()
+        } else {
+            LazyColumn(
+                modifier = Modifier.fillMaxWidth().height(200.dp)
+            ) {
+                items(it) { item ->
+                    MapItemView(item)
+                }
             }
         }
     } ?: run {
