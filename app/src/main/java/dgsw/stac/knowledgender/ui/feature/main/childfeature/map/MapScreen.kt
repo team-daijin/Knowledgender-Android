@@ -284,13 +284,6 @@ fun Body(
                     )
                 )
             )
-            Text(
-                text = "팁)움직이면 더 빨리 될수도..?", color = DarkestBlack, style = TextStyle(
-                    fontFamily = pretendard, fontWeight = FontWeight.Normal, fontSize = dpToSp(
-                        dp = 16.dp
-                    )
-                )
-            )
         }
     }
 }

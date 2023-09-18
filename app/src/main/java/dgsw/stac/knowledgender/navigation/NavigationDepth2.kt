@@ -1,5 +1,6 @@
 package dgsw.stac.knowledgender.navigation
 
+import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
@@ -25,10 +26,11 @@ import dgsw.stac.knowledgender.ui.feature.main.childfeature.mypage.MyPageViewMod
 fun NavigationDepth2(
     navController: NavHostController
 ) {
-
+    val viewModel: HomeViewModel = hiltViewModel()
     NavHost(navController = navController, startDestination = BottomNavItem.Home.route) {
         composable(BottomNavItem.Home.route) {
-            HomeScreenDestination(navController = navController)
+            Log.d("euya","아니시발")
+            HomeScreenDestination(viewModel = viewModel,navController = navController)
         }
         composable(BottomNavItem.Center.route) {
             MapScreenDestination(navController)
@@ -85,8 +87,7 @@ fun CardNewsDetailDestination(id: String, navController: NavHostController) {
 }
 
 @Composable
-fun HomeScreenDestination(navController: NavHostController) {
-    val viewModel: HomeViewModel = hiltViewModel()
+fun HomeScreenDestination(viewModel: HomeViewModel, navController: NavHostController) {
     HomeScreen(viewModel = viewModel) {
         navController.navigate(it)
     }

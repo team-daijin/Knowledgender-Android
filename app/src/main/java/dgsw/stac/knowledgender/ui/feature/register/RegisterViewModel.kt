@@ -37,21 +37,27 @@ class RegisterViewModel @Inject constructor() : ViewModel() {
     private val _gender = MutableStateFlow("")
     val gender: StateFlow<String> = _gender
 
-    var idError = mutableStateOf(false)
-    var pwError = mutableStateOf(false)
-    var pwCheckError = mutableStateOf(false)
+    val idError = mutableStateOf(false)
+    val pwError = mutableStateOf(false)
+    val pwCheckError = mutableStateOf(false)
 
 
-    val enabledButton = combine(_id, _pw, _pwCheck, _name, _gender) { id, pw, pwCheck, name, gender ->
-        id.isNotBlank() && pw.isNotBlank() && name.matches(Regex("^[가-힣]*\$")) && name.isNotBlank() && gender.isNotBlank() && age.value != 0
+    val enabledButton = combine(id, pw, pwCheck, name, gender) { id, pw, pwCheck, name, gender ->
+        id.isNotBlank() && pw.isNotBlank() && name matches Regex("^[가-힣]*\$") && name.isNotBlank() && gender.isNotBlank()
     }.stateIn(viewModelScope, SharingStarted.Lazily, false)
 
-    private fun checkInfo(): Boolean {
-        if (pwCheck.value != pw.value) {
+
+    private fun validPwCheck(): Boolean {
+        return if (pwCheck.value != pw.value) {
             pwCheckError.value = true
-            return false
+            false
+        } else {
+            true
         }
-        return if (pw.value.matches(Regex("/^(?=.*[a-zA-Z])(?=.*[!@#\$%^*+=-])(?=.*[0-9]).{8,30}\$/"))) {
+    }
+
+    private fun validPw(): Boolean {
+        return if (pw.value matches Regex("/^(?=.*[a-zA-Z])(?=.*[!@#\$%^*+=-])(?=.*[0-9]).{8,30}\$/")) {
             true
         } else {
             pwError.value = true
@@ -88,7 +94,9 @@ class RegisterViewModel @Inject constructor() : ViewModel() {
     }
 
     fun registerProcess(onSuccess: () -> Unit) {
-        if (checkInfo()) {
+        val validatedPwCheck = validPwCheck()
+        val validatedPw = validPw()
+        if (validatedPw&&validatedPwCheck) {
             viewModelScope.launch {
                 kotlin.runCatching {
                     RetrofitBuilder.apiService.register(

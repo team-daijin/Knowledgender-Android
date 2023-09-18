@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -49,6 +50,7 @@ import dgsw.stac.knowledgender.navigation.Route
 import dgsw.stac.knowledgender.ui.components.BaseButton
 import dgsw.stac.knowledgender.ui.components.BaseText
 import dgsw.stac.knowledgender.ui.components.BaseTextField
+import dgsw.stac.knowledgender.ui.components.ErrorText
 import dgsw.stac.knowledgender.ui.components.TextFieldSet
 import dgsw.stac.knowledgender.ui.theme.BasePurple
 import dgsw.stac.knowledgender.ui.theme.DarkBlack
@@ -56,7 +58,9 @@ import dgsw.stac.knowledgender.ui.theme.DarkestBlack
 import dgsw.stac.knowledgender.ui.theme.DarkestPurple
 import dgsw.stac.knowledgender.ui.theme.KnowledgenderTheme
 import dgsw.stac.knowledgender.ui.theme.LightBlack
+import dgsw.stac.knowledgender.ui.theme.LightRed
 import dgsw.stac.knowledgender.ui.theme.LightSky
+import dgsw.stac.knowledgender.ui.theme.LighterBlack
 import dgsw.stac.knowledgender.ui.theme.pretendard
 import dgsw.stac.knowledgender.util.dpToSp
 
@@ -140,15 +144,50 @@ private fun Body(viewModel: RegisterViewModel) {
                 if (it.length <= maxChar) viewModel.idChanged(it)
             }
         )
-        TextFieldSet(
-            textContent = stringResource(id = R.string.pw),
-            textFieldPlaceHolder = stringResource(id = R.string.pw_placeholder),
-            errorMsg = stringResource(id = R.string.pw_unfulfilled),
-            value = pw,
-            isError = viewModel.pwError.value,
-            isPw = true,
-            onValueChange = { if (it.length <= maxChar) viewModel.pwChanged(it) }
+        BaseText(
+            text = stringResource(id = R.string.pw),
+            color = DarkestPurple,
+            style = TextStyle(
+                fontSize = dpToSp(16.dp),
+                fontFamily = pretendard,
+                fontWeight = FontWeight.Medium
+            )
         )
+        BaseTextField(
+            modifier = Modifier
+                .padding(top = 4.dp)
+                .fillMaxWidth(),
+            value = pw,
+            placeHolder = stringResource(id = R.string.pw_placeholder),
+            onValueChange = { if (it.length <= maxChar) viewModel.pwChanged(it) },
+            textFieldError = viewModel.pwError.value,
+            isPw = true
+        )
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.Top
+        ) {
+            Text(
+                text = stringResource(id = R.string.pw_unfulfilled),
+                color = if (viewModel.pwError.value) LightRed else LighterBlack,
+                style = TextStyle(
+                    fontFamily = pretendard,
+                    fontWeight = FontWeight.Normal,
+                    fontSize = dpToSp(dp = 13.dp)
+                )
+            )
+            Text(
+                text = "${pw.length}/30",
+                color = LightBlack,
+                style = TextStyle(
+                    fontFamily = pretendard,
+                    fontWeight = FontWeight.Normal,
+                    fontSize = dpToSp(dp = 12.dp)
+                )
+            )
+        }
+        Spacer(modifier = Modifier.height(16.dp))
         TextFieldSet(
             textContent = stringResource(id = R.string.pw_check),
             textFieldPlaceHolder = stringResource(id = R.string.pw_check_placeholder),
@@ -156,7 +195,7 @@ private fun Body(viewModel: RegisterViewModel) {
             value = pwCheck,
             isError = viewModel.pwCheckError.value,
             isPw = true,
-            onValueChange = { if (it.length <= maxChar) viewModel.pwCheckChanged(it)  }
+            onValueChange = { if (it.length <= maxChar) viewModel.pwCheckChanged(it) }
         )
         BaseText(
             modifier = Modifier.padding(top = 8.dp),

@@ -4,6 +4,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -20,7 +21,9 @@ import dgsw.stac.knowledgender.util.dpToSp
 
 @Composable
 fun NoData(modifier: Modifier = Modifier) {
-    Column(modifier = modifier.height(150.dp), horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.Center) {
+    val i = 1
+    i.inc()
+    Column(modifier = modifier.height(150.dp).fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.Center) {
         Image(painter = painterResource(id = R.drawable.dataslash), contentDescription = "noData")
         BaseText(
             text = "근처에 연계된 상담소가 없어요",

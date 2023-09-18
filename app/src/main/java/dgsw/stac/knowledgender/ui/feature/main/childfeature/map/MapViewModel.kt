@@ -162,21 +162,21 @@ class MapViewModel @Inject constructor(
 
     private fun locationUpdate(context: Context, permissions: Array<String>) {
 
-        locationCallback.let {
+        locationCallback.let { it ->
             //An encapsulation of various parameters for requesting
             // location through FusedLocationProviderClient.
             val locationRequest: LocationRequest =
                 LocationRequest.create().apply {
                     interval = TimeUnit.SECONDS.toMillis(10)
                     fastestInterval = TimeUnit.SECONDS.toMillis(0)
-                    maxWaitTime = TimeUnit.MINUTES.toMillis(2)
+                    maxWaitTime = TimeUnit.SECONDS.toMillis(10)
                     priority = LocationRequest.PRIORITY_HIGH_ACCURACY
                 }
             //use FusedLocationProviderClient to request location update
-            if (permissions.all {
+            if (permissions.all {str ->
                     ContextCompat.checkSelfPermission(
                         context,
-                        it
+                        str
                     ) == PackageManager.PERMISSION_GRANTED
                 }
             ) {
