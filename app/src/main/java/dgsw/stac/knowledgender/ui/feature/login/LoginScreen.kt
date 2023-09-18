@@ -85,6 +85,9 @@ private fun Header() {
 
 @Composable
 private fun Body(viewModel: LoginViewModel, onNavigationRequested: (String) -> Unit) {
+    val id by viewModel.id.collectAsState()
+    val pw by viewModel.pw.collectAsState()
+
     val isValidLoginData by viewModel.enabledButton.collectAsState()
     val isError by viewModel.error.collectAsState()
     val errorMSG by viewModel.errorMSG.collectAsState()
@@ -94,21 +97,21 @@ private fun Body(viewModel: LoginViewModel, onNavigationRequested: (String) -> U
             textContent = stringResource(id = R.string.id),
             textFieldPlaceHolder = stringResource(id = R.string.id_placeholder),
             errorMsg = "",
-            value = viewModel.id,
+            value = id,
             isError = isError,
             onValueChange = {
-                viewModel.id = it
+                viewModel.idChanged(it)
             }
         )
         TextFieldSet(
             textContent = stringResource(id = R.string.pw),
             textFieldPlaceHolder = stringResource(id = R.string.pw_placeholder),
             errorMsg = errorMSG,
-            value = viewModel.pw,
+            value = pw,
             isError = isError,
             isPw = true,
             onValueChange = {
-                viewModel.pw = it
+                viewModel.pwChanged(it)
             }
         )
         BaseButton(
@@ -152,19 +155,19 @@ private fun Body(viewModel: LoginViewModel, onNavigationRequested: (String) -> U
                     fontSize = dpToSp(16.dp)
                 )
             )
-            ClickableText(
-                text = buildAnnotatedString {
-                    withStyle(style = SpanStyle(color = LightBlack)) {
-                        append("비밀번호를 잊어버렸어요")
-                    }
-                },
-                onClick = { },
-                style = TextStyle(
-                    fontFamily = pretendard,
-                    fontWeight = FontWeight.Light,
-                    fontSize = dpToSp(16.dp)
-                )
-            )
+//            ClickableText(
+//                text = buildAnnotatedString {
+//                    withStyle(style = SpanStyle(color = LightBlack)) {
+//                        append("비밀번호를 잊어버렸어요")
+//                    }
+//                },
+//                onClick = { },
+//                style = TextStyle(
+//                    fontFamily = pretendard,
+//                    fontWeight = FontWeight.Light,
+//                    fontSize = dpToSp(16.dp)
+//                )
+//            )
         }
     }
 }

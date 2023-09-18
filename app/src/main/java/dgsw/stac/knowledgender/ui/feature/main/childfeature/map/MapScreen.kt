@@ -278,7 +278,14 @@ fun Body(
         ) {
             CircularProgressIndicator()
             Text(
-                text = "잠시만 기다려주세요.\n팁)움직이면 더 빨리 될수도..?", color = DarkestBlack, style = TextStyle(
+                text = "잠시만 기다려주세요.", color = DarkestBlack, style = TextStyle(
+                    fontFamily = pretendard, fontWeight = FontWeight.Normal, fontSize = dpToSp(
+                        dp = 16.dp
+                    )
+                )
+            )
+            Text(
+                text = "팁)움직이면 더 빨리 될수도..?", color = DarkestBlack, style = TextStyle(
                     fontFamily = pretendard, fontWeight = FontWeight.Normal, fontSize = dpToSp(
                         dp = 16.dp
                     )

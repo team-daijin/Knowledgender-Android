@@ -27,15 +27,14 @@ class LoginViewModel @Inject constructor(
     private val pref: Pref,
     private val application: Application
 ) : AndroidViewModel(application) {
-    var id by mutableStateOf("")
-    var pw by mutableStateOf("")
+    private val _id = MutableStateFlow("")
+    val id: StateFlow<String> = _id
 
-//    val username = MutableStateFlow("")
-//    val password = MutableStateFlow("")
-
+    private val _pw = MutableStateFlow("")
+    val pw: StateFlow<String> = _pw
 
     val enabledButton = snapshotFlow { id }.combine(snapshotFlow { pw }) { id, pw ->
-        id.isNotEmpty() && pw.isNotEmpty()
+        id.value.isNotEmpty() && pw.value.isNotEmpty()
     }.stateIn(viewModelScope, SharingStarted.Lazily, false)
 
     private val _errorMSG = MutableStateFlow("")
@@ -44,13 +43,21 @@ class LoginViewModel @Inject constructor(
     private val _error = MutableStateFlow(false)
     val error: StateFlow<Boolean> = _error
 
+
+    fun idChanged(id: String) {
+        _id.value = id
+    }
+
+    fun pwChanged(pw: String) {
+        _pw.value = pw
+    }
     fun loginPOST(onSuccess: (String) -> Unit) {
         viewModelScope.launch {
             kotlin.runCatching {
                 RetrofitBuilder.apiService.login(
                     LoginRequest(
-                        accountId = id,
-                        password = pw
+                        accountId = id.value,
+                        password = pw.value
                     )
                 )
             }.onSuccess { response ->
