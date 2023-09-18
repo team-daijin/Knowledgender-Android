@@ -29,7 +29,6 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-const val AUTO_PAGE_CHANGE_DELAY = 5000L
 @OptIn(ExperimentalPagerApi::class)
 @Composable
 @ExperimentalFoundationApi

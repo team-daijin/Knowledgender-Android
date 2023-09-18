@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -27,6 +28,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -48,6 +50,7 @@ import dgsw.stac.knowledgender.navigation.Route
 import dgsw.stac.knowledgender.ui.components.BaseButton
 import dgsw.stac.knowledgender.ui.components.BaseText
 import dgsw.stac.knowledgender.ui.components.BaseTextField
+import dgsw.stac.knowledgender.ui.components.ErrorText
 import dgsw.stac.knowledgender.ui.components.TextFieldSet
 import dgsw.stac.knowledgender.ui.theme.BasePurple
 import dgsw.stac.knowledgender.ui.theme.DarkBlack
@@ -55,7 +58,9 @@ import dgsw.stac.knowledgender.ui.theme.DarkestBlack
 import dgsw.stac.knowledgender.ui.theme.DarkestPurple
 import dgsw.stac.knowledgender.ui.theme.KnowledgenderTheme
 import dgsw.stac.knowledgender.ui.theme.LightBlack
+import dgsw.stac.knowledgender.ui.theme.LightRed
 import dgsw.stac.knowledgender.ui.theme.LightSky
+import dgsw.stac.knowledgender.ui.theme.LighterBlack
 import dgsw.stac.knowledgender.ui.theme.pretendard
 import dgsw.stac.knowledgender.util.dpToSp
 
@@ -70,7 +75,7 @@ fun RegisterScreen(
     Column(
         Modifier
             .fillMaxSize()
-            .padding(start = 32.dp, top = 60.dp, end = 32.dp, bottom = 32.dp)
+            .padding(start = 28.dp, top = 60.dp, end = 28.dp, bottom = 32.dp)
             .verticalScroll(scrollState)
     ) {
         Header()
@@ -120,33 +125,77 @@ private fun Header() {
 @Composable
 private fun Body(viewModel: RegisterViewModel) {
     val wheelPickerState = rememberFWheelPickerState()
-    Column(
-    ) {
+    val maxChar = 30
+    val id by viewModel.id.collectAsState()
+    val pw by viewModel.pw.collectAsState()
+    val pwCheck by viewModel.pwCheck.collectAsState()
+    val name by viewModel.name.collectAsState()
+    val gender by viewModel.gender.collectAsState()
+
+
+    Column {
         TextFieldSet(
             textContent = stringResource(id = R.string.id),
             textFieldPlaceHolder = stringResource(id = R.string.id_placeholder),
             errorMsg = stringResource(id = R.string.id_duplicated),
-            value = viewModel.id.collectAsState().value,
+            value = id,
             isError = viewModel.idError.value,
-            onValueChange = { viewModel.id.value = it }
+            onValueChange = {
+                if (it.length <= maxChar) viewModel.idChanged(it)
+            }
         )
-        TextFieldSet(
-            textContent = stringResource(id = R.string.pw),
-            textFieldPlaceHolder = stringResource(id = R.string.pw_placeholder),
-            errorMsg = stringResource(id = R.string.pw_unfulfilled),
-            value = viewModel.pw.collectAsState().value,
-            isError = viewModel.pwError.value,
-            isPw = true,
-            onValueChange = { viewModel.pw.value = it }
+        BaseText(
+            text = stringResource(id = R.string.pw),
+            color = DarkestPurple,
+            style = TextStyle(
+                fontSize = dpToSp(16.dp),
+                fontFamily = pretendard,
+                fontWeight = FontWeight.Medium
+            )
         )
+        BaseTextField(
+            modifier = Modifier
+                .padding(top = 4.dp)
+                .fillMaxWidth(),
+            value = pw,
+            placeHolder = stringResource(id = R.string.pw_placeholder),
+            onValueChange = { if (it.length <= maxChar) viewModel.pwChanged(it) },
+            textFieldError = viewModel.pwError.value,
+            isPw = true
+        )
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.Top
+        ) {
+            Text(
+                text = stringResource(id = R.string.pw_unfulfilled),
+                color = if (viewModel.pwError.value) LightRed else LighterBlack,
+                style = TextStyle(
+                    fontFamily = pretendard,
+                    fontWeight = FontWeight.Normal,
+                    fontSize = dpToSp(dp = 13.dp)
+                )
+            )
+            Text(
+                text = "${pw.length}/30",
+                color = LightBlack,
+                style = TextStyle(
+                    fontFamily = pretendard,
+                    fontWeight = FontWeight.Normal,
+                    fontSize = dpToSp(dp = 12.dp)
+                )
+            )
+        }
+        Spacer(modifier = Modifier.height(16.dp))
         TextFieldSet(
             textContent = stringResource(id = R.string.pw_check),
             textFieldPlaceHolder = stringResource(id = R.string.pw_check_placeholder),
             errorMsg = stringResource(id = R.string.pw_check_dismatch),
-            value = viewModel.pwCheck.collectAsState().value,
+            value = pwCheck,
             isError = viewModel.pwCheckError.value,
             isPw = true,
-            onValueChange = { viewModel.pwCheck.value = it }
+            onValueChange = { if (it.length <= maxChar) viewModel.pwCheckChanged(it) }
         )
         BaseText(
             modifier = Modifier.padding(top = 8.dp),
@@ -162,10 +211,10 @@ private fun Body(viewModel: RegisterViewModel) {
             modifier = Modifier
                 .padding(top = 4.dp)
                 .fillMaxWidth(),
-            value = viewModel.name.collectAsState().value,
+            value = name,
             placeHolder = stringResource(id = R.string.name_placeholder),
             onValueChange = {
-                viewModel.name.value = it
+                if (it.length <= maxChar) viewModel.nameChanged(it)
             },
         )
         Row(
@@ -200,7 +249,7 @@ private fun Body(viewModel: RegisterViewModel) {
                         LaunchedEffect(state) {
                             snapshotFlow { state.currentIndex }
                                 .collect { ageValue ->
-                                    viewModel.age.value = ageValue
+                                    viewModel.ageChanged(ageValue)
                                 }
                         }
                     }
@@ -219,14 +268,14 @@ private fun Body(viewModel: RegisterViewModel) {
                 )
                 Row(horizontalArrangement = Arrangement.SpaceBetween) {
                     Button(
-                        onClick = { viewModel.gender.value = "남성" },
+                        onClick = { viewModel.genderForMale() },
                         Modifier
                             .height(40.dp),
                         shape = RoundedCornerShape(topStart = 5.dp, bottomStart = 5.dp),
                         colors = ButtonDefaults.buttonColors(
-                            containerColor = if (viewModel.gender.collectAsState().value == "남성") BasePurple else Color.Transparent
+                            containerColor = if (gender == "남성") BasePurple else Color.Transparent
                         ),
-                        border = if (viewModel.gender.collectAsState().value == "남성") null else BorderStroke(
+                        border = if (gender == "남성") null else BorderStroke(
                             1.dp,
                             LightSky
                         )
@@ -238,7 +287,7 @@ private fun Body(viewModel: RegisterViewModel) {
                                 fontWeight = FontWeight.Normal,
                                 fontSize = dpToSp(16.dp)
                             ),
-                            color = if (viewModel.gender.collectAsState().value == "남성") {
+                            color = if (gender == "남성") {
                                 Color.White
                             } else {
                                 LightBlack
@@ -246,14 +295,14 @@ private fun Body(viewModel: RegisterViewModel) {
                         )
                     }
                     Button(
-                        onClick = { viewModel.gender.value = "여성" },
+                        onClick = { viewModel.genderForFemale() },
                         Modifier
                             .height(40.dp),
                         shape = RoundedCornerShape(topEnd = 5.dp, bottomEnd = 5.dp),
                         colors = ButtonDefaults.buttonColors(
-                            containerColor = if (viewModel.gender.collectAsState().value == "여성") BasePurple else Color.Transparent
+                            containerColor = if (gender == "여성") BasePurple else Color.Transparent
                         ),
-                        border = if (viewModel.gender.collectAsState().value == "여성") null else BorderStroke(
+                        border = if (gender == "여성") null else BorderStroke(
                             1.dp,
                             LightSky
                         )
@@ -265,7 +314,7 @@ private fun Body(viewModel: RegisterViewModel) {
                                 fontWeight = FontWeight.Normal,
                                 fontSize = dpToSp(16.dp)
                             ),
-                            color = if (viewModel.gender.collectAsState().value == "여성") {
+                            color = if (gender == "여성") {
                                 Color.White
                             } else {
                                 LightBlack

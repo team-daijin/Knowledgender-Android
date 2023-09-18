@@ -35,6 +35,7 @@ import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
+import coil.compose.SubcomposeAsyncImage
 import dgsw.stac.knowledgender.R
 import dgsw.stac.knowledgender.ui.components.BaseText
 import dgsw.stac.knowledgender.ui.components.NoNetworkChecking
@@ -195,7 +196,8 @@ private fun Body(content: String, image: String) {
                 lineHeight = dpToSp(dp = 20.dp)
             )
         )
-        AsyncImage(
+        SubcomposeAsyncImage(
+            loading = { CircularProgressIndicator() },
             model = image,
             modifier = Modifier
                 .fillMaxWidth()

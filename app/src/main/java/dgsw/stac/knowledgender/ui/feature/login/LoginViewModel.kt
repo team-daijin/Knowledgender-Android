@@ -2,16 +2,23 @@ package dgsw.stac.knowledgender.ui.feature.login
 
 import android.app.Application
 import android.content.Intent
+import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
+import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInClient
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dgsw.stac.knowledgender.R
 import dgsw.stac.knowledgender.navigation.Route
 import dgsw.stac.knowledgender.pref.Pref
 import dgsw.stac.knowledgender.remote.LoginRequest
+import dgsw.stac.knowledgender.remote.RegisterRequest
 import dgsw.stac.knowledgender.remote.RetrofitBuilder
 import dgsw.stac.knowledgender.socket.PushNotification
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -27,15 +34,14 @@ class LoginViewModel @Inject constructor(
     private val pref: Pref,
     private val application: Application
 ) : AndroidViewModel(application) {
-    var id by mutableStateOf("")
-    var pw by mutableStateOf("")
+    private val _id = MutableStateFlow("")
+    val id: StateFlow<String> = _id
 
-//    val username = MutableStateFlow("")
-//    val password = MutableStateFlow("")
-
+    private val _pw = MutableStateFlow("")
+    val pw: StateFlow<String> = _pw
 
     val enabledButton = snapshotFlow { id }.combine(snapshotFlow { pw }) { id, pw ->
-        id.isNotEmpty() && pw.isNotEmpty()
+        id.value.isNotEmpty() && pw.value.isNotEmpty()
     }.stateIn(viewModelScope, SharingStarted.Lazily, false)
 
     private val _errorMSG = MutableStateFlow("")
@@ -44,13 +50,21 @@ class LoginViewModel @Inject constructor(
     private val _error = MutableStateFlow(false)
     val error: StateFlow<Boolean> = _error
 
+
+    fun idChanged(id: String) {
+        _id.value = id
+    }
+
+    fun pwChanged(pw: String) {
+        _pw.value = pw
+    }
     fun loginPOST(onSuccess: (String) -> Unit) {
         viewModelScope.launch {
             kotlin.runCatching {
                 RetrofitBuilder.apiService.login(
                     LoginRequest(
-                        accountId = id,
-                        password = pw
+                        accountId = id.value,
+                        password = pw.value
                     )
                 )
             }.onSuccess { response ->
@@ -73,5 +87,19 @@ class LoginViewModel @Inject constructor(
         }
     }
 
+    @Composable
+    fun getGoogleClient(): GoogleSignInClient {
+        val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+            .requestIdToken(stringResource(id = R.string.gci))
+            .build()
+        return GoogleSignIn.getClient(application,gso)
+    }
 
+    fun postIdToken(id: String,pw: String,name: String,age: Int,gender: String) {
+        viewModelScope.launch {
+            kotlin.runCatching {
+                RetrofitBuilder.apiService.register(RegisterRequest(accountId = id, password = pw,name = name,age = age, gender = gender))
+            }.onSuccess {  }
+        }
+    }
 }

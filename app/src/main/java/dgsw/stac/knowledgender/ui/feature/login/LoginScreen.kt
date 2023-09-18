@@ -1,5 +1,10 @@
 package dgsw.stac.knowledgender.ui.feature.login
 
+import android.app.Activity
+import android.util.Log
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.ActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -24,6 +29,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount
+import com.google.android.gms.tasks.Task
 import dgsw.stac.knowledgender.R
 import dgsw.stac.knowledgender.navigation.Route
 import dgsw.stac.knowledgender.ui.components.BaseButton
@@ -43,6 +51,35 @@ fun LoginScreen(
     viewModel: LoginViewModel,
     onNavigationRequested: (String) -> Unit
 ) {
+    val startForResult =
+        rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
+            Log.d("dmdi",result.resultCode.toString())
+            if (result.resultCode == Activity.RESULT_OK) {
+                val intent = result.data
+                Log.d("dmdi","null")
+                if (result.data != null) {
+                    val task: Task<GoogleSignInAccount> =
+                        GoogleSignIn.getSignedInAccountFromIntent(intent)
+
+                    when {
+                        task.isSuccessful -> {
+                            Log.d("성공","성공")
+                            task.result?.let {
+                               // viewModel.postIdToken(id = it.,)
+                            }
+                        }
+                        task.isComplete -> {
+                            Log.d("complete",task.result.idToken.toString())
+                        }
+                        task.isCanceled -> {
+                            Log.d("cancled","하")
+                        }
+                    }
+                }
+            }
+        }
+    val googleClient = viewModel.getGoogleClient()
+
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -85,6 +122,9 @@ private fun Header() {
 
 @Composable
 private fun Body(viewModel: LoginViewModel, onNavigationRequested: (String) -> Unit) {
+    val id by viewModel.id.collectAsState()
+    val pw by viewModel.pw.collectAsState()
+
     val isValidLoginData by viewModel.enabledButton.collectAsState()
     val isError by viewModel.error.collectAsState()
     val errorMSG by viewModel.errorMSG.collectAsState()
@@ -94,21 +134,21 @@ private fun Body(viewModel: LoginViewModel, onNavigationRequested: (String) -> U
             textContent = stringResource(id = R.string.id),
             textFieldPlaceHolder = stringResource(id = R.string.id_placeholder),
             errorMsg = "",
-            value = viewModel.id,
+            value = id,
             isError = isError,
             onValueChange = {
-                viewModel.id = it
+                viewModel.idChanged(it)
             }
         )
         TextFieldSet(
             textContent = stringResource(id = R.string.pw),
             textFieldPlaceHolder = stringResource(id = R.string.pw_placeholder),
             errorMsg = errorMSG,
-            value = viewModel.pw,
+            value = pw,
             isError = isError,
             isPw = true,
             onValueChange = {
-                viewModel.pw = it
+                viewModel.pwChanged(it)
             }
         )
         BaseButton(
@@ -152,19 +192,19 @@ private fun Body(viewModel: LoginViewModel, onNavigationRequested: (String) -> U
                     fontSize = dpToSp(16.dp)
                 )
             )
-            ClickableText(
-                text = buildAnnotatedString {
-                    withStyle(style = SpanStyle(color = LightBlack)) {
-                        append("비밀번호를 잊어버렸어요")
-                    }
-                },
-                onClick = { },
-                style = TextStyle(
-                    fontFamily = pretendard,
-                    fontWeight = FontWeight.Light,
-                    fontSize = dpToSp(16.dp)
-                )
-            )
+//            ClickableText(
+//                text = buildAnnotatedString {
+//                    withStyle(style = SpanStyle(color = LightBlack)) {
+//                        append("비밀번호를 잊어버렸어요")
+//                    }
+//                },
+//                onClick = { },
+//                style = TextStyle(
+//                    fontFamily = pretendard,
+//                    fontWeight = FontWeight.Light,
+//                    fontSize = dpToSp(16.dp)
+//                )
+//            )
         }
     }
 }
