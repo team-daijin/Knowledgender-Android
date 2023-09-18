@@ -1,5 +1,10 @@
 package dgsw.stac.knowledgender.ui.feature.login
 
+import android.app.Activity
+import android.util.Log
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.ActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -24,6 +29,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount
+import com.google.android.gms.tasks.Task
 import dgsw.stac.knowledgender.R
 import dgsw.stac.knowledgender.navigation.Route
 import dgsw.stac.knowledgender.ui.components.BaseButton
@@ -43,6 +51,35 @@ fun LoginScreen(
     viewModel: LoginViewModel,
     onNavigationRequested: (String) -> Unit
 ) {
+    val startForResult =
+        rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
+            Log.d("dmdi",result.resultCode.toString())
+            if (result.resultCode == Activity.RESULT_OK) {
+                val intent = result.data
+                Log.d("dmdi","null")
+                if (result.data != null) {
+                    val task: Task<GoogleSignInAccount> =
+                        GoogleSignIn.getSignedInAccountFromIntent(intent)
+
+                    when {
+                        task.isSuccessful -> {
+                            Log.d("성공","성공")
+                            task.result?.let {
+                               // viewModel.postIdToken(id = it.,)
+                            }
+                        }
+                        task.isComplete -> {
+                            Log.d("complete",task.result.idToken.toString())
+                        }
+                        task.isCanceled -> {
+                            Log.d("cancled","하")
+                        }
+                    }
+                }
+            }
+        }
+    val googleClient = viewModel.getGoogleClient()
+
     Column(
         modifier = modifier
             .fillMaxSize()

@@ -51,11 +51,11 @@ class RegisterViewModel @Inject constructor() : ViewModel() {
             pwCheckError.value = true
             return false
         }
-        if (pw.value.matches(Regex("/^(?=.*[a-zA-Z])(?=.*[!@#\$%^*+=-])(?=.*[0-9]).{8,30}\$/"))) {
-            return true
+        return if (pw.value.matches(Regex("/^(?=.*[a-zA-Z])(?=.*[!@#\$%^*+=-])(?=.*[0-9]).{8,30}\$/"))) {
+            true
         } else {
             pwError.value = true
-            return false
+            false
         }
     }
 

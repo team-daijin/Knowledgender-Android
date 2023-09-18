@@ -20,12 +20,26 @@ class HomeViewModel @Inject constructor() : ViewModel() {
 
     var cardNewsAvailable = false
 
+    private val _heart = MutableStateFlow<List<CardItem>?>(emptyList())
+    val heart: StateFlow<List<CardItem>?> = _heart
+
+    private val _body = MutableStateFlow<List<CardItem>?>(emptyList())
+    val body: StateFlow<List<CardItem>?> = _body
+
+    private val _crime = MutableStateFlow<List<CardItem>?>(emptyList())
+    val crime: StateFlow<List<CardItem>?> = _crime
+
+    private val _relationship = MutableStateFlow<List<CardItem>?>(emptyList())
+    val relationship: StateFlow<List<CardItem>?> = _relationship
+
+    private val _equality = MutableStateFlow<List<CardItem>?>(emptyList())
+    val equality: StateFlow<List<CardItem>?> = _equality
+
 
     suspend fun getBannerData() {
         kotlin.runCatching {
             RetrofitBuilder.apiService.banner()
         }.onSuccess {
-            Log.d("doqlTlqkf",it.toString())
             _bannerData.value = it.bannerResponses
         }
     }

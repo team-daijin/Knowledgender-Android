@@ -2,16 +2,23 @@ package dgsw.stac.knowledgender.ui.feature.login
 
 import android.app.Application
 import android.content.Intent
+import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
+import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInClient
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dgsw.stac.knowledgender.R
 import dgsw.stac.knowledgender.navigation.Route
 import dgsw.stac.knowledgender.pref.Pref
 import dgsw.stac.knowledgender.remote.LoginRequest
+import dgsw.stac.knowledgender.remote.RegisterRequest
 import dgsw.stac.knowledgender.remote.RetrofitBuilder
 import dgsw.stac.knowledgender.socket.PushNotification
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -80,5 +87,19 @@ class LoginViewModel @Inject constructor(
         }
     }
 
+    @Composable
+    fun getGoogleClient(): GoogleSignInClient {
+        val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+            .requestIdToken(stringResource(id = R.string.gci))
+            .build()
+        return GoogleSignIn.getClient(application,gso)
+    }
 
+    fun postIdToken(id: String,pw: String,name: String,age: Int,gender: String) {
+        viewModelScope.launch {
+            kotlin.runCatching {
+                RetrofitBuilder.apiService.register(RegisterRequest(accountId = id, password = pw,name = name,age = age, gender = gender))
+            }.onSuccess {  }
+        }
+    }
 }

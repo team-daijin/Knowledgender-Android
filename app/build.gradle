@@ -68,6 +68,9 @@ dependencies {
     implementation 'com.google.android.gms:play-services-location:21.0.1'
     androidTestImplementation platform('androidx.compose:compose-bom:2022.10.00')
 
+    //google oauth
+    implementation("com.google.android.gms:play-services-auth:20.7.0")
+
 
     //bottomSheet
     implementation 'androidx.compose.material3:material3:1.2.0-alpha02'
