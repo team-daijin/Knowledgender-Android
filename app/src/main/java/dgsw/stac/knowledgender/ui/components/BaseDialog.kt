@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -19,7 +18,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import dgsw.stac.knowledgender.ui.theme.BasePurple
 import dgsw.stac.knowledgender.ui.theme.DarkestBlack
@@ -29,14 +27,14 @@ import dgsw.stac.knowledgender.ui.theme.pretendard
 import dgsw.stac.knowledgender.util.dpToSp
 
 @Composable
-fun NoLoginDialog(openDialogCustom: MutableState<Boolean>, onLoginRequested: () -> Unit) {
+fun BaseDialog(openDialogCustom: MutableState<Boolean>, onLoginRequested: () -> Unit, title: String, description: String) {
     Dialog(onDismissRequest = { openDialogCustom.value = false }) {
-        DialogView(openDialogCustom = openDialogCustom, onLoginRequested = onLoginRequested)
+        DialogView(openDialogCustom = openDialogCustom, onLoginRequested = onLoginRequested,title = title,des = description)
     }
 }
 
 @Composable
-private fun DialogView(onLoginRequested: () -> Unit, openDialogCustom: MutableState<Boolean>) {
+private fun DialogView(onLoginRequested: () -> Unit, openDialogCustom: MutableState<Boolean>,title: String,des: String) {
     Surface(
         modifier = Modifier
             .fillMaxWidth()
@@ -48,7 +46,7 @@ private fun DialogView(onLoginRequested: () -> Unit, openDialogCustom: MutableSt
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
             BaseText(
                 modifier = Modifier.padding(top = 32.dp),
-                text = "로그인 하시겠습니까?",
+                text = title,
                 color = DarkestBlack,
                 style = TextStyle(
                     fontFamily = pretendard,
@@ -58,7 +56,7 @@ private fun DialogView(onLoginRequested: () -> Unit, openDialogCustom: MutableSt
             )
             BaseText(
                 modifier = Modifier.padding(top = 8.dp),
-                text = "로그인이 필요한 기능입니다.",
+                text = des,
                 color = LighterBlack,
                 style = TextStyle(
                     fontFamily = pretendard,

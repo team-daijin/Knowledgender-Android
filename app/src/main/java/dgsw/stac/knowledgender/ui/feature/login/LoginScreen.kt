@@ -28,7 +28,6 @@ import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.tasks.Task
@@ -39,7 +38,6 @@ import dgsw.stac.knowledgender.ui.components.BaseText
 import dgsw.stac.knowledgender.ui.components.TextFieldSet
 import dgsw.stac.knowledgender.ui.theme.BasePurple
 import dgsw.stac.knowledgender.ui.theme.DarkestPurple
-import dgsw.stac.knowledgender.ui.theme.LightBlack
 import dgsw.stac.knowledgender.ui.theme.LightSky
 import dgsw.stac.knowledgender.ui.theme.pretendard
 import dgsw.stac.knowledgender.util.dpToSp
@@ -126,7 +124,6 @@ private fun Body(viewModel: LoginViewModel, onNavigationRequested: (String) -> U
     val pw by viewModel.pw.collectAsState()
 
     val isValidLoginData by viewModel.enabledButton.collectAsState()
-    val isError by viewModel.error.collectAsState()
     val errorMSG by viewModel.errorMSG.collectAsState()
 
     Column {
@@ -135,7 +132,7 @@ private fun Body(viewModel: LoginViewModel, onNavigationRequested: (String) -> U
             textFieldPlaceHolder = stringResource(id = R.string.id_placeholder),
             errorMsg = "",
             value = id,
-            isError = isError,
+            isError = viewModel.error.value,
             onValueChange = {
                 viewModel.idChanged(it)
             }
@@ -145,7 +142,7 @@ private fun Body(viewModel: LoginViewModel, onNavigationRequested: (String) -> U
             textFieldPlaceHolder = stringResource(id = R.string.pw_placeholder),
             errorMsg = errorMSG,
             value = pw,
-            isError = isError,
+            isError = viewModel.error.value,
             isPw = true,
             onValueChange = {
                 viewModel.pwChanged(it)

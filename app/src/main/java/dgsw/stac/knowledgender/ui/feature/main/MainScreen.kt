@@ -43,7 +43,7 @@ import dgsw.stac.knowledgender.R
 import dgsw.stac.knowledgender.navigation.NavigationDepth2
 import dgsw.stac.knowledgender.navigation.Route.LOGIN
 import dgsw.stac.knowledgender.ui.components.BaseText
-import dgsw.stac.knowledgender.ui.components.NoLoginDialog
+import dgsw.stac.knowledgender.ui.components.BaseDialog
 import dgsw.stac.knowledgender.ui.components.NotReadyDialog
 import dgsw.stac.knowledgender.ui.theme.BasePurple
 import dgsw.stac.knowledgender.ui.theme.LightPurple
@@ -95,11 +95,13 @@ fun MainScreen(viewModel: MainViewModel, onNavigationRequested: (String) -> Unit
         ) {
 
             if (onLoginRequested.value) {
-                NoLoginDialog(
+                BaseDialog(
                     onLoginRequested = {
                         onNavigationRequested(LOGIN)
                     },
-                    openDialogCustom = onLoginRequested
+                    openDialogCustom = onLoginRequested,
+                    title = "로그인 하시겠습니까?",
+                    description = "로그인이 필요한 기능입니다."
                 )
             }
             if (notReady.value) {
@@ -153,19 +155,13 @@ fun TopBar(
                     .wrapContentWidth()
                     .padding(end = 4.dp),
                 contentScale = ContentScale.Crop,
-                colorFilter = if (currentRoute == HOME) {
-                    ColorFilter.tint(Color.White)
-                } else {
-                    ColorFilter.tint(BasePurple)
-                }
+                colorFilter = ColorFilter.tint(BasePurple)
+
             )
             BaseText(
                 text = stringResource(id = R.string.title),
-                color = if (currentRoute == HOME) {
-                    Color.White
-                } else {
-                    BasePurple
-                },
+                color = BasePurple
+                ,
                 style = TextStyle(
                     fontFamily = pretendard,
                     fontWeight = FontWeight.SemiBold,
@@ -187,11 +183,8 @@ fun TopBar(
 //                        onNavigationRequested(Route.CHAT)
 //                    }
                 },
-            colorFilter = if (currentRoute == HOME) {
-                ColorFilter.tint(Color.White)
-            } else {
-                ColorFilter.tint(BasePurple)
-            }
+            colorFilter = ColorFilter.tint(BasePurple)
+
         )
     }
 

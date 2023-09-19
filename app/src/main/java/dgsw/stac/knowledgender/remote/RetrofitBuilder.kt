@@ -7,8 +7,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 object RetrofitBuilder {
 
-    private const val BASE_URL = "http://52.78.246.108:8080/"
-//    private val BASE_URL = "https://jsonplaceholder.typicode.com"
+    private const val BASE_URL = "https://algosipeosseong.site/"
     private fun getRetrofit(): Retrofit {
         return Retrofit.Builder()
             .baseUrl(BASE_URL)
@@ -21,6 +20,5 @@ object RetrofitBuilder {
             .addConverterFactory(GsonConverterFactory.create())
             .build()
     }
-
     val apiService: RetrofitService = getRetrofit().create(RetrofitService::class.java)
 }

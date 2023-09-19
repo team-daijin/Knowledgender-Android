@@ -131,19 +131,53 @@ private fun Body(viewModel: RegisterViewModel) {
     val pwCheck by viewModel.pwCheck.collectAsState()
     val name by viewModel.name.collectAsState()
     val gender by viewModel.gender.collectAsState()
+    val idErrorMsg by viewModel.errorMsg.collectAsState()
 
 
     Column {
-        TextFieldSet(
-            textContent = stringResource(id = R.string.id),
-            textFieldPlaceHolder = stringResource(id = R.string.id_placeholder),
-            errorMsg = stringResource(id = R.string.id_duplicated),
-            value = id,
-            isError = viewModel.idError.value,
-            onValueChange = {
-                if (it.length <= maxChar) viewModel.idChanged(it)
-            }
+        BaseText(
+            text = stringResource(id = R.string.id),
+            color = DarkestPurple,
+            style = TextStyle(
+                fontSize = dpToSp(16.dp),
+                fontFamily = pretendard,
+                fontWeight = FontWeight.Medium
+            )
         )
+        BaseTextField(
+            modifier = Modifier
+                .padding(top = 4.dp)
+                .fillMaxWidth(),
+            value = id,
+            placeHolder = stringResource(id = R.string.id_placeholder),
+            onValueChange = { if (it.length <= maxChar) viewModel.idChanged(it) },
+            textFieldError = viewModel.idError.value
+        )
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.Top
+        ) {
+            Text(
+                text = idErrorMsg,
+                color = if (viewModel.idError.value) LightRed else LighterBlack,
+                style = TextStyle(
+                    fontFamily = pretendard,
+                    fontWeight = FontWeight.Normal,
+                    fontSize = dpToSp(dp = 13.dp)
+                )
+            )
+            Text(
+                text = "${id.length}/30",
+                color = LightBlack,
+                style = TextStyle(
+                    fontFamily = pretendard,
+                    fontWeight = FontWeight.Normal,
+                    fontSize = dpToSp(dp = 12.dp)
+                )
+            )
+        }
+        Spacer(modifier = Modifier.height(20.dp))
         BaseText(
             text = stringResource(id = R.string.pw),
             color = DarkestPurple,
@@ -187,7 +221,7 @@ private fun Body(viewModel: RegisterViewModel) {
                 )
             )
         }
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(20.dp))
         TextFieldSet(
             textContent = stringResource(id = R.string.pw_check),
             textFieldPlaceHolder = stringResource(id = R.string.pw_check_placeholder),

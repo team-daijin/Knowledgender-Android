@@ -7,22 +7,18 @@ plugins {
     id 'com.google.android.libraries.mapsplatform.secrets-gradle-plugin'
 }
 
-Properties properties = new Properties()
-properties.load(project.rootProject.file('local.properties').newDataInputStream())
-def google_map_key = properties.getProperty('google_map_key')
 
 android {
     namespace 'dgsw.stac.knowledgender'
     compileSdk 33
 
     defaultConfig {
-        manifestPlaceholders= [googleMapKey: google_map_key]
 
         applicationId "dgsw.stac.knowledgender"
         minSdk 24
         targetSdk 33
-        versionCode 7
-        versionName "3.0"
+        versionCode 8
+        versionName "3.1"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {

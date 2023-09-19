@@ -1,6 +1,5 @@
 package dgsw.stac.knowledgender.ui.feature.register
 
-import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -41,9 +40,11 @@ class RegisterViewModel @Inject constructor() : ViewModel() {
     val pwError = mutableStateOf(false)
     val pwCheckError = mutableStateOf(false)
 
+    private val _errorMsg = MutableStateFlow("영문, 숫자 포함 30자리 미만으로 입력해주세요")
+    val errorMsg: StateFlow<String> = _errorMsg
 
-    val enabledButton = combine(id, pw, pwCheck, name, gender) { id, pw, pwCheck, name, gender ->
-        id.isNotBlank() && pw.isNotBlank() && name matches Regex("^[가-힣]*\$") && name.isNotBlank() && gender.isNotBlank()
+    val enabledButton = combine(id, pw, age, name, gender) { id, pw, age, name, gender ->
+        id.isNotBlank() && pw.isNotBlank() && name matches Regex("^[가-힣]*$") && name.isNotBlank() && gender.isNotBlank() && age != 0
     }.stateIn(viewModelScope, SharingStarted.Lazily, false)
 
 
@@ -52,15 +53,30 @@ class RegisterViewModel @Inject constructor() : ViewModel() {
             pwCheckError.value = true
             false
         } else {
+            pwCheckError.value = false
             true
         }
     }
 
     private fun validPw(): Boolean {
-        return if (pw.value matches Regex("/^(?=.*[a-zA-Z])(?=.*[!@#\$%^*+=-])(?=.*[0-9]).{8,30}\$/")) {
+        val regex = """^(?=.*[A-Za-z])(?=.*\d)(?=.*[$@$!%*#?&])[A-Za-z\d$@$!%*#?&]{8,}$""".toRegex()
+        return if (regex.matches(pw.value)) {
+            pwError.value = false
             true
         } else {
             pwError.value = true
+            false
+        }
+    }
+
+    private fun validId(): Boolean {
+        val regex = """^(?=.*[A-Za-z0-9])[a-z0-9]*$""".toRegex()
+        return if(regex.matches(id.value)) {
+            idError.value = false
+            true
+        } else {
+            idError.value = true
+            _errorMsg.value = "영문, 숫자 포함 30자리 미만으로 입력해주세요"
             false
         }
     }
@@ -94,9 +110,7 @@ class RegisterViewModel @Inject constructor() : ViewModel() {
     }
 
     fun registerProcess(onSuccess: () -> Unit) {
-        val validatedPwCheck = validPwCheck()
-        val validatedPw = validPw()
-        if (validatedPw&&validatedPwCheck) {
+        if (validId() && validPw() && validPwCheck()) {
             viewModelScope.launch {
                 kotlin.runCatching {
                     RetrofitBuilder.apiService.register(
@@ -111,11 +125,13 @@ class RegisterViewModel @Inject constructor() : ViewModel() {
                             }
                         )
                     )
-                }.onSuccess { onSuccess.invoke() }.onFailure { idError.value = true }
+                }.onSuccess {
+                    onSuccess.invoke()
+                }.onFailure {
+                    idError.value = true
+                    _errorMsg.value = "이미 존재하는 아이디입니다."
+                }
             }
         }
     }
-//    private val username = flow {
-//        emit(RetrofitBuilder.retrofitService.fetchUsername())
-//    }.stateIn(viewModelScope, SharingStarted.Lazily, "")
 }

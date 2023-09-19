@@ -2,6 +2,7 @@ package dgsw.stac.knowledgender.ui.feature.login
 
 import android.app.Application
 import android.content.Intent
+import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -40,15 +41,14 @@ class LoginViewModel @Inject constructor(
     private val _pw = MutableStateFlow("")
     val pw: StateFlow<String> = _pw
 
-    val enabledButton = snapshotFlow { id }.combine(snapshotFlow { pw }) { id, pw ->
-        id.value.isNotEmpty() && pw.value.isNotEmpty()
+    val enabledButton =  combine(id,pw) { id, pw ->
+        id.isNotEmpty() && pw.isNotEmpty()
     }.stateIn(viewModelScope, SharingStarted.Lazily, false)
 
     private val _errorMSG = MutableStateFlow("")
     val errorMSG: StateFlow<String> = _errorMSG
 
-    private val _error = MutableStateFlow(false)
-    val error: StateFlow<Boolean> = _error
+    val error = mutableStateOf(false)
 
 
     fun idChanged(id: String) {
@@ -58,6 +58,7 @@ class LoginViewModel @Inject constructor(
     fun pwChanged(pw: String) {
         _pw.value = pw
     }
+
     fun loginPOST(onSuccess: (String) -> Unit) {
         viewModelScope.launch {
             kotlin.runCatching {
@@ -82,7 +83,7 @@ class LoginViewModel @Inject constructor(
                     "HTTP 404" -> _errorMSG.value = "해당 유저를 찾지 못했습니다."
                     "HTTP 400" -> _errorMSG.value = "로그인에 실패했습니다."
                 }
-                _error.value = true
+                error.value = true
             }
         }
     }

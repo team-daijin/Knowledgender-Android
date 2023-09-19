@@ -1,5 +1,6 @@
 package dgsw.stac.knowledgender.ui.feature.main.childfeature.mypage
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -38,7 +39,9 @@ class MyPageViewModel @Inject constructor(private val pref: Pref) : ViewModel() 
             val euya = pref.getAccessToken().first()
             pref.saveAccessToken("")
             pref.saveRefreshToken("")
-            RetrofitBuilder.apiService.deleteUserInfo("Bearer $euya")
+            kotlin.runCatching {
+                RetrofitBuilder.apiService.deleteUserInfo("Bearer $euya")
+            }.onFailure { Log.d("euya","Fail!") }
         }
     }
 }
