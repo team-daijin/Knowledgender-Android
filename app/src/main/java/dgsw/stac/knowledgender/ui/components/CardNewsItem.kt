@@ -21,16 +21,21 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
+import dgsw.stac.knowledgender.navigation.Route.CARDNEWSDETAIL
 import dgsw.stac.knowledgender.remote.CardResponse
-import dgsw.stac.knowledgender.ui.feature.main.CARDNEWSDETAIL
 import dgsw.stac.knowledgender.ui.theme.BasePurple
 import dgsw.stac.knowledgender.ui.theme.DarkestBlack
 import dgsw.stac.knowledgender.util.dpToSp
 
 @Composable
-fun CardNewsItemView(item: CardResponse, onNavigationRequested: (String) -> Unit) {
-    Column(modifier = Modifier.width(165.dp)
-        .padding(vertical = 10.dp, horizontal = 8.dp)
+fun CardNewsItemView(
+    modifier: Modifier = Modifier,
+    item: CardResponse,
+    onNavigationRequested: (String) -> Unit
+) {
+    Column(modifier = modifier
+        .width(165.dp)
+        .padding(horizontal = 8.dp)
         .clickable { onNavigationRequested(CARDNEWSDETAIL + "/" + item.id) }
     ) {
         Surface(shape = RoundedCornerShape(8.dp)) {

@@ -27,14 +27,29 @@ import dgsw.stac.knowledgender.ui.theme.pretendard
 import dgsw.stac.knowledgender.util.dpToSp
 
 @Composable
-fun BaseDialog(openDialogCustom: MutableState<Boolean>, onLoginRequested: () -> Unit, title: String, description: String) {
+fun BaseDialog(
+    openDialogCustom: MutableState<Boolean>,
+    onLoginRequested: () -> Unit,
+    title: String,
+    description: String
+) {
     Dialog(onDismissRequest = { openDialogCustom.value = false }) {
-        DialogView(openDialogCustom = openDialogCustom, onLoginRequested = onLoginRequested,title = title,des = description)
+        DialogView(
+            openDialogCustom = openDialogCustom,
+            onLoginRequested = onLoginRequested,
+            title = title,
+            des = description
+        )
     }
 }
 
 @Composable
-private fun DialogView(onLoginRequested: () -> Unit, openDialogCustom: MutableState<Boolean>,title: String,des: String) {
+private fun DialogView(
+    onLoginRequested: () -> Unit,
+    openDialogCustom: MutableState<Boolean>,
+    title: String,
+    des: String
+) {
     Surface(
         modifier = Modifier
             .fillMaxWidth()

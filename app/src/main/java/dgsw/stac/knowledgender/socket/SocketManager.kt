@@ -1,5 +1,6 @@
 package dgsw.stac.knowledgender.socket
 
+import dgsw.stac.knowledgender.BuildConfig
 import io.socket.client.IO
 import io.socket.client.Socket
 import io.socket.emitter.Emitter
@@ -14,7 +15,7 @@ class SocketManager {
             val options = IO.Options()
             options.query = "authorization=Bearer $token"
             return SOCKET ?: synchronized(this) {
-                val socket = IO.socket("http://52.78.246.108:8085",options)
+                val socket = IO.socket(BuildConfig.SOCKETURL,options)
                 SOCKET = socket
                 socket
             }

@@ -19,7 +19,7 @@
         android:label="@string/app_name"
         android:roundIcon="@drawable/logo"
         android:supportsRtl="true"
-        android:theme="@style/Theme.Knowledgender"
+        android:theme="@style/Theme.SplashScreen"
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <meta-data
@@ -29,6 +29,7 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyDaxnN6AiyJkVo-INrOG1q83r2TvsIEPeM" />
         <activity
+            android:screenOrientation="fullSensor"
             android:name=".ui.MainActivity"
             android:exported="true"
             android:label="@string/app_name"

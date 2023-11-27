@@ -1,6 +1,5 @@
 package dgsw.stac.knowledgender.ui.components
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -28,7 +27,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import dgsw.stac.knowledgender.remote.AppointmentResponse
-import dgsw.stac.knowledgender.ui.feature.main.childfeature.map.MapViewModel
+import dgsw.stac.knowledgender.ui.feature.map.MapViewModel
 import dgsw.stac.knowledgender.ui.theme.BaseBlack
 import dgsw.stac.knowledgender.ui.theme.DarkestBlack
 import dgsw.stac.knowledgender.ui.theme.pretendard
@@ -99,41 +98,6 @@ fun MapItemView(item: AppointmentResponse) {
                     fontFamily = pretendard, fontWeight = FontWeight.Normal, fontSize = 14.sp
                 )
             )
-//            if (item.appointmentAvailable) {
-//                Button(
-//                    modifier = Modifier
-//                        .heightIn(30.dp)
-//                        .widthIn(200.dp)
-//                        .padding(top = 8.dp),
-//                    onClick = {
-//                        viewModel.onColumnItemClicked(item)
-//                    },
-//                    shape = RoundedCornerShape(5.dp),
-//                    colors = ButtonDefaults.buttonColors(BasePurple)
-//                ) {
-//                    Text(
-//                        text = "예약하기",
-//                        style = TextStyle(
-//                            fontFamily = pretendard,
-//                            fontWeight = FontWeight.Normal,
-//                            fontSize = 20.sp
-//                        )
-//                    )
-//                }
-//            } else {
-//                Text(
-//                    modifier = Modifier
-//                        .height(40.dp)
-//                        .width(200.dp),
-//                    text = item.introduce,
-//                    color = DarkestBlack,
-//                    style = TextStyle(
-//                        fontFamily = pretendard,
-//                        fontWeight = FontWeight.Normal,
-//                        fontSize = 14.sp
-//                    )
-//                )
-//            }
         }
     }
 }

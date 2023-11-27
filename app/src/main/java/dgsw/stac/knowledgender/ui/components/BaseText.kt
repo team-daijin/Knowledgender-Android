@@ -30,11 +30,11 @@ fun BaseText(modifier: Modifier = Modifier, text: String, color: Color, style: T
 
 @Composable
 fun HomeTitleText(modifier: Modifier = Modifier, text: String,subText: String) {
-    Column(modifier = Modifier.padding(start = 24.dp)) {
+    Column(Modifier.padding(start = 24.dp)) {
         Text(
             text = text, color = DarkestBlack, style = TextStyle(
                 fontFamily = pretendard,
-                fontWeight = FontWeight.Medium,
+                fontWeight = FontWeight.SemiBold,
                 fontSize = dpToSp(
                     dp = 20.dp
                 )
@@ -51,5 +51,4 @@ fun HomeTitleText(modifier: Modifier = Modifier, text: String,subText: String) {
             )
         )
     }
-
 }

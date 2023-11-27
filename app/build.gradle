@@ -7,23 +7,28 @@ plugins {
     id 'com.google.android.libraries.mapsplatform.secrets-gradle-plugin'
 }
 
+Properties properties = new Properties()
+properties.load(project.rootProject.file('local.properties').newDataInputStream())
 
 android {
     namespace 'dgsw.stac.knowledgender'
-    compileSdk 33
+    compileSdk 34
 
     defaultConfig {
 
         applicationId "dgsw.stac.knowledgender"
         minSdk 24
         targetSdk 33
-        versionCode 8
-        versionName "3.1"
+        versionCode 14
+        versionName "3.7"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
             useSupportLibrary true
         }
+        buildConfigField "String", "BASEURL", properties['base.url']
+        buildConfigField "String", "SOCKETURL", properties['socket.url']
+
     }
 
     buildTypes {
@@ -45,6 +50,7 @@ android {
     }
     buildFeatures {
         compose true
+        buildConfig = true
     }
     composeOptions {
         kotlinCompilerExtensionVersion '1.3.2'
@@ -63,6 +69,9 @@ dependencies {
     implementation platform('androidx.compose:compose-bom:2023.03.00')
     implementation 'com.google.android.gms:play-services-location:21.0.1'
     androidTestImplementation platform('androidx.compose:compose-bom:2022.10.00')
+
+    //splash
+    implementation "androidx.core:core-splashscreen:1.0.0"
 
     //google oauth
     implementation("com.google.android.gms:play-services-auth:20.7.0")
@@ -101,7 +110,7 @@ dependencies {
     kapt "com.google.dagger:hilt-compiler:2.44"
 
     //navigation
-    def nav_version = "2.5.3"
+    def nav_version = "2.7.4"
     implementation "androidx.navigation:navigation-compose:$nav_version"
 
 

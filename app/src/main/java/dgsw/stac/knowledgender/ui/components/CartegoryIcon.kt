@@ -13,7 +13,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import dgsw.stac.knowledgender.R
-import dgsw.stac.knowledgender.ui.feature.main.CARDNEWS
+import dgsw.stac.knowledgender.navigation.Route.CARDNEWS
 import dgsw.stac.knowledgender.ui.theme.BaseBlack
 import dgsw.stac.knowledgender.ui.theme.pretendard
 import dgsw.stac.knowledgender.util.BODY

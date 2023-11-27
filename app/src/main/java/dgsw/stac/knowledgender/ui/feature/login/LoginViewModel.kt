@@ -28,6 +28,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
 
 @HiltViewModel
@@ -60,6 +61,8 @@ class LoginViewModel @Inject constructor(
     }
 
     fun loginPOST(onSuccess: (String) -> Unit) {
+        runBlocking {  }
+
         viewModelScope.launch {
             kotlin.runCatching {
                 RetrofitBuilder.apiService.login(
@@ -71,17 +74,18 @@ class LoginViewModel @Inject constructor(
             }.onSuccess { response ->
                 pref.saveAccessToken(response.accessToken)
                 pref.saveRefreshToken(response.refreshToken)
-                onSuccess(Route.MAIN)
+                onSuccess(Route.HOME)
                 application.startService(
                     Intent(application, PushNotification::class.java).apply {
                         putExtra("Access", response.accessToken)
                     }
                 )
             }.onFailure {
-                when(it.message.toString()){
-                    "HTTP 500" -> _errorMSG.value = "서버가 원활하지 않습니다.."
-                    "HTTP 404" -> _errorMSG.value = "해당 유저를 찾지 못했습니다."
-                    "HTTP 400" -> _errorMSG.value = "로그인에 실패했습니다."
+                _errorMSG.value = when(it.message.toString()){
+                    "HTTP 500" -> "서버가 원활하지 않습니다.."
+                    "HTTP 404" -> "해당 유저를 찾지 못했습니다."
+                    "HTTP 400" -> "로그인에 실패했습니다."
+                    else -> ""
                 }
                 error.value = true
             }
