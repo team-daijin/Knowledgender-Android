@@ -10,14 +10,15 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import site.algosipeosseong.model.CardnewsDetail
 import javax.inject.Inject
 
 @HiltViewModel
 class CardNewsDetailViewModel @Inject constructor() : ViewModel() {
 
 
-    private val _cardNewsDetail = MutableStateFlow<CardResponse?>(null)
-    val cardNewsDetail: StateFlow<CardResponse?> = _cardNewsDetail.asStateFlow()
+    private val _cardNewsDetail = MutableStateFlow<CardnewsDetail?>(null)
+    val cardNewsDetail = _cardNewsDetail.asStateFlow()
 
     fun getDetailInfo(id: String) = viewModelScope.launch(Dispatchers.IO) {
         kotlin.runCatching {

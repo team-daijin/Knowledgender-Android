@@ -8,6 +8,12 @@ import retrofit2.http.POST
 import retrofit2.http.PUT
 import retrofit2.http.Path
 import retrofit2.http.Query
+import site.algosipeosseong.model.Banner
+import site.algosipeosseong.model.Cardnews
+import site.algosipeosseong.model.CardnewsCategory
+import site.algosipeosseong.model.CardnewsDetail
+import site.algosipeosseong.model.Category
+import site.algosipeosseong.model.ClinicRequest
 
 interface RetrofitService {
 //    @POST()
@@ -21,31 +27,34 @@ interface RetrofitService {
     @POST("api/auth/login")
     suspend fun login(@Body login: LoginRequest): LoginResponse
 
-    @GET("api/card/{id}")
+    @GET("card/{id}")
     suspend fun getCardNewsDetail(
         @Path("id") cardNewsId: String
-    ): CardResponse
+    ): CardnewsDetail
 
-    @GET("/api/card/")
-    suspend fun cardCategory(@Query("category") category: String): CardResponseList
+    @GET("card")
+    suspend fun getCardnews(): List<Cardnews>
 
-    @POST("/api/room/")
+    @GET("card/category/{category}")
+    suspend fun getCardnewsByCategory(@Path("category")category: String): List<CardnewsCategory>
+
+    @POST("room")
     suspend fun createRoom(@Header("authorization") token: String)
 
-    @GET("/api/banner/")
-    suspend fun banner(): BannerResponseList
+    @GET("banner")
+    suspend fun banner(): List<Banner>
 
-    @GET("/api/user/")
+    @GET("user")
     suspend fun getUserInfo(@Header("Authorization") token: String): Profile
 
-    @DELETE("/api/user/")
+    @DELETE("user")
     suspend fun deleteUserInfo(@Header("Authorization") token: String)
 
 
-    @GET("/api/clinic/")
+    @GET("clinic")
     suspend fun appointmentView(
-        @Query("latitude") latitude: Double,
-        @Query("longitude") longitude: Double
+        @Query("radius") radius: Int = 5000,
+        @Body location: ClinicRequest
     ): List<AppointmentResponse>
 
     @POST("/api/appointment/")

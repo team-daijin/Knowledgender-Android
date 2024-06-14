@@ -20,7 +20,6 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -73,8 +72,8 @@ fun CardNewsDetailScreen(
                 Banner(state.thumbnail)
                 Spacer(modifier = Modifier.padding(top = 4.dp))
                 Column(Modifier.padding(horizontal = 24.dp)) {
-                    Header(state.title, state.writer, state.category)
-                    Body(state.content, state.image)
+                    Header(state.title, state.expert, state.category)
+                    Body(state.content, state.thumbnail)
                 }
 
             }
@@ -186,19 +185,19 @@ private fun Body(content: String, image: String) {
             .padding(top = 24.dp)
 
     ) {
-        Text(
-            text = content,
-            color = DarkestBlack,
-            style = TextStyle(
-                fontFamily = pretendard,
-                fontWeight = FontWeight.Normal,
-                fontSize = dpToSp(16.dp),
-                lineHeight = dpToSp(dp = 20.dp)
-            )
-        )
+//        Text(
+//            text = content,
+//            color = DarkestBlack,
+//            style = TextStyle(
+//                fontFamily = pretendard,
+//                fontWeight = FontWeight.Normal,
+//                fontSize = dpToSp(16.dp),
+//                lineHeight = dpToSp(dp = 20.dp)
+//            )
+//        )
         SubcomposeAsyncImage(
             loading = { CircularProgressIndicator() },
-            model = image,
+            model = content,
             modifier = Modifier
                 .fillMaxWidth()
                 .wrapContentHeight(),

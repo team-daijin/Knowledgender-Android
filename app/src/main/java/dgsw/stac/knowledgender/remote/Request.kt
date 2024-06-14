@@ -1,6 +1,6 @@
 package dgsw.stac.knowledgender.remote
 
-
+import java.time.LocalDate
 
 
 data class RegisterRequest(
@@ -23,8 +23,8 @@ data class LoginRequest(
 //"password": String
 
 data class AppointmentReservationRequest(
-    val date : String,
-    val time : String,
+    val date: LocalDate,
+    val time: String,
     val content: String,
     val clientId: String
 )

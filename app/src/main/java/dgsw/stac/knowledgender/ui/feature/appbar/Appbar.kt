@@ -7,7 +7,9 @@ import android.net.Uri
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -18,9 +20,9 @@ import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.material.BottomNavigation
 import androidx.compose.material.BottomNavigationItem
 import androidx.compose.material3.Icon
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -41,7 +43,6 @@ import dgsw.stac.knowledgender.R
 import dgsw.stac.knowledgender.navigation.Route.CARDNEWS
 import dgsw.stac.knowledgender.navigation.Route.CARDNEWSDETAIL
 import dgsw.stac.knowledgender.navigation.Route.CENTER
-import dgsw.stac.knowledgender.navigation.Route.CHAT
 import dgsw.stac.knowledgender.navigation.Route.HOME
 import dgsw.stac.knowledgender.navigation.Route.MY
 import dgsw.stac.knowledgender.ui.components.BaseText
@@ -55,7 +56,7 @@ import dgsw.stac.knowledgender.util.dpToSp
 sealed class BottomNavItem(val name: String, val icon: Int, val route: String) {
     object Center : BottomNavItem(name = "상담센터", icon = R.drawable.knowledgender_center, CENTER)
     object Home : BottomNavItem(name = "홈", icon = R.drawable.knowledgender_home, HOME)
-    object My : BottomNavItem(name = "마이", icon = R.drawable.knowledgender_my, MY)
+    object My : BottomNavItem(name = "정보", icon = R.drawable.questionmark_1, MY)
 }
 
 
@@ -63,31 +64,26 @@ sealed class BottomNavItem(val name: String, val icon: Int, val route: String) {
 fun BottomAppbar(
     navController: NavHostController,
     viewModel: AppbarViewModel,
-    onLoginRequested: MutableState<Boolean>
+    context: Context
 ) {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
 
-
-    val isLogin by viewModel.isLogin.collectAsState()
     BackOnPressed()
     BottomNavigationView(
-        onLoginRequested = onLoginRequested,
         navController = navController,
         currentRoute = currentRoute,
-        isLogin = isLogin
+        context = context
     )
+
 }
 
 @Composable
 fun TopBar(
     route: Boolean,
-    onLoginRequested: MutableState<Boolean>,
     context: Context,
-    viewModel: AppbarViewModel,
-    onNavigationRequested: (String) -> Unit
+    viewModel: AppbarViewModel
 ) {
-    val isLogin by viewModel.isLogin.collectAsState()
 
     Row(
         Modifier
@@ -138,35 +134,15 @@ fun TopBar(
                     BasePurple
                 )
             )
-            Image(
-                painter = painterResource(id = R.drawable.knowledgender_chat),
-                contentDescription = "chat",
-                modifier = Modifier
-                    .padding(start = 12.dp)
-                    .width(22.5.dp)
-                    .height(22.5.dp)
-                    .clickable {
-                        if (!isLogin) {
-                            onLoginRequested.value = true
-                        } else {
-                            onNavigationRequested(CHAT)
-                        }
-                    },
-                colorFilter = if (route) ColorFilter.tint(Color.White) else ColorFilter.tint(
-                    BasePurple
-                )
-            )
         }
-
     }
 }
 
 @Composable
 fun BottomNavigationView(
-    onLoginRequested: MutableState<Boolean>,
     navController: NavHostController,
     currentRoute: String?,
-    isLogin: Boolean
+    context: Context
 ) {
     val items = listOf(
         BottomNavItem.Center,
@@ -212,9 +188,13 @@ fun BottomNavigationView(
                 selected = currentRoute == item.route,
                 alwaysShowLabel = true,
                 onClick = {
-                    if (!isLogin && item.route == MY) {
-                        onLoginRequested.value = true
-                    } else if(currentRoute != item.route) {
+                    if (item.route == MY) {
+                        val urlIntent = Intent(
+                            Intent.ACTION_VIEW,
+                            Uri.parse("https://bento.me/knowledgender")
+                        )
+                        context.startActivity(urlIntent)
+                    } else if (currentRoute != item.route) {
                         navController.navigate(item.route) {
                             navController.graph.id.let {
                                 popUpTo(it) {

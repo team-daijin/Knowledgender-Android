@@ -1,5 +1,8 @@
 package dgsw.stac.knowledgender.ui.feature.mypage
 
+import android.content.Context
+import android.content.Intent
+import android.net.Uri
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column

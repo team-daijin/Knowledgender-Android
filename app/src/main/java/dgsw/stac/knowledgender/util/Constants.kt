@@ -2,9 +2,24 @@ package dgsw.stac.knowledgender.util
 
 
 
-const val HEART = "마음"
-const val BODY = "신체"
-const val CRIME = "범죄"
-const val RELATIONSHIP = "관계"
-const val EQUALITY = "평등"
-const val NONE = "없음"
+enum class Category(val str: String) {
+    HEART("HEART"),
+    BODY("BODY"),
+    RELATION("RELATION"),
+    VIOLENCE("VIOLENCE"),
+    EQUALITY("EQUALITY")
+}
+
+fun categoryConverter(str: String?): Category {
+    str?.let {
+        return when (it) {
+            Category.HEART.str -> Category.HEART
+            Category.BODY.str -> Category.BODY
+            Category.RELATION.str -> Category.RELATION
+            Category.VIOLENCE.str -> Category.VIOLENCE
+            else -> Category.EQUALITY
+        }
+    }.run {
+        return Category.HEART
+    }
+}

@@ -16,10 +16,7 @@ import dgsw.stac.knowledgender.R
 import dgsw.stac.knowledgender.navigation.Route.CARDNEWS
 import dgsw.stac.knowledgender.ui.theme.BaseBlack
 import dgsw.stac.knowledgender.ui.theme.pretendard
-import dgsw.stac.knowledgender.util.BODY
-import dgsw.stac.knowledgender.util.CRIME
-import dgsw.stac.knowledgender.util.HEART
-import dgsw.stac.knowledgender.util.RELATIONSHIP
+import dgsw.stac.knowledgender.util.Category
 import dgsw.stac.knowledgender.util.dpToSp
 
 @Composable
@@ -28,16 +25,22 @@ fun CategoryIcon(category: String,onNavigateTo: (String) -> Unit) {
         Image(
             modifier = Modifier.size(30.dp).clickable { onNavigateTo("$CARDNEWS/${category}") },
             painter = when(category){
-                HEART -> painterResource(id = R.drawable.heart)
-                BODY -> painterResource(id = R.drawable.body)
-                CRIME -> painterResource(id = R.drawable.crime)
-                RELATIONSHIP -> painterResource(id = R.drawable.relationship)
+                Category.HEART.str -> painterResource(id = R.drawable.heart)
+                Category.BODY.str -> painterResource(id = R.drawable.body)
+                Category.RELATION.str -> painterResource(id = R.drawable.relationship)
+                Category.VIOLENCE.str -> painterResource(id = R.drawable.crime)
                 else -> painterResource(id = R.drawable.equality)
             },
-            contentDescription = "heart"
+            contentDescription = null
         )
         Text(
-            text = category,
+            text = when(category){
+                Category.HEART.str -> "마음"
+                Category.BODY.str -> "신체"
+                Category.RELATION.str -> "관계"
+                Category.VIOLENCE.str -> "폭력"
+                else -> "평등"
+            },
             color = BaseBlack,
             style = TextStyle(
                 fontFamily = pretendard,

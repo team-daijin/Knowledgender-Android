@@ -1,5 +1,6 @@
 package dgsw.stac.knowledgender.ui.feature.home
 
+import CardNewsItemView
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
@@ -45,21 +46,20 @@ import dgsw.stac.knowledgender.remote.BannerResponse
 import dgsw.stac.knowledgender.remote.CardResponse
 import dgsw.stac.knowledgender.ui.components.BannerView
 import dgsw.stac.knowledgender.ui.components.BaseText
-import dgsw.stac.knowledgender.ui.components.CardNewsItemView
 import dgsw.stac.knowledgender.ui.components.CategoryIcon
 import dgsw.stac.knowledgender.ui.components.HomeTitleText
 import dgsw.stac.knowledgender.ui.components.NoNetworkChecking
 import dgsw.stac.knowledgender.ui.theme.DarkestBlack
 import dgsw.stac.knowledgender.ui.theme.LightSky
 import dgsw.stac.knowledgender.ui.theme.pretendard
-import dgsw.stac.knowledgender.util.BODY
-import dgsw.stac.knowledgender.util.CRIME
-import dgsw.stac.knowledgender.util.EQUALITY
-import dgsw.stac.knowledgender.util.HEART
-import dgsw.stac.knowledgender.util.RELATIONSHIP
 import dgsw.stac.knowledgender.util.dpToSp
 import dgsw.stac.knowledgender.util.networkCheck
 import dgsw.stac.knowledgender.util.safeLet
+import dgsw.stac.knowledgender.util.Category
+import dgsw.stac.knowledgender.util.dpToSp
+import dgsw.stac.knowledgender.util.networkCheck
+import site.algosipeosseong.model.Banner
+import site.algosipeosseong.model.Cardnews
 
 @Composable
 fun HomeScreen(
@@ -71,20 +71,10 @@ fun HomeScreen(
     val scrollState = rememberScrollState()
 
     val bannerData by viewModel.bannerData.collectAsState()
-    val heart by viewModel.heart.collectAsState()
-    val body by viewModel.body.collectAsState()
-    val relationship by viewModel.relationship.collectAsState()
-    val crime by viewModel.crime.collectAsState()
-    val equality by viewModel.equality.collectAsState()
+    val cards by viewModel.cards.collectAsState()
     var visible by remember { mutableStateOf(false) }
 
-    safeLet(
-        heart,
-        body,
-        relationship,
-        crime,
-        equality
-    ) { checkedHeart, checkedBody, checkedRelationship, checkedCrime, checkedEquality ->
+    cards?.let {
         if (networkCheck() || viewModel.cardNewsAvailable.value) {
             Column(
                 modifier = modifier
@@ -94,11 +84,7 @@ fun HomeScreen(
                 Header(bannerData)
                 Spacer(modifier = Modifier.height(32.dp))
                 Body(
-                    heart = checkedHeart,
-                    body = checkedBody,
-                    relationship = checkedRelationship,
-                    crime = checkedCrime,
-                    equality = checkedEquality,
+                    cards = it,
                     onNavigationRequested = onNavigationRequested
 
                 ) {
@@ -127,10 +113,9 @@ fun HomeScreen(
     }
 }
 
-
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun Header(bannerData: List<BannerResponse>?) {
+fun Header(bannerData: List<Banner>?) {
 
 
     bannerData?.let {
@@ -156,11 +141,7 @@ fun Header(bannerData: List<BannerResponse>?) {
 
 @Composable
 fun Body(
-    heart: List<CardResponse>,
-    body: List<CardResponse>,
-    relationship: List<CardResponse>,
-    crime: List<CardResponse>,
-    equality: List<CardResponse>,
+    cards: List<Cardnews>,
     onNavigationRequested: (String) -> Unit,
     position: (Dp) -> Unit
 ) {
@@ -168,65 +149,46 @@ fun Body(
     var columnHeightDp by remember {
         mutableStateOf(0.dp)
     }
-
+    val homeCardSet = mapOf(
+        Pair("마음", Pair("마음 상담소로 오세요", "내 안에 숨어있는 마음상담소로 초대합니다!")),
+        Pair("신체", Pair("나만 몰랐던 나의 몸", "나조차도 모르고 있었던 나의 몸 속 비밀")),
+        Pair("관계", Pair("너와 나의 연결고리", "즐겁고 행복한 우리의 관계를 건강하게 유지하는 법")),
+        Pair("폭력", Pair("나를 확실하게 지키는 법", "폭력으로부터 나를 올바른 방법으로 보호해봅시다")),
+        Pair("평등", Pair("세상에 같은 사람은 없다", "차이는 틀린 것이 아닌 다른 것!"))
+    )
     Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .onGloballyPositioned {
-                columnHeightDp = it.positionInParent().y.dp - 175.dp
-                position(columnHeightDp)
-            }, horizontalArrangement = Arrangement.SpaceEvenly
+        modifier = Modifier.padding(top = 8.dp),
+        horizontalArrangement = Arrangement.SpaceEvenly
     ) {
-        CategoryIcon(category = HEART, onNavigationRequested)
-        CategoryIcon(category = BODY, onNavigationRequested)
-        CategoryIcon(category = RELATIONSHIP, onNavigationRequested)
-        CategoryIcon(category = CRIME, onNavigationRequested)
-        CategoryIcon(category = EQUALITY, onNavigationRequested)
+        CategoryIcon(category = Category.HEART.str, onNavigationRequested)
+        CategoryIcon(category = Category.BODY.str, onNavigationRequested)
+        CategoryIcon(category = Category.RELATION.str, onNavigationRequested)
+        CategoryIcon(category = Category.VIOLENCE.str, onNavigationRequested)
+        CategoryIcon(category = Category.EQUALITY.str, onNavigationRequested)
     }
     Column {
-        Spacer(modifier = Modifier.height(20.dp))
-        HomeTitleText(text = "마음 상담소로 오세요", subText = "내 안에 숨어있는 마음상담소로 초대합니다!")
-        LazyRow(
-            modifier = Modifier.padding(top = 8.dp),
-            contentPadding = PaddingValues(start = 16.dp)
-        ) {
-            items(heart) {
-                CardNewsItemView(Modifier,it, onNavigationRequested)
-            }
-        }
-        Spacer(modifier = Modifier.height(20.dp))
-        HomeTitleText(text = "나만 몰랐던 나의 몸", subText = "나조차도 모르고 있었던 나의 몸 속 비밀")
-        LazyRow(modifier = Modifier.padding(top = 8.dp),
-            contentPadding = PaddingValues(start = 16.dp)) {
-            items(body) {
-                CardNewsItemView(Modifier,it, onNavigationRequested)
-            }
-        }
-        Spacer(modifier = Modifier.height(20.dp))
-        HomeTitleText(text = "너와 나의 연결고리", subText = "즐겁고 행복한 우리의 관계를 건강하게 유지하는 법")
-        LazyRow(modifier = Modifier.padding(top = 8.dp),
-            contentPadding = PaddingValues(start = 16.dp)) {
-            items(relationship) {
-                CardNewsItemView(Modifier,it, onNavigationRequested)
-            }
-        }
-        Spacer(modifier = Modifier.height(20.dp))
-        HomeTitleText(text = "나를 확실하게 지키는 법", subText = "폭력으로부터 나를 올바른 방법으로 보호해봅시다")
-        LazyRow(modifier = Modifier.padding(top = 8.dp),
-            contentPadding = PaddingValues(start = 16.dp)) {
-            items(crime) {
-                CardNewsItemView(Modifier,it, onNavigationRequested)
-            }
-        }
-        Spacer(modifier = Modifier.height(20.dp))
-        HomeTitleText(text = "세상에 같은 사람은 없다", subText = "차이는 틀린 것이 아닌 다른 것!")
-        LazyRow(modifier = Modifier.padding(top = 8.dp),
-            contentPadding = PaddingValues(start = 16.dp)) {
-            items(equality) {
-                CardNewsItemView(Modifier,it, onNavigationRequested)
+        cards.forEach { cardnews ->
+            Spacer(modifier = Modifier.height(28.dp))
+            HomeTitleText(
+                text = homeCardSet[cardnews.category]!!.first,
+                subText = homeCardSet[cardnews.category]!!.second
+            )
+            LazyRow(
+                modifier = Modifier.padding(top = 8.dp),
+                contentPadding = PaddingValues(start = 16.dp, end = 16.dp)
+            ) {
+                items(cardnews.cards) {
+                    CardNewsItemView(
+                        category = cardnews.category,
+                        item = it,
+                        onNavigationRequested = onNavigationRequested
+                    )
+                }
             }
         }
     }
-
 }
+
+
+
 

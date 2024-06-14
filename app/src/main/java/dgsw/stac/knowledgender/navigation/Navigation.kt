@@ -1,6 +1,6 @@
 package dgsw.stac.knowledgender.navigation
 
-import android.util.Log
+import CardNewsScreen
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
 import androidx.compose.animation.core.LinearEasing
@@ -22,6 +22,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -41,9 +42,7 @@ import dgsw.stac.knowledgender.navigation.Route.SPLASH
 import dgsw.stac.knowledgender.ui.components.BaseDialog
 import dgsw.stac.knowledgender.ui.feature.appbar.AppbarViewModel
 import dgsw.stac.knowledgender.ui.feature.appbar.BottomAppbar
-import dgsw.stac.knowledgender.ui.feature.appbar.BottomNavItem
 import dgsw.stac.knowledgender.ui.feature.appbar.TopBar
-import dgsw.stac.knowledgender.ui.feature.cardnews.CardNewsScreen
 import dgsw.stac.knowledgender.ui.feature.cardnews.CardNewsViewModel
 import dgsw.stac.knowledgender.ui.feature.cardnewsdetail.CardNewsDetailScreen
 import dgsw.stac.knowledgender.ui.feature.cardnewsdetail.CardNewsDetailViewModel
@@ -60,6 +59,8 @@ import dgsw.stac.knowledgender.ui.feature.mypage.MyPageViewModel
 import dgsw.stac.knowledgender.ui.feature.register.RegisterScreen
 import dgsw.stac.knowledgender.ui.feature.register.RegisterViewModel
 import dgsw.stac.knowledgender.ui.feature.splash.SplashScreen
+import dgsw.stac.knowledgender.util.Category
+import dgsw.stac.knowledgender.util.categoryConverter
 
 @Composable
 fun Navigation() {
@@ -77,7 +78,6 @@ fun Navigation() {
     val navController = rememberNavController()
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination
-    Log.d("euya",currentDestination.toString())
     val onLoginRequested = remember {
         mutableStateOf(false)
     }
@@ -91,7 +91,7 @@ fun Navigation() {
         if (onLoginRequested.value) {
             BaseDialog(
                 onLoginRequested = {
-                    navController.navigate(Route.LOGIN)
+                    navController.navigate(LOGIN)
                 },
                 openDialogCustom = onLoginRequested,
                 title = "로그인 하시겠습니까?",
@@ -103,11 +103,11 @@ fun Navigation() {
         modifier = Modifier.fillMaxSize(),
         bottomBar = {
             when (currentDestination?.route) {
-                CENTER, HOME, MY, "$CARDNEWS/{category}","$CARDNEWSDETAIL/{id}"  -> BottomAppbar(
-                    navController = navController,
-                    viewModel = appbarViewModel,
-                    onLoginRequested = onLoginRequested
-                )
+                CENTER, HOME, MY, "$CARDNEWS/{category}", "$CARDNEWSDETAIL/{id}" -> BottomAppbar(
+                navController = navController,
+                viewModel = appbarViewModel,
+                context = LocalContext.current
+            )
 
                 else -> {}
             }
@@ -115,7 +115,7 @@ fun Navigation() {
         },
         topBar = {
             when (currentDestination?.route) {
-                CENTER, HOME, MY,"$CARDNEWS/{category}","$CARDNEWSDETAIL/{id}" -> TopAppBar(
+                CENTER, HOME, MY, "$CARDNEWS/{category}", "$CARDNEWSDETAIL/{id}" -> TopAppBar(
                     elevation = 0.dp,
                     backgroundColor = if (currentDestination.route == HOME && !positionChecked.value) {
                         Color.Transparent
@@ -125,12 +125,9 @@ fun Navigation() {
                 ) {
                     TopBar(
                         route = currentDestination.route == HOME && !positionChecked.value,
-                        onLoginRequested = onLoginRequested,
                         context = LocalContext.current,
                         viewModel = appbarViewModel
-                    ) {
-                        navController.navigate(it)
-                    }
+                    )
                 }
 
                 else -> {}
@@ -138,9 +135,12 @@ fun Navigation() {
         }
     ) {
         NavHost(
-            modifier = when(currentDestination?.route) {
+            modifier = when (currentDestination?.route) {
                 HOME, CENTER, MY -> Modifier.padding(bottom = it.calculateBottomPadding())
-                "$CARDNEWS/{category}","$CARDNEWSDETAIL/{id}" -> Modifier.padding(top = it.calculateTopPadding(),bottom = it.calculateBottomPadding())
+                "$CARDNEWS/{category}", "$CARDNEWSDETAIL/{id}" -> Modifier.padding(
+                    top = it.calculateTopPadding(),
+                    bottom = it.calculateBottomPadding()
+                )
                 else -> Modifier
             },
             navController = navController,
@@ -155,17 +155,18 @@ fun Navigation() {
             }
             composable(
                 HOME,
-                enterTransition = { fadeIn(animationSpec = tween(250, easing = LinearEasing)) },
-                exitTransition = { fadeOut(animationSpec = tween(250, easing = LinearEasing)) },
-                popEnterTransition = { fadeIn(animationSpec = tween(250, easing = LinearEasing)) },
+                enterTransition = { fadeIn(animationSpec = tween(500, easing = LinearEasing)) },
+                exitTransition = { fadeOut(animationSpec = tween(500, easing = LinearEasing)) },
+                popEnterTransition = { fadeIn(animationSpec = tween(500, easing = LinearEasing)) },
                 popExitTransition = {
                     fadeOut(
                         animationSpec = tween(
-                            250,
+                            500,
                             easing = LinearEasing
                         )
                     )
-                }) {
+                }
+            ) {
                 HomeScreenDestination(
                     viewModel = homeViewModel,
                     navController = navController,
@@ -174,13 +175,13 @@ fun Navigation() {
             }
             composable(
                 CENTER,
-                enterTransition = { fadeIn(animationSpec = tween(100, easing = LinearEasing)) },
-                exitTransition = { fadeOut(animationSpec = tween(100, easing = LinearEasing)) },
-                popEnterTransition = { fadeIn(animationSpec = tween(100, easing = LinearEasing)) },
+                enterTransition = { fadeIn(animationSpec = tween(500, easing = LinearEasing)) },
+                exitTransition = { fadeOut(animationSpec = tween(500, easing = LinearEasing)) },
+                popEnterTransition = { fadeIn(animationSpec = tween(500, easing = LinearEasing)) },
                 popExitTransition = {
                     fadeOut(
                         animationSpec = tween(
-                            100,
+                            500,
                             easing = LinearEasing
                         )
                     )
@@ -206,20 +207,19 @@ fun Navigation() {
                 "${CARDNEWS}/{category}",
                 listOf(navArgument("category") {
                     type = NavType.StringType
-                }), enterTransition = { fadeIn(animationSpec = tween(100, easing = LinearEasing)) },
-                exitTransition = { fadeOut(animationSpec = tween(100, easing = LinearEasing)) },
-                popEnterTransition = { fadeIn(animationSpec = tween(100, easing = LinearEasing)) },
-                popExitTransition = { fadeOut(animationSpec = tween(100, easing = LinearEasing)) }
+                }), enterTransition = { fadeIn(animationSpec = tween(500, easing = LinearEasing)) },
+                exitTransition = { fadeOut(animationSpec = tween(500, easing = LinearEasing)) },
+                popEnterTransition = { fadeIn(animationSpec = tween(500, easing = LinearEasing)) },
+                popExitTransition = { fadeOut(animationSpec = tween(500, easing = LinearEasing)) }
             ) { backStack ->
-                val category = backStack.arguments?.getString("category")
+                val category = categoryConverter(backStack.arguments?.getString("category"))
 
-                if (category != null) {
-                    CardNewsDestination(
-                        category = category,
-                        viewModel = cardNewsViewModel,
-                        navController = navController
-                    )
-                }
+                CardNewsDestination(
+                    currentDestination = currentDestination,
+                    category = category,
+                    viewModel = cardNewsViewModel,
+                    navController = navController
+                )
             }
             composable(
                 "$CARDNEWSDETAIL/{id}",
@@ -291,15 +291,39 @@ fun Navigation() {
 
 @Composable
 fun CardNewsDestination(
-    category: String,
+    currentDestination: NavDestination?,
+    category: Category,
     viewModel: CardNewsViewModel,
     navController: NavHostController
 ) {
     CardNewsScreen(
-        category,
+        currentRoute = currentDestination,
+        category = category,
         viewModel = viewModel,
-        onNavigtionRequested = { navController.navigate(it) }
-    ) { navController.popBackStack() }
+        onNavigtionRequested = {
+            navController.navigate(it) {
+                navController.graph.id.let {
+                    popUpTo(it) {
+                        saveState = true
+                        inclusive = true
+                    }
+                }
+                launchSingleTop = true
+                restoreState = true
+            }
+        }
+    ) {
+        navController.navigate(HOME) {
+            navController.graph.id.let {
+                popUpTo(it) {
+                    saveState = true
+                    inclusive = true
+                }
+            }
+            launchSingleTop = true
+            restoreState = true
+        }
+    }
 }
 
 @Composable

@@ -26,9 +26,15 @@ import dgsw.stac.knowledgender.remote.AppointmentResponse
 import dgsw.stac.knowledgender.remote.RetrofitBuilder
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import site.algosipeosseong.model.ClinicRequest
+import java.time.LocalDate
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
@@ -53,33 +59,67 @@ class MapViewModel @Inject constructor(
     private val _appointmentView = MutableStateFlow<List<AppointmentResponse>?>(null)
     val appointmentView: StateFlow<List<AppointmentResponse>?> = _appointmentView
 
-    var date by mutableStateOf("")
-    var time by mutableStateOf("")
-    var content by mutableStateOf("")
+
+    private val _date = MutableStateFlow(LocalDate.of(1, 1, 1))
+    val date = _date.asStateFlow()
+
+    private val _time = MutableStateFlow("")
+    val time = _time.asStateFlow()
+
+    private val _content = MutableStateFlow("")
+    val content = _content.asStateFlow()
 
     private val _reg = MutableStateFlow(LatLng(0.0, 0.0))
     val reg: StateFlow<LatLng> = _reg
 
+    val enabledButton = combine(date, time, content) { date, time, content ->
+        time.isNotEmpty() && content.isNotEmpty()
+    }.stateIn(viewModelScope, SharingStarted.Lazily, false)
 
-
-    suspend fun postReservation(clientId: String) {
-        kotlin.runCatching {
-            RetrofitBuilder.apiService.getReservation(
-                pref.getAccessToken().first(),
-                AppointmentReservationRequest(
-                    date = date,
-                    time = time,
-                    content = content,
-                    clientId = clientId
-                )
-            )
+    fun onUpdateDate(string: String) {
+        val str = string.split("/").map {
+            it.toInt()
         }
+        _date.value = LocalDate.of(str[0], str[1], str[2])
+    }
+
+    fun onUpdateTime(selectedHour: Int, selectedMinute: Int) {
+        _time.value = "$selectedHour:$selectedMinute"
+    }
+
+    fun onUpdateContent(string: String) {
+        _content.value = string
+    }
+
+    fun postReservation() {
+        viewModelScope.launch(Dispatchers.IO) {
+            kotlin.runCatching {
+                viewData.value?.let {
+                    RetrofitBuilder.apiService.getReservation(
+                        pref.getAccessToken().first(),
+                        AppointmentReservationRequest(
+                            date = with(date.value) {
+                                LocalDate.of(year, monthValue, dayOfMonth)
+                            },
+                            time = time.value,
+                            content = content.value,
+                            clientId = it.id
+                        )
+                    )
+                }
+            }.onSuccess {
+
+            }.onFailure {
+
+            }
+        }
+
     }
 
     fun getMarkerItem(location: LatLng) {
         viewModelScope.launch(Dispatchers.IO) {
             kotlin.runCatching {
-                RetrofitBuilder.apiService.appointmentView(location.latitude, location.longitude)
+                RetrofitBuilder.apiService.appointmentView(location = ClinicRequest(location.latitude, location.longitude))
             }.map {
                 _appointmentView.value = it
             }.onFailure {
@@ -91,16 +131,11 @@ class MapViewModel @Inject constructor(
 
     fun onBackClicked() {
         _viewState.value = 0
+        _viewData.value = null
     }
 
     fun onIconClicked(data: AppointmentResponse) {
         _viewState.value = 1
-       _viewData.value = data
-    }
-
-
-    fun onColumnItemClicked(data: AppointmentResponse) {
-        _viewState.value = 2
         _viewData.value = data
     }
 
@@ -141,7 +176,6 @@ class MapViewModel @Inject constructor(
             locationUpdate(context, permissions)
         }
 
-        Log.d("dksltlqkf", currentUserLocation.toString())
         return currentUserLocation
 
     }
@@ -152,9 +186,9 @@ class MapViewModel @Inject constructor(
             val removeTask = locationProvider.removeLocationUpdates(locationCallback)
             removeTask.addOnCompleteListener { task ->
                 if (task.isSuccessful) {
-                    Log.d("euya", "Location Callback removed.")
+                    Log.d("success", "Location Callback removed.")
                 } else {
-                    Log.d("euya", "Failed to remove Location Callback.")
+                    Log.d("failed", "Failed to remove Location Callback.")
                 }
             }
         } catch (se: SecurityException) {
@@ -176,7 +210,7 @@ class MapViewModel @Inject constructor(
                     priority = LocationRequest.PRIORITY_HIGH_ACCURACY
                 }
             //use FusedLocationProviderClient to request location update
-            if (permissions.all {str ->
+            if (permissions.all { str ->
                     ContextCompat.checkSelfPermission(
                         context,
                         str
