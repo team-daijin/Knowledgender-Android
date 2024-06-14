@@ -26,7 +26,6 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import dgsw.stac.knowledgender.navigation.Route.CARDNEWSDETAIL
 import dgsw.stac.knowledgender.remote.CardResponse
-import dgsw.stac.knowledgender.ui.feature.main.CARDNEWSDETAIL
 import dgsw.stac.knowledgender.ui.components.BaseText
 import dgsw.stac.knowledgender.ui.theme.BasePurple
 import dgsw.stac.knowledgender.ui.theme.DarkestBlack

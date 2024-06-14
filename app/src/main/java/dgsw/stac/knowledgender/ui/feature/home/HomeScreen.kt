@@ -157,7 +157,7 @@ fun Body(
         Pair("평등", Pair("세상에 같은 사람은 없다", "차이는 틀린 것이 아닌 다른 것!"))
     )
     Row(
-        modifier = Modifier.padding(top = 8.dp),
+        modifier = Modifier.fillMaxWidth().padding(top = 8.dp),
         horizontalArrangement = Arrangement.SpaceEvenly
     ) {
         CategoryIcon(category = Category.HEART.str, onNavigationRequested)

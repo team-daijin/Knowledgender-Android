@@ -25,6 +25,7 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import coil.compose.AsyncImage
 import coil.compose.rememberAsyncImagePainter
 import coil.compose.rememberImagePainter
 import coil.request.ImageRequest
@@ -56,17 +57,18 @@ fun BannerView(item: List<Banner>) {
         Alignment.BottomCenter
     ) {
         HorizontalPager(
-           // modifier = Modifier.fillMaxHeight(),
+            // modifier = Modifier.fillMaxHeight(),
             count = item.size,
             state = pagerState,
             userScrollEnabled = true,
-            content = {page ->
+            content = { page ->
                 AsyncImage(
-                    model = item[page].fileUrl,
+                    model = item[page].image,
                     contentDescription = "Banner",
                     modifier = Modifier
                         .fillMaxWidth(),
                     contentScale = ContentScale.Crop
+                )
             }
         )
         HorizontalPagerIndicator(

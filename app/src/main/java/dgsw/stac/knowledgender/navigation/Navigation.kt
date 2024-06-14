@@ -1,6 +1,5 @@
 package dgsw.stac.knowledgender.navigation
 
-import CardNewsScreen
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
 import androidx.compose.animation.core.LinearEasing
@@ -43,6 +42,7 @@ import dgsw.stac.knowledgender.ui.components.BaseDialog
 import dgsw.stac.knowledgender.ui.feature.appbar.AppbarViewModel
 import dgsw.stac.knowledgender.ui.feature.appbar.BottomAppbar
 import dgsw.stac.knowledgender.ui.feature.appbar.TopBar
+import dgsw.stac.knowledgender.ui.feature.cardnews.CardNewsScreen
 import dgsw.stac.knowledgender.ui.feature.cardnews.CardNewsViewModel
 import dgsw.stac.knowledgender.ui.feature.cardnewsdetail.CardNewsDetailScreen
 import dgsw.stac.knowledgender.ui.feature.cardnewsdetail.CardNewsDetailViewModel
